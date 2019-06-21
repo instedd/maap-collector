@@ -2,8 +2,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
-import * as networkActions from '../actions/network'
 import { createLogger } from 'redux-logger';
+import * as networkActions from '../actions/network';
 import createRootReducer from '../reducers';
 
 const history = createHashHistory();

@@ -6,26 +6,34 @@ import App from './containers/App';
 import HomePage from './containers/HomePage';
 import Login from './containers/Login';
 
-const mapStateToProps = (state) => {
-  const { user } = state
-  return { user }
-}
+const mapStateToProps = state => {
+  const { user } = state;
+  return { user };
+};
 
-const NonPrivateRoute = connect(mapStateToProps)(({ component: Component, path, user }) => {
-  return <Route exact path={path} exact render={(props) => (
-    user.data
-      ? <Redirect to={routes.HOME} />
-      : <Component {...props} />
-  )} />
-})
+const NonPrivateRoute = connect(mapStateToProps)(
+  ({ component: Component, path, user }) => (
+    <Route
+      exact
+      path={path}
+      render={props =>
+        user.data ? <Redirect to={routes.HOME} /> : <Component {...props} />
+      }
+    />
+  )
+);
 
-const PrivateRoute = connect(mapStateToProps)(({ component: Component, path, user }) => {
-  return <Route exact path={path} exact render={(props) => (
-    user.data
-      ? <Component {...props} />
-      : <Redirect to={routes.SIGN_IN} />
-  )} />
-})
+const PrivateRoute = connect(mapStateToProps)(
+  ({ component: Component, path, user }) => (
+    <Route
+      exact
+      path={path}
+      render={props =>
+        user.data ? <Component {...props} /> : <Redirect to={routes.SIGN_IN} />
+      }
+    />
+  )
+);
 
 const Router = () => (
   <App>
@@ -36,4 +44,4 @@ const Router = () => (
   </App>
 );
 
-export default withRouter(connect(mapStateToProps)(Router))
+export default withRouter(connect(mapStateToProps)(Router));
