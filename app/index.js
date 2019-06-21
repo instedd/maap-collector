@@ -4,8 +4,12 @@ import { AppContainer } from 'react-hot-loader';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
+import { setNetworkOnline, setNetworkOffline } from './actions/network'
 
 const store = configureStore();
+
+window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
+window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
 
 render(
   <AppContainer>
