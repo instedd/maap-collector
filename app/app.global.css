@@ -1,0 +1,16 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+
+@import '~@material/react-button/dist/button.css';
+@import '~@material/react-card/dist/card.css';
+@import '~@material/react-layout-grid/dist/layout-grid.css';
+@import '~@material/react-text-field/dist/text-field.css';
+
+
+body {
+  position: relative;
+  height: 100vh;
+  font-family: Arial, Helvetica, Helvetica Neue, serif;
+}
