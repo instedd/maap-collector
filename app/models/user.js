@@ -1,10 +1,10 @@
-import { Model } from 'sequelize'
+import { Model } from 'sequelize';
+
 class User extends Model {}
 
-const model = (sequelize) => User.init({
+const model = sequelize =>
+  User.init({}, { sequelize, modelName: model.modelName });
 
-}, { sequelize, modelName: model.modelName })
+model.modelName = 'User';
 
-model.modelName = 'User'
-
-export default model
+export default model;
