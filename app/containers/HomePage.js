@@ -1,13 +1,23 @@
 // @flow
 import React, { Component } from 'react';
-import Home from '../components/Home';
+import { connect } from 'react-redux';
+// import Home from '../components/Home';
 
-type Props = {};
+type Props = {
+  sync: {
+    synchronizing: boolean
+  }
+};
 
-export default class HomePage extends Component<Props> {
+const mapStateToProps = ({ sync }) => ({ sync });
+
+class HomePage extends Component<Props> {
   props: Props;
 
   render() {
-    return <Home />;
+    const { sync } = this.props;
+    return <div>syncing: {sync.synchronizing}</div>;
   }
 }
+
+export default connect(mapStateToProps)(HomePage);

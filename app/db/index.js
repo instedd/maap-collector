@@ -7,8 +7,19 @@ const initialize = (dbName, password) => {
     dialectModulePath: '@journeyapps/sqlcipher',
     storage: `app/db/storage/${dbName}.sqlite`
   });
-  Object.values(models.default).forEach(model => model(sequelize));
+  const objects = Object.values(models.default)
+    .map(model => model(sequelize))
+    .reduce(
+      (acc, m) => {
+        acc[m.name] = m;
+        return acc;
+      },
+      {
+        sequelize
+      }
+    );
   sequelize.sync();
+  return objects;
 };
 
 export default { initialize };
