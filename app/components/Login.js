@@ -3,13 +3,13 @@
 import React, { Component } from 'react';
 import Button from '@material/react-button';
 import Card, { CardActions, CardActionButtons } from '@material/react-card';
-import {Cell, Grid, Row} from '@material/react-layout-grid';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { requestLogin } from '../actions/user';
 
-import styles from './Login.css';
+// import styles from './Login.css';
 
 type Props = {
   dispatch: Dispatch
@@ -19,17 +19,17 @@ type State = {
   password: string
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { dispatch } = state;
-  return { dispatch }
-}
+  return { dispatch };
+};
 
- class Login extends Component<Props, State> {
+class Login extends Component<Props, State> {
   props: Props;
 
   state: State = {
-    username: "",
-    password: ""
+    username: '',
+    password: ''
   };
 
   handleSubmit(event: SyntheticEvent<HTMLButtonElement>) {
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
   }
 
   render() {
-    const { username, password } = this.state
+    const { username, password } = this.state;
     return (
       <Grid>
         <Row>
@@ -51,23 +51,25 @@ const mapStateToProps = (state) => {
           <Cell columns={6}>
             <Card>
               <form onSubmit={e => this.handleSubmit(e)}>
-                <TextField label='Username'>
+                <TextField label="Username">
                   <Input
                     value={username}
-                    onChange={e => this.setState({username: e.currentTarget.value})} />
+                    onChange={e =>
+                      this.setState({ username: e.currentTarget.value })
+                    }
+                  />
                 </TextField>
-                <TextField label='Password'>
+                <TextField label="Password">
                   <Input
                     value={password}
-                    onChange={e => this.setState({password: e.currentTarget.value})} />
+                    onChange={e =>
+                      this.setState({ password: e.currentTarget.value })
+                    }
+                  />
                 </TextField>
                 <CardActions>
                   <CardActionButtons>
-                    <Button
-                    raised
-                    >
-                      Login
-                    </Button>
+                    <Button raised>Login</Button>
                   </CardActionButtons>
                 </CardActions>
               </form>
@@ -79,4 +81,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Login)
+export default connect(mapStateToProps)(Login);

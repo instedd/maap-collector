@@ -10,7 +10,7 @@ const history = createHashHistory();
 
 const rootReducer = createRootReducer(history);
 
-const configureStore = () => {
+const configureStore = ({ preloadedState }) => {
   // Redux Configuration
   const middleware = [];
   const enhancers = [];
@@ -53,7 +53,7 @@ const configureStore = () => {
   const enhancer = composeEnhancers(...enhancers);
 
   // Create Store
-  const store = createStore(rootReducer, {}, enhancer);
+  const store = createStore(rootReducer, preloadedState, enhancer);
 
   if (module.hot) {
     module.hot.accept(
