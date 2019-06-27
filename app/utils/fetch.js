@@ -1,6 +1,8 @@
+import { API_URL } from '../constants/config';
+
 const fetchPaginated = async (url, auth) => {
   const f = page =>
-    fetch(`${url}?page=${page}`, {
+    fetch(`${API_URL}${url}?page=${page}`, {
       headers: auth
     }).then(res => res.json());
 

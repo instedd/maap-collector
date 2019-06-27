@@ -262,6 +262,7 @@
     "@material/react-layout-grid": "^0.13.0",
     "@material/react-text-field": "^0.13.0",
     "devtron": "^1.4.0",
+    "dotenv": "^8.0.0",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
     "electron-updater": "^3.1.6",

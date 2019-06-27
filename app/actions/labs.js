@@ -13,7 +13,7 @@ const labMapper = props => ({
 export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
-  fetchPaginated('http://localhost:3000/api/v1/labs', user.auth)
+  fetchPaginated('/api/v1/labs', user.auth)
     .then(res =>
       res.map(async item => {
         const mapper = labMapper(item);
