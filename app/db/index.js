@@ -22,4 +22,7 @@ const initialize = (dbName, password) => {
   return objects;
 };
 
-export default { initialize };
+const initializeForUser = ({ data }) =>
+  initialize(data.response.id, data.password);
+
+export default { initialize, initializeForUser };

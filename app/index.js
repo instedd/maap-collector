@@ -7,6 +7,7 @@ import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 import { setNetworkOnline, setNetworkOffline } from './actions/network';
 import { loadState, saveState } from './utils/localStorage';
+import { syncStart } from './actions/sync';
 
 const persistedState = loadState();
 const store = configureStore({ preloadedState: persistedState });
@@ -21,6 +22,7 @@ store.subscribe(
 
 window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
 window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
+if (store.getState().user.data) store.dispatch(syncStart());
 
 render(
   <AppContainer>

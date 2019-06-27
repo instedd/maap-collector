@@ -7,8 +7,8 @@ const REQUEST_LOGIN = 'REQUEST_LOGIN';
 const USER_LOGGED_IN_FAILURE = 'USER_LOGGED_IN_FAILURE';
 
 export const requestLogin = (username, password) => dispatch => {
+  // TODO: Support for offline login
   dispatch({ type: 'REQUEST_LOGIN' });
-  dispatch(syncStart());
   fetch('http://localhost:3000/api/v1/auth/sign_in', {
     method: 'POST',
     headers: {
@@ -27,9 +27,10 @@ export const requestLogin = (username, password) => dispatch => {
     .catch(e => dispatch(userLoggedInFailure(e)));
 };
 
-export const userLoggedIn = user => {
-  db.initialize('dbname', user.password);
-  return { type: 'USER_LOGGED_IN', user };
+export const userLoggedIn = user => dispatch => {
+  db.initializeForUser({ data: user });
+  dispatch({ type: 'USER_LOGGED_IN', user });
+  setTimeout(() => dispatch(syncStart()), 600);
 };
 
 export const userLoggedInFailure = error => ({
