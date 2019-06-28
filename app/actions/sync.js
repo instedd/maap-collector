@@ -1,11 +1,11 @@
-import { fetchLabs } from './labs';
+import { syncLabs } from './labs';
 
 const SYNC_START = 'SYNC_START';
 
 export const entities = [
   {
     name: 'Lab',
-    listAction: fetchLabs
+    listAction: syncLabs
   }
 ];
 

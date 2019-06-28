@@ -2,6 +2,7 @@ import db from '../db';
 import { fetchPaginated } from '../utils/fetch';
 
 const FETCH_LABS = 'FETCH_LABS';
+const SYNC_LABS = 'SYNC_LABS';
 const FETCH_LABS_FAILED = 'FETCH_LABS_FAILED';
 
 // TODO: Abstract this to a helper function
@@ -10,7 +11,7 @@ const labMapper = props => ({
   remoteId: props.id
 });
 
-export const fetchLabs = () => async (dispatch, getState) => {
+export const syncLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
   fetchPaginated('http://localhost:3000/api/v1/labs', user.auth)
