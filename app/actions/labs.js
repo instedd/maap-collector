@@ -2,7 +2,9 @@ import db from '../db';
 import { fetchPaginated } from '../utils/fetch';
 
 const FETCH_LABS = 'FETCH_LABS';
+const FETCHED_LABS = 'FETCHED_LABS';
 const SYNC_LABS = 'SYNC_LABS';
+const SYNC_LABS_FAILED = 'SYNC_LABS_FAILED';
 const FETCH_LABS_FAILED = 'FETCH_LABS_FAILED';
 
 // TODO: Abstract this to a helper function
@@ -27,7 +29,16 @@ export const syncLabs = () => async (dispatch, getState) => {
         );
       })
     )
-    .catch(error => dispatch({ type: FETCH_LABS_FAILED, error }));
+    .catch(error => (throw error));
 };
 
-export { FETCH_LABS, FETCH_LABS_FAILED };
+export const fetchLabs = () => async(dispatch, getState) => {
+  const { user } = getState();
+  const { Lab } = db.initializeForUser(user);
+  dispatch({type: FETCH_LABS})
+  Lab.findAll().then(items => {
+    dispatch({type: FETCHED_LABS, items: items})
+  })
+}
+
+export { FETCH_LABS, FETCHED_LABS, FETCH_LABS_FAILED };

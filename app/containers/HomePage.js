@@ -1,7 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import Home from '../components/Home';
+import Home from '../components/Home';
+import Labs from '../components/Labs';
 
 type Props = {
   sync: {
@@ -16,7 +17,13 @@ class HomePage extends Component<Props> {
 
   render() {
     const { sync } = this.props;
-    return <div>syncing: {sync.synchronizing}</div>;
+    return (
+      <div>
+        <div>syncing: {sync.synchronizing}</div>
+        <Home/>
+        <Labs/>
+      </div>
+    );
   }
 }
 
