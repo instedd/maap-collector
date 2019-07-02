@@ -1,10 +1,13 @@
 // @flow
 
 import React, { Component } from 'react';
-// import style from './Labs.css';
-import { connect } from 'react-redux'
+import Card from '@material/react-card';
+
+import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { fetchLabs } from '../actions/labs';
+
+import styles from './Labs.css';
 
 type Props = {
   dispatch: Dispatch,
@@ -29,7 +32,7 @@ class Labs extends Component<Props, State> {
     const { labs } = this.props;
     return (
       <div>
-        <div className="lab-list">
+        <Card>
           <h2>Labs</h2>
           <table>
             <thead>
@@ -50,8 +53,11 @@ class Labs extends Component<Props, State> {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr></tr>
+            </tfoot>
           </table>
-        </div>
+        </Card>
       </div>
     );
   }
