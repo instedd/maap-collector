@@ -29,16 +29,16 @@ export const syncLabs = () => async (dispatch, getState) => {
         );
       })
     )
-    .catch(error => (throw error));
+    .catch(error => throw error);
 };
 
-export const fetchLabs = () => async(dispatch, getState) => {
+export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
-  dispatch({type: FETCH_LABS})
+  dispatch({ type: FETCH_LABS });
   Lab.findAll().then(items => {
-    dispatch({type: FETCHED_LABS, items: items})
-  })
-}
+    dispatch({ type: FETCHED_LABS, items });
+  });
+};
 
 export { FETCH_LABS, FETCHED_LABS, FETCH_LABS_FAILED };

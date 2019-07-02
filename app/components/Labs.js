@@ -17,15 +17,15 @@ type State = {};
 
 const mapStateToProps = state => {
   const { dispatch, labs } = state;
-  return ({ dispatch, labs })
-}
+  return { dispatch, labs };
+};
 
 class Labs extends Component<Props, State> {
   state: State = {};
 
-  componentDidMount () {
-    const {dispatch} = this.props
-    dispatch(fetchLabs())
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchLabs());
   }
 
   render() {
@@ -54,7 +54,7 @@ class Labs extends Component<Props, State> {
               ))}
             </tbody>
             <tfoot>
-              <tr></tr>
+              <tr />
             </tfoot>
           </table>
         </Card>

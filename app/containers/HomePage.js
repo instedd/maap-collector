@@ -20,8 +20,8 @@ class HomePage extends Component<Props> {
     return (
       <div>
         <div>syncing: {sync.synchronizing}</div>
-        <Home/>
-        <Labs/>
+        <Home />
+        <Labs />
       </div>
     );
   }

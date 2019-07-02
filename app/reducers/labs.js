@@ -2,7 +2,7 @@ import { FETCHED_LABS } from '../actions/labs';
 import type { Action } from './types';
 
 const initialState = {
-  items:  []
+  items: []
 };
 
 export default function counter(state = initialState, action: Action) {
