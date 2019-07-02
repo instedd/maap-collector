@@ -1,6 +1,7 @@
 import { fetchLabs } from './labs';
 
 const SYNC_START = 'SYNC_START';
+const SYNC_STOP = 'SYNC_STOP';
 
 export const entities = [
   {
@@ -10,10 +11,14 @@ export const entities = [
 ];
 
 export const syncStart = () => dispatch => {
-  dispatch({ type: 'SYNC_START' });
+  dispatch({ type: SYNC_START });
   entities.forEach(({ listAction }) => {
     dispatch(listAction());
   });
 };
 
-export { SYNC_START };
+export const syncStop = () => dispatch => {
+  dispatch({ type: SYNC_STOP });
+};
+
+export { SYNC_START, SYNC_STOP };
