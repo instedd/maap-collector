@@ -16,7 +16,7 @@ class HomePage extends Component<Props> {
 
   render() {
     const { sync } = this.props;
-    return <div>syncing: {sync.synchronizing}</div>;
+    return <div></div>;
   }
 }
 
