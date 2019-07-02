@@ -1,5 +1,6 @@
 import db from '../db';
 import { syncStart } from './sync';
+import { API_URL } from '../constants/config';
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN';
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
@@ -9,7 +10,7 @@ const USER_LOGGED_IN_FAILURE = 'USER_LOGGED_IN_FAILURE';
 export const requestLogin = (username, password) => dispatch => {
   // TODO: Support for offline login
   dispatch({ type: 'REQUEST_LOGIN' });
-  fetch('http://localhost:3000/api/v1/auth/sign_in', {
+  fetch(`${API_URL}/api/v1/auth/sign_in`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
