@@ -2,7 +2,7 @@ import { SYNC_START } from '../actions/sync';
 import type { Action } from './types';
 
 const initialState = {
-  syncronizing: false
+  synchronizing: false
 };
 
 export default function network(state = initialState, action: Action) {
