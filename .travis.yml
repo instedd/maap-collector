@@ -8,6 +8,11 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+      addons:
+        homebrew:
+          packages:
+          - sqlite
+          - sqlcipher
 
     # - os: linux
     #   language: node_js
