@@ -1,11 +1,28 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import { throttle } from 'lodash';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
+import { setNetworkOnline, setNetworkOffline } from './actions/network';
+import { loadState, saveState } from './utils/localStorage';
+import { syncStart } from './actions/sync';
 
-const store = configureStore();
+const persistedState = loadState();
+const store = configureStore({ preloadedState: persistedState });
+
+store.subscribe(
+  throttle(() => {
+    saveState({
+      user: store.getState().user
+    });
+  }, 1000)
+);
+
+window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
+window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
+if (store.getState().user.data) store.dispatch(syncStart());
 
 render(
   <AppContainer>

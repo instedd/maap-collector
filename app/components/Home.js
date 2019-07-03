@@ -1,6 +1,7 @@
 // @flow
 /* eslint no-plusplus: off */
 import React, { Component } from 'react';
+import styles from './Home.css';
 
 type Props = {};
 type State = {};

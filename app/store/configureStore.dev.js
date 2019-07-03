@@ -3,13 +3,14 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
+import * as networkActions from '../actions/network';
 import createRootReducer from '../reducers';
 
 const history = createHashHistory();
 
 const rootReducer = createRootReducer(history);
 
-const configureStore = () => {
+const configureStore = ({ preloadedState }) => {
   // Redux Configuration
   const middleware = [];
   const enhancers = [];
@@ -34,7 +35,8 @@ const configureStore = () => {
 
   // Redux DevTools Configuration
   const actionCreators = {
-    ...routerActions
+    ...routerActions,
+    ...networkActions
   };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   /* eslint-disable no-underscore-dangle */
@@ -51,7 +53,7 @@ const configureStore = () => {
   const enhancer = composeEnhancers(...enhancers);
 
   // Create Store
-  const store = createStore(rootReducer, {}, enhancer);
+  const store = createStore(rootReducer, preloadedState, enhancer);
 
   if (module.hot) {
     module.hot.accept(
