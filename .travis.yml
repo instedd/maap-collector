@@ -3,7 +3,6 @@ matrix:
     - os: osx
       language: node_js
       node_js:
-        - node
         - 10.15.3
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
