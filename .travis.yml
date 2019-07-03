@@ -12,7 +12,7 @@ matrix:
           packages:
           - sqlite
           - sqlcipher
-          update: true
+          # update: true
 
     # - os: linux
     #   language: node_js
