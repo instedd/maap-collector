@@ -11,8 +11,8 @@ matrix:
       addons:
         homebrew:
           packages:
-            - sqlite
-            - sqlcipher
+          - sqlite
+          - sqlcipher
           update: true
 
     # - os: linux
