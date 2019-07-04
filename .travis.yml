@@ -14,7 +14,6 @@ matrix:
           - sqlcipher
 
     - os: windows
-      cache: false
       language: node_js
       node_js:
         - 10.15.3
@@ -85,15 +84,16 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
 
 script:
-  - yarn postinstall
-  - yarn lint
-  # # HACK: Temporarily ignore `yarn flow` on windows
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
-  - yarn build-e2e
-  - yarn test-e2e
+  # - yarn postinstall
+  # - yarn lint
+  # # # HACK: Temporarily ignore `yarn flow` on windows
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
+  # - yarn build-e2e
+  # - yarn test-e2e
   - ps
 
 after_script:
   - gpg-connect-agent /bye
+  - ps
 notifications:
   email: false
