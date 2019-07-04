@@ -14,10 +14,13 @@ matrix:
           - sqlcipher
 
     - os: windows
+      cache: false
       language: node_js
       node_js:
         - 10.15.3
       env:
+        - YARN_GPG=no
+        - TEMPDIR=TEMPDIR=$LOCALAPPDATA\\Temp
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
