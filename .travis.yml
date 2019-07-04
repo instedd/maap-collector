@@ -91,6 +91,6 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
   - yarn build-e2e
   - yarn test-e2e
-  - ps -aux
+  - ps
 notifications:
   email: false
