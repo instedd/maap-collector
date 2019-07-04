@@ -61,6 +61,7 @@ before_install:
       export PROJECTDIR=$(pwd) \
       export YARNCACHE=$(yarn cache dir) \
       export TEMPDIR=$LOCALAPPDATA\\Temp \
+      export YARN_GPG=no \
       powershell Add-MpPreference -ExclusionProcess ${NODEPATH} \
       powershell Add-MpPreference -ExclusionPath ${YARNCACHE} \ 
       powershell Add-MpPreference -ExclusionPath ${PROJECTDIR} \
