@@ -16,6 +16,7 @@ const labMapper = props => ({
 export const syncLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
+  dispatch({ type: SYNC_LABS });
   fetchPaginated('/api/v1/labs', user.auth)
     .then(res =>
       res.map(async item => {
@@ -29,16 +30,16 @@ export const syncLabs = () => async (dispatch, getState) => {
         );
       })
     )
-    .catch(error => throw error);
+    .catch(error => dispatch({ type: SYNC_LABS_FAILED, error }));
 };
 
 export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
   dispatch({ type: FETCH_LABS });
-  Lab.findAll().then(items => {
-    dispatch({ type: FETCHED_LABS, items });
-  });
+  Lab.findAll()
+    .then(items => dispatch({ type: FETCHED_LABS, items }))
+    .catch(error => dispatch({ type: FETCH_LABS_FAILED, error }));
 };
 
 export { FETCH_LABS, FETCHED_LABS, FETCH_LABS_FAILED };

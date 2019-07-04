@@ -16,7 +16,6 @@ class HomePage extends Component<Props> {
   props: Props;
 
   render() {
-    const { sync } = this.props;
     return (
       <div>
         <Home />

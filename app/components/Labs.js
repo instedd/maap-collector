@@ -7,11 +7,13 @@ import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { fetchLabs } from '../actions/labs';
 
-import styles from './Labs.css';
+import './Labs.css';
 
 type Props = {
   dispatch: Dispatch,
-  labs: Object
+  labs: {
+    items: []
+  }
 };
 type State = {};
 
@@ -44,8 +46,8 @@ class Labs extends Component<Props, State> {
               </tr>
             </thead>
             <tbody>
-              {labs.items.map((item, i) => (
-                <tr key={i}>
+              {labs.items.map(item => (
+                <tr key={`item-${item.id}`}>
                   <td>{item.name}</td>
                   <td>{item.address}</td>
                   <td>{item.location}</td>
