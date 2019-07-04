@@ -92,5 +92,8 @@ script:
   - yarn build-e2e
   - yarn test-e2e
   - ps
+
+after_script:
+  - gpg-connect-agent /bye
 notifications:
   email: false
