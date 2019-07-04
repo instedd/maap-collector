@@ -14,6 +14,7 @@ matrix:
           - sqlcipher
 
     - os: windows
+      cache: false
       language: node_js
       node_js:
         - 10.15.3
