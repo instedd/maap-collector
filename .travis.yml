@@ -38,6 +38,7 @@ cache:
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "windows" ]; then powershell -command 'Set-MpPreference -DisableRealtimeMonitoring $true'; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then powershell -command 'Set-MpPreference -DisableArchiveScanning $true'; fi
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install sqlite --params "/NoTools"; fi
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then yarn config delete proxy; fi
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm config rm proxy; fi
