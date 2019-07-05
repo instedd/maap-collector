@@ -1,18 +1,17 @@
 // @flow
 
 import React, { Component } from 'react';
-import Card from '@material/react-card';
 
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { fetchLabs } from '../actions/labs';
-
-import './Labs.css';
+import Table from './Table';
 
 type Props = {
   dispatch: Dispatch,
   labs: {
-    items: []
+    items: [],
+    totalCount: number
   }
 };
 type State = {};
@@ -34,32 +33,12 @@ class Labs extends Component<Props, State> {
     const { labs } = this.props;
     return (
       <div>
-        <Card>
-          <h2>Labs</h2>
-          <table>
-            <thead>
-              <tr>
-                <th id="name">Name</th>
-                <th id="address">Address</th>
-                <th id="location">Location</th>
-                <th id="ownership">Ownership</th>
-              </tr>
-            </thead>
-            <tbody>
-              {labs.items.map(item => (
-                <tr key={`item-${item.id}`}>
-                  <td>{item.name}</td>
-                  <td>{item.address}</td>
-                  <td>{item.location}</td>
-                  <td>{item.ownership}</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr />
-            </tfoot>
-          </table>
-        </Card>
+        <Table
+          items={labs.items}
+          totalCount={labs.totalCount}
+          columns={['Name', 'Address', 'Ownership', 'Last activity']}
+          fields={['name', 'address', 'ownership', 'updatedAt']}
+        />
       </div>
     );
   }

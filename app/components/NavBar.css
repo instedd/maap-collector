@@ -9,4 +9,5 @@
 }
 .navBarTabs button {
   color: #fff;
+  text-transform: initial;
 }

@@ -37,8 +37,9 @@ export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
   dispatch({ type: FETCH_LABS });
-  Lab.findAll()
-    .then(items => dispatch({ type: FETCHED_LABS, items }))
+  const totalCount = await Lab.count();
+  Lab.findAll({ limit: 15 })
+    .then(items => dispatch({ type: FETCHED_LABS, items, totalCount }))
     .catch(error => dispatch({ type: FETCH_LABS_FAILED, error }));
 };
 
