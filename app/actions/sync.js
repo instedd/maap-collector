@@ -1,9 +1,19 @@
 import { syncLabs } from './labs';
+import { syncSpecimenSources } from './specimenSources';
+import { syncCultureTypes } from './cultureTypes';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
 
 export const entities = [
+  {
+    name: 'SpecimenSource',
+    listAction: syncSpecimenSources
+  },
+  {
+    name: 'CultureType',
+    listAction: syncCultureTypes
+  },
   {
     name: 'Lab',
     listAction: syncLabs
@@ -15,6 +25,7 @@ export const syncStart = () => dispatch => {
   entities.forEach(({ listAction }) => {
     dispatch(listAction());
   });
+  dispatch(syncSpecimenSources());
 };
 
 export const syncStop = () => dispatch => {
