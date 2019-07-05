@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Home from '../components/Home';
 import Labs from '../components/Labs';
 
 type Props = {
@@ -18,7 +17,6 @@ class HomePage extends Component<Props> {
   render() {
     return (
       <div>
-        <Home />
         <Labs />
       </div>
     );

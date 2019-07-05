@@ -3,6 +3,13 @@
   --mdc-theme-secondary: #333;
 }
 
+.mdc-top-app-bar {
+  background-color: var(--mdc-theme-secondary);
+}
+.mdc-top-app-bar__title {
+  color: var(--mdc-theme-primary);
+}
+
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
   color: var(--mdc-theme-primary);
 }
