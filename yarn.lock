@@ -1171,6 +1171,14 @@
     classnames "^2.2.6"
     react "^16.4.2"
 
+"@material/react-material-icon@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-material-icon/-/react-material-icon-0.14.1.tgz#d869053a2e8b94038d8cf28722ad2b6fdb76c582"
+  integrity sha512-npJReSYXMd6nTptQCm+hoDAbhWjeKvg1gOa8lotBOYOlj4VAa2uvLflxrquhCdnn7RvvnElSG6/0royOt00eBw==
+  dependencies:
+    "@material/react-ripple" "^0.14.1"
+    classnames "^2.2.6"
+
 "@material/react-notched-outline@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@material/react-notched-outline/-/react-notched-outline-0.13.0.tgz#358af38cdf0f2d206d522f0f2a8cef4fda582bff"
@@ -1191,6 +1199,53 @@
     react "^16.4.2"
     utility-types "^3.2.1"
 
+"@material/react-ripple@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-ripple/-/react-ripple-0.14.1.tgz#a5edeed1efd3207e78fb4eb8c62a9bc65124fb01"
+  integrity sha512-UWrE6u7WiGihIB1eQfXr7pt2ZNLhphN4AQayz2x1ZTvKuQ4etGOyRkFeZcaBuv0Qb5f8UE76YsO+4yVUQsKGqQ==
+  dependencies:
+    "@material/dom" "^1.0.0"
+    "@material/ripple" "^1.0.0"
+    classnames "^2.2.6"
+    utility-types "^3.2.1"
+
+"@material/react-tab-bar@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-tab-bar/-/react-tab-bar-0.14.1.tgz#7518e80f50d71c5a32403c54781f66834936dd92"
+  integrity sha512-DmsAXdzPOhO6JVJfK+aGk5H8jD9VOKZDRJtvWMnYgJtJtSIf5hL9FLVLhLozdyGieSbFD1rmyEceTUJtnjE+LQ==
+  dependencies:
+    "@material/react-tab" "^0.14.1"
+    "@material/react-tab-scroller" "^0.14.1"
+    "@material/tab-bar" "^1.0.0"
+    classnames "^2.2.6"
+
+"@material/react-tab-indicator@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-tab-indicator/-/react-tab-indicator-0.14.1.tgz#47ca1e3e7eb15517f70a77747ef442cdec37a991"
+  integrity sha512-h2SPcIAyxi08tPLs2opGSta61lzUPE55Au9TUM+Lp5a7d/+hzaMXMpZYtTDSl165hO/IZxK1qoD3XPXevJ0xbg==
+  dependencies:
+    "@material/tab-indicator" "^1.0.0"
+    classnames "^2.2.6"
+
+"@material/react-tab-scroller@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-tab-scroller/-/react-tab-scroller-0.14.1.tgz#342f9395cadf8f3a92f535a238c335afb26ec49a"
+  integrity sha512-YAaj+m05A2FB/FuuXRD1fIgOnFrDcRIxFL8s55wAMD0Dz5JSjuUtCpNHFs8ef4HGoUF9qWyvHKnmJ3z0SAPGvg==
+  dependencies:
+    "@material/dom" "^1.0.0"
+    "@material/tab-scroller" "^1.0.0"
+    classnames "^2.2.6"
+
+"@material/react-tab@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-tab/-/react-tab-0.14.1.tgz#ec797c60490b0234706d91375c100bd4385bb2b1"
+  integrity sha512-j8jQmKm1fngb3UgdQnkfRATViPtKy/8ILhc1jeJ6g5WuAQUrNj7tD5jTyzDhIkpePUr6AtuFqqK2xv+U24nJAw==
+  dependencies:
+    "@material/react-ripple" "^0.14.1"
+    "@material/react-tab-indicator" "^0.14.1"
+    "@material/tab" "^1.0.0"
+    classnames "^2.2.6"
+
 "@material/react-text-field@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@material/react-text-field/-/react-text-field-0.13.0.tgz#9f297a143e2a9dc0d2eb140c6d15655215969703"
@@ -1202,6 +1257,15 @@
     "@material/textfield" "^1.1.1"
     classnames "^2.2.6"
     react "^16.4.2"
+
+"@material/react-top-app-bar@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@material/react-top-app-bar/-/react-top-app-bar-0.14.1.tgz#2ce9e38dedfb66e8c5142b87ae54423166bfc244"
+  integrity sha512-3jKlOd3oM04w0g3+GjYEhCM+mVwpMlUDZcmdYV24j2M0rBM1VILk838OS+YXe/y2hRNRTsfEzyXSZF1pKcIWCw==
+  dependencies:
+    "@material/react-ripple" "^0.14.1"
+    "@material/top-app-bar" "^1.1.0"
+    classnames "^2.2.6"
 
 "@material/ripple@^1.0.0", "@material/ripple@^1.1.0":
   version "1.1.0"
@@ -1227,6 +1291,51 @@
   dependencies:
     "@material/feature-targeting" "^0.44.1"
 
+"@material/tab-bar@^1.0.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@material/tab-bar/-/tab-bar-1.1.1.tgz#f0f17fafd2e97b04d1a3dd7a3ad3861624d193b2"
+  integrity sha512-BwMcZlaQmlN919jugVl4AOnt/sQYfv42/TRT2EFbFQGfFUN+8C0kwWL8m5TDhZkQ5S6IR5oPLX7kqC0NDYqW+Q==
+  dependencies:
+    "@material/base" "^1.0.0"
+    "@material/elevation" "^1.1.0"
+    "@material/tab" "^1.1.1"
+    "@material/tab-scroller" "^1.1.1"
+    tslib "^1.9.3"
+
+"@material/tab-indicator@^1.0.0", "@material/tab-indicator@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@material/tab-indicator/-/tab-indicator-1.1.0.tgz#2c37e8fe146d84a99482509cbb785f67336f0463"
+  integrity sha512-wbZMFCfQo62einr/Ju9PDAeFpRR/Ori5oV2lcsF1uSQXeLxougarwcbk0egWnEtY4Wa6dPgM5P6wQQsYnIeUIQ==
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/theme" "^1.1.0"
+    tslib "^1.9.3"
+
+"@material/tab-scroller@^1.0.0", "@material/tab-scroller@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@material/tab-scroller/-/tab-scroller-1.1.1.tgz#e7704b2d3c4de9b7474d4b017e440ed655ee9c2e"
+  integrity sha512-LwYXIdk0rzjisnRTNBw1OPMvBzRWhMVGfVV73pEuDV3lkpcp1v4gfig3GR6JI8U8iPZXpxbPqaVEl/K/r8zhYw==
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/dom" "^1.1.0"
+    "@material/tab" "^1.1.1"
+    tslib "^1.9.3"
+
+"@material/tab@^1.0.0", "@material/tab@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@material/tab/-/tab-1.1.1.tgz#8d4890929be3c44cc076925f83f6366ac107b7ac"
+  integrity sha512-PpBehtp1eeh9wNDkYdRS3JpFa4Do9wMqK4OZo7ZSntKucjd9bx0TiA2TLj8WuFVWIWmXMcsz3DAWshyG3JAs0Q==
+  dependencies:
+    "@material/base" "^1.0.0"
+    "@material/ripple" "^1.1.0"
+    "@material/rtl" "^0.42.0"
+    "@material/tab-indicator" "^1.1.0"
+    "@material/theme" "^1.1.0"
+    "@material/typography" "^1.0.0"
+    tslib "^1.9.3"
+
 "@material/textfield@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@material/textfield/-/textfield-1.1.1.tgz#7c031675e662007e36d2344623507cc2dadfffb2"
@@ -1251,6 +1360,21 @@
   integrity sha512-YYUV9Rhbx4r/EMb/zoOYJUWjhXChNaLlH1rqt3vpNVyxRcxGqoVMGp5u1XALBCFiD9dACPKLIkKyRYa928nmPQ==
   dependencies:
     "@material/feature-targeting" "^0.44.1"
+
+"@material/top-app-bar@^1.1.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@material/top-app-bar/-/top-app-bar-1.1.1.tgz#a7a339fbb49fcd11a6362ca9b301fac4e28398c4"
+  integrity sha512-UZ2aHB+lzI+ddy/Hcy61hvNbSZBLArgWwVtA1r4UvQAlvht0Zl85jCj1vs+GM+qxbMFfXFet2q0n5p4ykk9v7g==
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/elevation" "^1.1.0"
+    "@material/ripple" "^1.1.0"
+    "@material/rtl" "^0.42.0"
+    "@material/shape" "^1.1.1"
+    "@material/theme" "^1.1.0"
+    "@material/typography" "^1.0.0"
+    tslib "^1.9.3"
 
 "@material/typography@^1.0.0":
   version "1.0.0"
