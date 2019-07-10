@@ -1,5 +1,5 @@
 import db from '../db';
-import { fetchPaginated } from '../utils/fetch';
+import { remoteSync } from './sync';
 
 const FETCH_CULTURE_TYPES = 'FETCH_CULTURE_TYPES';
 const FETCHED_CULTURE_TYPES = 'FETCHED_CULTURE_TYPES';
@@ -15,22 +15,11 @@ const cultureTypeMapper = props => ({
 
 export const syncCultureTypes = () => async (dispatch, getState) => {
   const { user } = getState();
-  const { CultureType } = db.initializeForUser(user);
+
   dispatch({ type: SYNC_CULTURE_TYPES });
-  fetchPaginated('/api/v1/culture_types', user.auth)
-    .then(res =>
-      res.map(async item => {
-        const mapper = cultureTypeMapper(item);
-        return (
-          CultureType.findOrBuild({ where: { id: mapper.remoteId } })
-            // TODO: Do queries only if changed
-            // TODO: Only update if the remote is more recent (mapper.updated_at > lab.updatedAt). Otherwise
-            .then(([specimenSource]) => specimenSource.update(mapper))
-            .catch(e => console.log(e))
-        );
-      })
-    )
-    .catch(error => dispatch({ type: SYNC_CULTURE_TYPES_FAILED, error }));
+  dispatch(
+    remoteSync('/api/v1/culture_types', user, 'CultureType', cultureTypeMapper)
+  );
 };
 
 export const fetchCultureType = () => async (dispatch, getState) => {

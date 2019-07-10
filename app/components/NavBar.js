@@ -10,17 +10,18 @@ import TabBar from '@material/react-tab-bar';
 import Tab from '@material/react-tab';
 import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
-import type { Dispatch } from '../reducers/types';
 
 import styles from './NavBar.css';
-import SyncStatus from './SyncStatus'
+import SyncStatus from './SyncStatus';
 
-type Props = {};
+type Props = {
+  currentLab: number
+};
 type State = {};
 
-const mapStateToProps = ({currentLab}) => ({
+const mapStateToProps = ({ currentLab }) => ({
   currentLab
-})
+});
 
 class NavBar extends Component<Props, State> {
   props: Props;
@@ -41,30 +42,32 @@ class NavBar extends Component<Props, State> {
             </TopAppBarSection>
             <TopAppBarSection align="end" />
           </TopAppBarRow>
-          {currentLab && <TopAppBarRow>
-            <TabBar className={styles.navBarTabs}>
-              <Tab minWidth="true">
-                <MaterialIcon icon="local_pharmacy" />
-                Lab records
-              </Tab>
-              <Tab minWidth="true">
-                <MaterialIcon icon="assignment_ind" />
-                Patient Records
-              </Tab>
-              <Tab minWidth="true">
-                <MaterialIcon icon="local_pharmacy" />
-                Pharmacy records
-              </Tab>
-              <Tab minWidth="true">
-                <MaterialIcon icon="bar_chart" />
-                Pharmacy stats
-              </Tab>
-              <Tab minWidth="true">
-                <MaterialIcon icon="settings" />
-                Settings
-              </Tab>
-            </TabBar>
-          </TopAppBarRow>}
+          {currentLab && (
+            <TopAppBarRow>
+              <TabBar className={styles.navBarTabs}>
+                <Tab minWidth="true">
+                  <MaterialIcon icon="local_pharmacy" />
+                  Lab records
+                </Tab>
+                <Tab minWidth="true">
+                  <MaterialIcon icon="assignment_ind" />
+                  Patient Records
+                </Tab>
+                <Tab minWidth="true">
+                  <MaterialIcon icon="local_pharmacy" />
+                  Pharmacy records
+                </Tab>
+                <Tab minWidth="true">
+                  <MaterialIcon icon="bar_chart" />
+                  Pharmacy stats
+                </Tab>
+                <Tab minWidth="true">
+                  <MaterialIcon icon="settings" />
+                  Settings
+                </Tab>
+              </TabBar>
+            </TopAppBarRow>
+          )}
         </TopAppBar>
         <TopAppBarFixedAdjust />
         {currentLab && <TopAppBarFixedAdjust />}

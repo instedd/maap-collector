@@ -1,5 +1,5 @@
 import db from '../db';
-import { fetchPaginated } from '../utils/fetch';
+import { remoteSync } from './sync';
 
 const FETCH_SPECIMEN_SOURCES = 'FETCH_SPECIMEN_SOURCES';
 const FETCHED_SPECIMEN_SOURCES = 'FETCHED_SPECIMEN_SOURCES';
@@ -15,22 +15,15 @@ const specimenSourcesMapper = props => ({
 
 export const syncSpecimenSources = () => async (dispatch, getState) => {
   const { user } = getState();
-  const { SpecimenSource } = db.initializeForUser(user);
   dispatch({ type: SYNC_SPECIMEN_SOURCES });
-  fetchPaginated('/api/v1/specimen_sources', user.auth)
-    .then((res, totalItems) =>
-      res.map(async item => {
-        const mapper = specimenSourcesMapper(item);
-        return (
-          SpecimenSource.findOrBuild({ where: { id: mapper.remoteId } })
-            // TODO: Do queries only if changed
-            // TODO: Only update if the remote is more recent (mapper.updated_at > lab.updatedAt). Otherwise
-            .then(([specimenSource]) => specimenSource.update(mapper))
-            .catch(e => console.log(e))
-        );
-      })
+  dispatch(
+    remoteSync(
+      '/api/v1/specimen_sources',
+      user,
+      'SpecimenSource',
+      specimenSourcesMapper
     )
-    .catch(error => dispatch({ type: SYNC_SPECIMEN_SOURCES_FAILED, error }));
+  );
 };
 
 export const fetchSpecimenSources = () => async (dispatch, getState) => {
