@@ -36,14 +36,11 @@ export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
   dispatch({ type: FETCH_LABS });
-<<<<<<< Updated upstream
   const totalCount = await Lab.count();
   Lab.findAll({ limit: 15 })
     .then(items => dispatch({ type: FETCHED_LABS, items, totalCount }))
-=======
   Lab.findAll({ limit: 15 })
     .then(items => dispatch({ type: FETCHED_LABS, items }))
->>>>>>> Stashed changes
     .catch(error => dispatch({ type: FETCH_LABS_FAILED, error }));
 };
 
