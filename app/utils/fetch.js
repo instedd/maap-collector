@@ -1,25 +1,28 @@
 import { API_URL } from '../constants/config';
 
-const fetchPaginated = async (url, auth) => {
+const fetchPaginated = async (url, auth, callback) => {
   const f = page =>
     fetch(`${API_URL}${url}?page=${page}`, {
       headers: auth
     }).then(res => res.json());
 
   // This gets the first page, so we can iterate over each page
-  const { items: firstItems, total_pages: totalPages } = await f(1);
+  const res = await f(1);
+  const { items: firstItems, total_pages: totalPages } = res;
+  await callback(firstItems, res);
 
-  if (totalPages <= 1) return Promise.resolve(firstItems);
+  if (totalPages <= 1) return Promise.resolve();
   // After that, we iterate over the following pages and save the result into an array
   // This generates 1 request per page
-  const otherPages = (await Promise.all(
-    [...new Array(totalPages - 1)].map(async (_, i) => {
-      const { items } = await f(i + 2);
-      return items;
-    })
-  )).reduce((arr, acc) => [...acc, ...arr], []);
-  const items = [...firstItems, ...otherPages];
-  return Promise.resolve(items);
+  /* eslint-disable */
+  for (const i of [...new Array(totalPages - 1)].map((_, i) => i)) {
+    const res = await f(i + 2);
+    const { items } = res;
+    await callback(items, res);
+  }
+  /* eslint-enable */
+
+  return Promise.resolve();
 };
 
 const fetchAuthenticated = () => {
