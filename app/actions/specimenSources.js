@@ -18,7 +18,7 @@ export const syncSpecimenSources = () => async (dispatch, getState) => {
   const { SpecimenSource } = db.initializeForUser(user);
   dispatch({ type: SYNC_SPECIMEN_SOURCES });
   fetchPaginated('/api/v1/specimen_sources', user.auth)
-    .then(res =>
+    .then((res, totalItems) =>
       res.map(async item => {
         const mapper = specimenSourcesMapper(item);
         return (

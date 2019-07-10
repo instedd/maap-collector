@@ -9,18 +9,26 @@ import TopAppBar, {
 import TabBar from '@material/react-tab-bar';
 import Tab from '@material/react-tab';
 import MaterialIcon from '@material/react-material-icon';
+import { connect } from 'react-redux';
+import type { Dispatch } from '../reducers/types';
 
 import styles from './NavBar.css';
+import SyncStatus from './SyncStatus'
 
 type Props = {};
 type State = {};
 
-export default class NavBar extends Component<Props, State> {
+const mapStateToProps = ({currentLab}) => ({
+  currentLab
+})
+
+class NavBar extends Component<Props, State> {
   props: Props;
 
   state: State;
 
   render() {
+    const { currentLab } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
@@ -29,10 +37,11 @@ export default class NavBar extends Component<Props, State> {
               <TopAppBarTitle className={styles.navBarTitle}>
                 MAAP
               </TopAppBarTitle>
+              <SyncStatus />
             </TopAppBarSection>
             <TopAppBarSection align="end" />
           </TopAppBarRow>
-          <TopAppBarRow>
+          {currentLab && <TopAppBarRow>
             <TabBar className={styles.navBarTabs}>
               <Tab minWidth="true">
                 <MaterialIcon icon="local_pharmacy" />
@@ -55,11 +64,13 @@ export default class NavBar extends Component<Props, State> {
                 Settings
               </Tab>
             </TabBar>
-          </TopAppBarRow>
+          </TopAppBarRow>}
         </TopAppBar>
         <TopAppBarFixedAdjust />
-        <TopAppBarFixedAdjust />
+        {currentLab && <TopAppBarFixedAdjust />}
       </div>
     );
   }
 }
+
+export default connect(mapStateToProps)(NavBar);

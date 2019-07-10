@@ -17,9 +17,8 @@ export const syncLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
   dispatch({ type: SYNC_LABS });
-  fetchPaginated('/api/v1/labs', user.auth)
-    .then(res =>
-      res.map(async item => {
+  fetchPaginated('/api/v1/labs', user.auth, (res =>
+      res.forEach(async item => {
         const mapper = labMapper(item);
         return (
           Lab.findOrBuild({ where: { id: mapper.remoteId } })
@@ -29,17 +28,22 @@ export const syncLabs = () => async (dispatch, getState) => {
             .catch(e => console.log(e))
         );
       })
-    )
-    .catch(error => dispatch({ type: SYNC_LABS_FAILED, error }));
+    ))
+    // .catch(error => dispatch({ type: SYNC_LABS_FAILED, error }));
 };
 
 export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   const { Lab } = db.initializeForUser(user);
   dispatch({ type: FETCH_LABS });
+<<<<<<< Updated upstream
   const totalCount = await Lab.count();
   Lab.findAll({ limit: 15 })
     .then(items => dispatch({ type: FETCHED_LABS, items, totalCount }))
+=======
+  Lab.findAll({ limit: 15 })
+    .then(items => dispatch({ type: FETCHED_LABS, items }))
+>>>>>>> Stashed changes
     .catch(error => dispatch({ type: FETCH_LABS_FAILED, error }));
 };
 
