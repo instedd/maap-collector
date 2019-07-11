@@ -5,7 +5,7 @@ import routes from './constants/routes';
 import App from './containers/App';
 import HomePage from './containers/HomePage';
 import Login from './containers/Login';
-import AntimicrobialConsumptionDataIndex from './containers/AntimicrobialConsumptionDataIndex';
+import AntibioticConsumptionDataIndex from './containers/AntibioticConsumptionDataIndex';
 
 const mapStateToProps = state => {
   const { user } = state;
@@ -43,8 +43,8 @@ const Router = () => (
       <PrivateRoute exact path={routes.HOME} component={HomePage} />
       <PrivateRoute
         exact
-        path={routes.ANTIMICROBIAL_CONSUMPTION_DATA_INDEX}
-        component={AntimicrobialConsumptionDataIndex}
+        path={routes.ANTIBIOTIC_CONSUMPTION_DATA_INDEX}
+        component={AntibioticConsumptionDataIndex}
       />
     </Switch>
   </App>

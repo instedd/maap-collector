@@ -4,6 +4,7 @@ import { fetchPaginated } from '../utils/fetch';
 import { syncLabs } from './labs';
 import { syncSpecimenSources } from './specimenSources';
 import { syncCultureTypes } from './cultureTypes';
+import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -22,6 +23,10 @@ export const entities = [
   {
     name: 'Lab',
     listAction: syncLabs
+  },
+  {
+    name: 'AntibioticConsumptionStat',
+    listAction: syncAntibioticConsumptionStats
   }
 ];
 

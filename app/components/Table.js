@@ -31,15 +31,18 @@ type Props = {
   totalCount: number,
   items: [],
   columns: [],
-  fields: []
+  fields: [],
+  entityName: string
 };
 
-const Table = ({ totalCount, items, columns, fields }: Props) => (
+const Table = ({ totalCount, items, columns, fields, entityName }: Props) => (
   <Card>
     <Grid align="left">
       <Row>
         <Cell cols={12}>
-          <h2 className={styles.tableHeader}>{totalCount} facilities</h2>
+          <h2 className={styles.tableHeader}>
+            {totalCount} {entityName}
+          </h2>
         </Cell>
       </Row>
     </Grid>

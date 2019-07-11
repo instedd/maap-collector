@@ -34,6 +34,7 @@ class Labs extends Component<Props, State> {
     return (
       <div>
         <Table
+          entityName="labs"
           items={labs.items}
           totalCount={labs.totalCount}
           columns={['Name', 'Address', 'Ownership', 'Last activity']}

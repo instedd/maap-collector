@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Labs from '../components/Labs';
+import AntibioticConsumptionStatsList from '../components/AntibioticConsumptionStatsList';
 
 type Props = {
   sync: {
@@ -11,16 +11,16 @@ type Props = {
 
 const mapStateToProps = ({ sync }) => ({ sync });
 
-class HomePage extends Component<Props> {
+class AntibioticConsumptionStatsIndex extends Component<Props> {
   props: Props;
 
   render() {
     return (
       <div>
-        <Labs />
+        <AntibioticConsumptionStatsList />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(HomePage);
+export default connect(mapStateToProps)(AntibioticConsumptionStatsIndex);
