@@ -10,26 +10,41 @@ import TabBar from '@material/react-tab-bar';
 import Tab from '@material/react-tab';
 import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
+import routes from '../constants/routes';
 import styles from './NavBar.css';
 import SyncStatus from './SyncStatus';
 
 type Props = {
-  currentLab: number
+  currentLab: number,
+  history: {}
 };
 type State = {};
 
 const mapStateToProps = ({ currentLab }) => ({
-  currentLab
+  currentLab: currentLab || true
 });
 
+const tabs = [
+  {
+    name: 'Lab Records',
+    icon: <MaterialIcon icon="local_pharmacy" />,
+    path: routes.HOME
+  },
+  {
+    name: 'Pharmacy stats',
+    icon: <MaterialIcon icon="bar_chart" />,
+    path: routes.ANTIMICROBIAL_CONSUMPTION_DATA_INDEX
+  }
+];
 class NavBar extends Component<Props, State> {
   props: Props;
 
   state: State;
 
   render() {
-    const { currentLab } = this.props;
+    const { currentLab, history } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
@@ -44,27 +59,18 @@ class NavBar extends Component<Props, State> {
           </TopAppBarRow>
           {currentLab && (
             <TopAppBarRow>
-              <TabBar className={styles.navBarTabs}>
-                <Tab minWidth="true">
-                  <MaterialIcon icon="local_pharmacy" />
-                  Lab records
-                </Tab>
-                <Tab minWidth="true">
-                  <MaterialIcon icon="assignment_ind" />
-                  Patient Records
-                </Tab>
-                <Tab minWidth="true">
-                  <MaterialIcon icon="local_pharmacy" />
-                  Pharmacy records
-                </Tab>
-                <Tab minWidth="true">
-                  <MaterialIcon icon="bar_chart" />
-                  Pharmacy stats
-                </Tab>
-                <Tab minWidth="true">
-                  <MaterialIcon icon="settings" />
-                  Settings
-                </Tab>
+              <TabBar activeIndex={null} className={styles.navBarTabs}>
+                {tabs.map(tab => (
+                  <Tab
+                    key={tab.name}
+                    active={history.location.pathname === tab.path}
+                    onClick={() => history.push(tab.path)}
+                    minWidth="true"
+                  >
+                    {tab.icon}
+                    {tab.name}
+                  </Tab>
+                ))}
               </TabBar>
             </TopAppBarRow>
           )}
@@ -76,4 +82,4 @@ class NavBar extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(NavBar);
+export default withRouter(connect(mapStateToProps)(NavBar));

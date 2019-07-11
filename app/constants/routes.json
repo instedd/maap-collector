@@ -1,4 +1,5 @@
 {
   "HOME": "/",
-  "SIGN_IN": "/sign_in"
+  "SIGN_IN": "/sign_in",
+  "ANTIMICROBIAL_CONSUMPTION_DATA_INDEX": "/antimicrobial_consumption_stats"
 }
