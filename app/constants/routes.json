@@ -1,5 +1,6 @@
 {
   "HOME": "/",
   "SIGN_IN": "/sign_in",
-  "ANTIBIOTIC_CONSUMPTION_DATA_INDEX": "/antibiotic_consumption_stats"
+  "ANTIBIOTIC_CONSUMPTION_DATA_INDEX": "/antibiotic_consumption_stats",
+  "NEW_ANTIBIOTIC_CONSUMPTION_STAT": "/antibiotic_consumption_stats/new"
 }

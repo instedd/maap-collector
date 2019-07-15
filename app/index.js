@@ -22,7 +22,8 @@ store.subscribe(
 
 window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
 window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
-if (store.getState().user.data) store.dispatch(syncStart());
+if (store.getState().user.data)
+  setTimeout(() => store.dispatch(syncStart()), 30000);
 
 render(
   <AppContainer>

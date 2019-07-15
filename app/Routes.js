@@ -6,6 +6,7 @@ import App from './containers/App';
 import HomePage from './containers/HomePage';
 import Login from './containers/Login';
 import AntibioticConsumptionDataIndex from './containers/AntibioticConsumptionDataIndex';
+import NewAntibioticConsumptionStat from './containers/NewAntibioticConsumptionStat';
 
 const mapStateToProps = state => {
   const { user } = state;
@@ -45,6 +46,11 @@ const Router = () => (
         exact
         path={routes.ANTIBIOTIC_CONSUMPTION_DATA_INDEX}
         component={AntibioticConsumptionDataIndex}
+      />
+      <PrivateRoute
+        exact
+        path={routes.NEW_ANTIBIOTIC_CONSUMPTION_STAT}
+        component={NewAntibioticConsumptionStat}
       />
     </Switch>
   </App>
