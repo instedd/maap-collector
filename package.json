@@ -277,6 +277,7 @@
     "history": "^4.7.2",
     "lodash": "^4.17.11",
     "node-pre-gyp": "^0.13.0",
+    "query-string": "^6.8.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-hot-loader": "^4.3.4",

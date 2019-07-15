@@ -32,8 +32,8 @@ export const entities = [
 
 export const syncStart = () => dispatch => {
   dispatch({ type: SYNC_START });
-  entities.forEach(({ listAction }) => {
-    dispatch(listAction());
+  entities.forEach(({ listAction }, i) => {
+    setTimeout(() => dispatch(listAction()), 300 * (i + 1));
   });
 };
 
@@ -42,11 +42,20 @@ export const syncStop = () => dispatch => {
 };
 
 export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
-  const initializedDb = db.initializeForUser(user);
+  const initializedDb = await await db.initializeForUser(user);
   const entity = initializedDb[entityName];
+  const oldestEntity = await entity.findOne({
+    order: [['lastSyncAt', 'DESC']]
+  });
+  const oldestDate = oldestEntity
+    ? new Date(oldestEntity.lastSyncAt).toUTCString()
+    : null;
   return fetchPaginated(
     url,
     user.auth,
+    {
+      updated_at_gth: oldestDate
+    },
     (res, { total_count: totalCount, current_page: currentPage }) => {
       if (currentPage === '1')
         dispatch({
@@ -63,7 +72,10 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
             // TODO: Only update if the remote is more recent (mapper.updated_at > lab.updatedAt). Otherwise
             .then(([foundEntity]) => {
               dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName });
-              return foundEntity.update(mapped);
+              return foundEntity.update({
+                mapped,
+                lastSyncAt: new Date()
+              });
             })
             .catch(e => console.log(e))
         );

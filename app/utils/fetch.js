@@ -1,8 +1,9 @@
+import { stringify } from 'query-string';
 import { API_URL } from '../constants/config';
 
-const fetchPaginated = async (url, auth, callback) => {
+const fetchPaginated = async (url, auth, args, callback) => {
   const f = page =>
-    fetch(`${API_URL}${url}?page=${page}`, {
+    fetch(`${API_URL}${url}?${stringify({ ...args, page })}`, {
       headers: auth
     }).then(res => res.json());
 

@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import * as models from '../models';
 
-const initialize = (dbName, password) => {
+const initialize = async (dbName, password) => {
   const sequelize = new Sequelize(null, null, password, {
     dialect: 'sqlite',
     dialectModulePath: '@journeyapps/sqlcipher',
@@ -18,11 +18,11 @@ const initialize = (dbName, password) => {
         sequelize
       }
     );
-  sequelize.sync();
+  await sequelize.sync();
   return objects;
 };
 
-const initializeForUser = ({ data }) =>
+const initializeForUser = async ({ data }) =>
   initialize(data.response.id, data.password);
 
 export default { initialize, initializeForUser };

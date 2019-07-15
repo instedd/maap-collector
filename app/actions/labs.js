@@ -20,7 +20,7 @@ export const syncLabs = () => async (dispatch, getState) => {
 
 export const fetchLabs = () => async (dispatch, getState) => {
   const { user } = getState();
-  const { Lab } = db.initializeForUser(user);
+  const { Lab } = await db.initializeForUser(user);
   dispatch({ type: FETCH_LABS });
   const totalCount = await Lab.count();
   Lab.findAll({ limit: 15 })

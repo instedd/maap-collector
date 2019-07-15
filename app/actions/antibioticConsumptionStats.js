@@ -35,7 +35,7 @@ export const fetchAntibioticConsumptionStats = () => async (
   getState
 ) => {
   const { user } = getState();
-  const { AntibioticConsumptionStat } = db.initializeForUser(user);
+  const { AntibioticConsumptionStat } = await db.initializeForUser(user);
   dispatch({ type: FETCH_ANTIBIOTIC_CONSUMPTION_STATS });
   const totalCount = await AntibioticConsumptionStat.count();
   AntibioticConsumptionStat.findAll({ limit: 15 })
