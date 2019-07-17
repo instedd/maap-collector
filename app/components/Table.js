@@ -35,7 +35,8 @@ type Props = {
   entityName?: string,
   onClick?: () => void,
   title?: string,
-  rowClassName?: () => [string]
+  rowClassName?: () => [string],
+  lastRow?: typeof Component
 };
 
 const Table = ({
@@ -46,7 +47,8 @@ const Table = ({
   entityName,
   onClick,
   title,
-  rowClassName
+  rowClassName,
+  lastRow
 }: Props) => (
   <Card>
     <Grid align="left">
@@ -78,6 +80,7 @@ const Table = ({
             ))}
           </tr>
         ))}
+        {lastRow}
       </tbody>
       <tfoot>
         <tr />
@@ -90,7 +93,8 @@ Table.defaultProps = {
   onClick: () => {},
   title: null,
   entityName: '',
-  rowClassName: () => {}
+  rowClassName: () => {},
+  lastRow: () => {}
 };
 
 export default Table;

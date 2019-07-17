@@ -15,10 +15,9 @@ const mapper = props => ({
   ...props,
   remoteId: props.id,
   remoteAntibioticId: props.antibiotic_id,
-  remoteFacilityId: props.facility_id,
+  recipientFacility: props.recipient_facility,
   recipientUnit: props.recipient_unit,
-  antibioticId: null,
-  facilityId: null
+  antibioticId: null
 });
 
 // const uploadMapper = props => ({
@@ -69,24 +68,25 @@ export const fetchAntibioticConsumptionStats = antibioticId => async (
   const totalCount = await AntibioticConsumptionStat.count({
     where: { antibioticId }
   });
-  AntibioticConsumptionStat.findAll({ where: { antibioticId }, limit: 15 })
-    .then(async items => {
-      await Promise.all(
-        items.map(item =>
-          // TODO: Generate this dinamically from relations
-          item.getFacility().then(facility => {
-            // eslint-disable-next-line
-            item.facility = facility;
-            return facility;
-          })
-        )
-      );
-      return dispatch({
+  AntibioticConsumptionStat.findAll({ where: { antibioticId } })
+    .then(async items =>
+      //
+      // await Promise.all(
+      //   items.map(item =>
+      //     // TODO: Generate this dinamically from relations
+      //     // item.getFacility().then(facility => {
+      //     //   // eslint-disable-next-line
+      //     //   item.facility = facility;
+      //     //   return facility;
+      //     // })
+      //   )
+      // );
+      dispatch({
         type: FETCHED_ANTIBIOTIC_CONSUMPTION_STATS,
         items,
         totalCount
-      });
-    })
+      })
+    )
     .catch(error =>
       dispatch({ type: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED, error })
     );

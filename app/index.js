@@ -5,6 +5,7 @@ import { throttle } from 'lodash';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
+
 import { setNetworkOnline, setNetworkOffline } from './actions/network';
 import { loadState, saveState } from './utils/localStorage';
 import { syncStart } from './actions/sync';

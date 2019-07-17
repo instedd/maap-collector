@@ -4,10 +4,6 @@ class AntibioticConsumptionStat extends Model {
   get issuedText() {
     return this.issued ? 'In' : 'Out';
   }
-
-  get recipientFacilityName() {
-    return this.facility.name;
-  }
 }
 
 const model = sequelize => {
@@ -15,8 +11,7 @@ const model = sequelize => {
     {
       antibioticId: { type: Sequelize.INTEGER },
       remoteAntibioticId: { type: Sequelize.NUMBER },
-      facilityId: { type: Sequelize.NUMBER },
-      remoteFacilityId: { type: Sequelize.NUMBER },
+      recipientFacility: { type: Sequelize.STRING },
       issued: { type: Sequelize.BOOLEAN },
       quantity: { type: Sequelize.NUMBER },
       balance: { type: Sequelize.NUMBER },
@@ -33,16 +28,14 @@ const model = sequelize => {
   });
   // TODO: Abstract this to be generic and outside a hook
   m.addHook('beforeValidate', async instance => {
-    const antibiotic = await sequelize.models.Antibiotic.findOne({
-      where: { remoteId: instance.remoteAntibioticId }
-    });
-    const facility = await sequelize.models.Lab.findOne({
-      where: { remoteId: instance.remoteFacilityId }
-    });
-    // eslint-disable-next-line
-    instance.antibioticId = antibiotic.id;
-    // eslint-disable-next-line
-    instance.facilityId = facility.id;
+    // TODO: Get remote id's when only a local id is present
+    if (instance.remoteAntibioticId) {
+      const antibiotic = await sequelize.models.Antibiotic.findOne({
+        where: { remoteId: instance.remoteAntibioticId }
+      });
+      // eslint-disable-next-line
+      instance.antibioticId = antibiotic.id;
+    }
   });
   return m;
 };
