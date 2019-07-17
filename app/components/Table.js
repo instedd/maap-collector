@@ -32,17 +32,27 @@ type Props = {
   items: [],
   columns: [],
   fields: [],
-  entityName: string
+  entityName?: string,
+  onClick?: () => void,
+  title?: string,
+  rowClassName?: () => [string]
 };
 
-const Table = ({ totalCount, items, columns, fields, entityName }: Props) => (
+const Table = ({
+  totalCount,
+  items,
+  columns,
+  fields,
+  entityName,
+  onClick,
+  title,
+  rowClassName
+}: Props) => (
   <Card>
     <Grid align="left">
       <Row>
         <Cell cols={12}>
-          <h2>
-            {totalCount} {entityName}
-          </h2>
+          <h2>{title || `${totalCount} ${entityName}`}</h2>
         </Cell>
       </Row>
     </Grid>
@@ -56,7 +66,11 @@ const Table = ({ totalCount, items, columns, fields, entityName }: Props) => (
       </thead>
       <tbody>
         {items.map(item => (
-          <tr key={`item-${item.id}`}>
+          <tr
+            className={rowClassName(item)}
+            key={`item-${item.id}`}
+            onClick={() => onClick(item)}
+          >
             {fields.map(field => (
               <td key={`item-${item.id}-${field}`}>
                 {parseField(item[field])}
@@ -71,5 +85,12 @@ const Table = ({ totalCount, items, columns, fields, entityName }: Props) => (
     </table>
   </Card>
 );
+
+Table.defaultProps = {
+  onClick: () => {},
+  title: null,
+  entityName: '',
+  rowClassName: () => {}
+};
 
 export default Table;

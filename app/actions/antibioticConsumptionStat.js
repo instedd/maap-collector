@@ -8,7 +8,7 @@ export const createAntibioticConsumptionStat = attributes => async (
   getState
 ) => {
   const { user } = getState();
-  const { AntibioticConsumptionStat } = await db.initializeForUser(user);
+  const { AntibioticConsumptionStat } = db.initializeForUser(user);
   dispatch({ type: SAVING_ANTIBIOTIC_CONSUMPTION_STAT });
 
   const record = await AntibioticConsumptionStat.create(attributes);

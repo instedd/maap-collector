@@ -8,6 +8,7 @@ import labs from './labs';
 import sync from './sync';
 import specimenSources from './specimenSources';
 import antibioticConsumptionStats from './antibioticConsumptionStats';
+import antibiotics from './antibiotics';
 
 export default function createRootReducer(history: {}) {
   const routerReducer = connectRouter(history)(() => {});
@@ -21,7 +22,8 @@ export default function createRootReducer(history: {}) {
       labs,
       sync,
       specimenSources,
-      antibioticConsumptionStats
+      antibioticConsumptionStats,
+      antibiotics
     })
   );
 }

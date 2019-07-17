@@ -5,36 +5,43 @@ import { syncLabs } from './labs';
 import { syncSpecimenSources } from './specimenSources';
 import { syncCultureTypes } from './cultureTypes';
 import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
+import { syncAntibiotics } from './antibiotics';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
 const UPDATE_PENDING_COUNT = 'UPDATE_PENDING_COUNT';
 const REDUCE_PENDING_COUNT = 'REDUCE_PENDING_COUNT';
 
+// TODO: We should honor this order, currently the async process randomizes everything
 export const entities = [
   {
     name: 'SpecimenSource',
-    listAction: syncSpecimenSources
+    syncAction: syncSpecimenSources
   },
   {
     name: 'CultureType',
-    listAction: syncCultureTypes
+    syncAction: syncCultureTypes
   },
   {
     name: 'Lab',
-    listAction: syncLabs
+    syncAction: syncLabs
+  },
+  {
+    name: 'Antibiotic',
+    syncAction: syncAntibiotics
   },
   {
     name: 'AntibioticConsumptionStat',
-    listAction: syncAntibioticConsumptionStats
+    syncAction: syncAntibioticConsumptionStats
   }
 ];
 
-export const syncStart = () => dispatch => {
+export const syncStart = () => async dispatch => {
   dispatch({ type: SYNC_START });
-  entities.forEach(({ listAction }, i) => {
-    setTimeout(() => dispatch(listAction()), 300 * (i + 1));
-  });
+
+  setTimeout(async () => {
+    entities.forEach(({ syncAction }) => dispatch(syncAction()));
+  }, 300);
 };
 
 export const syncStop = () => dispatch => {
@@ -42,7 +49,7 @@ export const syncStop = () => dispatch => {
 };
 
 export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
-  const initializedDb = await await db.initializeForUser(user);
+  const initializedDb = await db.initializeForUser(user);
   const entity = initializedDb[entityName];
   const oldestEntity = await entity.findOne({
     order: [['lastSyncAt', 'DESC']]
@@ -73,7 +80,7 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
             .then(([foundEntity]) => {
               dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName });
               return foundEntity.update({
-                mapped,
+                ...mapped,
                 lastSyncAt: new Date()
               });
             })
@@ -83,5 +90,7 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
     }
   );
 };
+
+// export const remoteUpload = (/* url, user, entityName, mapper */) => async () => {}
 
 export { SYNC_START, SYNC_STOP, UPDATE_PENDING_COUNT, REDUCE_PENDING_COUNT };

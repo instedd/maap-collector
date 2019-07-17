@@ -1,6 +1,8 @@
 import db from '../db';
 import { remoteSync } from './sync';
 
+// const UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS =
+//   'UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS';
 const FETCH_ANTIBIOTIC_CONSUMPTION_STATS = 'FETCH_ANTIBIOTIC_CONSUMPTION_STATS';
 const FETCHED_ANTIBIOTIC_CONSUMPTION_STATS =
   'FETCHED_ANTIBIOTIC_CONSUMPTION_STATS';
@@ -11,8 +13,18 @@ const FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED =
 // TODO: Abstract this to a helper function
 const mapper = props => ({
   ...props,
-  remoteId: props.id
+  remoteId: props.id,
+  remoteAntibioticId: props.antibiotic_id,
+  remoteFacilityId: props.facility_id,
+  recipientUnit: props.recipient_unit,
+  antibioticId: null,
+  facilityId: null
 });
+
+// const uploadMapper = props => ({
+//   ...props,
+//   id: props.remoteId
+// });
 
 export const syncAntibioticConsumptionStats = () => async (
   dispatch,
@@ -20,7 +32,7 @@ export const syncAntibioticConsumptionStats = () => async (
 ) => {
   const { user } = getState();
   dispatch({ type: SYNC_ANTIBIOTIC_CONSUMPTION_STATS });
-  dispatch(
+  return dispatch(
     remoteSync(
       '/api/v1/antibiotic_consumption_stats',
       user,
@@ -28,24 +40,53 @@ export const syncAntibioticConsumptionStats = () => async (
       mapper
     )
   );
+  // .then(() => dispatch(uploadAntibioticConsumptionStats()));
 };
 
-export const fetchAntibioticConsumptionStats = () => async (
+// export const uploadAntibioticConsumptionStats = () => async (
+//   dispatch,
+//   getState
+// ) => {
+//   const { user } = getState();
+//   dispatch({ type: UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS });
+//   dispatch(
+//     remoteUpload(
+//       '/api/v1/antibiotic_consumption_stats',
+//       user,
+//       'AntibioticConsumptionStat',
+//       uploadMapper
+//     )
+//   );
+// };
+
+export const fetchAntibioticConsumptionStats = antibioticId => async (
   dispatch,
   getState
 ) => {
   const { user } = getState();
   const { AntibioticConsumptionStat } = await db.initializeForUser(user);
   dispatch({ type: FETCH_ANTIBIOTIC_CONSUMPTION_STATS });
-  const totalCount = await AntibioticConsumptionStat.count();
-  AntibioticConsumptionStat.findAll({ limit: 15 })
-    .then(items =>
-      dispatch({
+  const totalCount = await AntibioticConsumptionStat.count({
+    where: { antibioticId }
+  });
+  AntibioticConsumptionStat.findAll({ where: { antibioticId }, limit: 15 })
+    .then(async items => {
+      await Promise.all(
+        items.map(item =>
+          // TODO: Generate this dinamically from relations
+          item.getFacility().then(facility => {
+            // eslint-disable-next-line
+            item.facility = facility;
+            return facility;
+          })
+        )
+      );
+      return dispatch({
         type: FETCHED_ANTIBIOTIC_CONSUMPTION_STATS,
         items,
         totalCount
-      })
-    )
+      });
+    })
     .catch(error =>
       dispatch({ type: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED, error })
     );

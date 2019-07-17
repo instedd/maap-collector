@@ -11,7 +11,6 @@ const fetchPaginated = async (url, auth, args, callback) => {
   const res = await f(1);
   const { items: firstItems, total_pages: totalPages } = res;
   await callback(firstItems, res);
-
   if (totalPages <= 1) return Promise.resolve();
   // After that, we iterate over the following pages and save the result into an array
   // This generates 1 request per page

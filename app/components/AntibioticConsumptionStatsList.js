@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
@@ -12,7 +12,8 @@ type Props = {
   antibioticConsumptionStats: {
     items: [],
     totalCount: number
-  }
+  },
+  antibioticId: string
 };
 type State = {};
 
@@ -25,8 +26,8 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchAntibioticConsumptionStats());
+    const { dispatch, antibioticId } = this.props;
+    dispatch(fetchAntibioticConsumptionStats(antibioticId));
   }
 
   render() {
@@ -34,11 +35,26 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
     return (
       <div>
         <Table
-          entityName="pharmacy consumption stats"
+          title={<Link to="/antibiotics">Go back</Link>}
           items={antibioticConsumptionStats.items}
           totalCount={antibioticConsumptionStats.totalCount}
-          columns={['ID', 'Date']}
-          fields={['id', 'date']}
+          columns={[
+            'Date',
+            'Issued',
+            'Quantity',
+            'Balance',
+            'Recipient facility',
+            'Recipient unit'
+          ]}
+          fields={[
+            'date',
+            'issuedText',
+            'quantity',
+            'balance',
+            'recipientFacilityName',
+            'recipientUnit'
+          ]}
+          rowClassName={item => [item.issued ? 'highlight' : '']}
         />
       </div>
     );

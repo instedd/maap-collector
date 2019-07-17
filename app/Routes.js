@@ -5,8 +5,9 @@ import routes from './constants/routes';
 import App from './containers/App';
 import HomePage from './containers/HomePage';
 import Login from './containers/Login';
-import AntibioticConsumptionDataIndex from './containers/AntibioticConsumptionDataIndex';
-import NewAntibioticConsumptionStat from './containers/NewAntibioticConsumptionStat';
+import AntibioticsIndex from './containers/AntibioticsIndex';
+import AntibioticsDetail from './containers/AntibioticsDetail';
+// import NewAntibioticConsumptionStat from './containers/NewAntibioticConsumptionStat';
 
 const mapStateToProps = state => {
   const { user } = state;
@@ -45,12 +46,12 @@ const Router = () => (
       <PrivateRoute
         exact
         path={routes.ANTIBIOTIC_CONSUMPTION_DATA_INDEX}
-        component={AntibioticConsumptionDataIndex}
+        component={AntibioticsIndex}
       />
       <PrivateRoute
         exact
-        path={routes.NEW_ANTIBIOTIC_CONSUMPTION_STAT}
-        component={NewAntibioticConsumptionStat}
+        path="/antibiotics/:id"
+        component={AntibioticsDetail}
       />
     </Switch>
   </App>
