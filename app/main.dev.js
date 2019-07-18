@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -95,6 +95,13 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
+  globalShortcut.register('CommandOrControl+Shift+K', () => {
+    mainWindow.webContents.openDevTools();
+  });
+
+  window.addEventListener('beforeunload', () => {
+    globalShortcut.unregisterAll();
+  });
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
