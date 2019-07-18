@@ -56,11 +56,8 @@ script:
   - yarn build-e2e
   - yarn test-e2e
 
-deploy:
-  provider: script
-  script: "./deploy.sh"
-  skip_cleanup: true
-  on:
-    tags: true
+after_success:
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yarn package-ci; fi
+
 notifications:
   email: false
