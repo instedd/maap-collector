@@ -94,7 +94,7 @@ Table.defaultProps = {
   title: null,
   entityName: '',
   rowClassName: () => {},
-  lastRow: () => {}
+  lastRow: null
 };
 
 export default Table;

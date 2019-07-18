@@ -1,8 +1,9 @@
+import snakeCaseKeys from 'snakecase-keys';
 import db from '../db';
-import { remoteSync } from './sync';
+import { remoteSync, remoteUpload } from './sync';
 
-// const UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS =
-//   'UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS';
+const UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS =
+  'UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS';
 const FETCH_ANTIBIOTIC_CONSUMPTION_STATS = 'FETCH_ANTIBIOTIC_CONSUMPTION_STATS';
 const FETCHED_ANTIBIOTIC_CONSUMPTION_STATS =
   'FETCHED_ANTIBIOTIC_CONSUMPTION_STATS';
@@ -20,10 +21,10 @@ const mapper = props => ({
   antibioticId: null
 });
 
-// const uploadMapper = props => ({
-//   ...props,
-//   id: props.remoteId
-// });
+const uploadMapper = props => ({
+  ...snakeCaseKeys(props.dataValues),
+  id: props.dataValues.remoteId
+});
 
 export const syncAntibioticConsumptionStats = () => async (
   dispatch,
@@ -38,25 +39,24 @@ export const syncAntibioticConsumptionStats = () => async (
       'AntibioticConsumptionStat',
       mapper
     )
-  );
-  // .then(() => dispatch(uploadAntibioticConsumptionStats()));
+  ).then(() => dispatch(uploadAntibioticConsumptionStats()));
 };
 
-// export const uploadAntibioticConsumptionStats = () => async (
-//   dispatch,
-//   getState
-// ) => {
-//   const { user } = getState();
-//   dispatch({ type: UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS });
-//   dispatch(
-//     remoteUpload(
-//       '/api/v1/antibiotic_consumption_stats',
-//       user,
-//       'AntibioticConsumptionStat',
-//       uploadMapper
-//     )
-//   );
-// };
+export const uploadAntibioticConsumptionStats = () => async (
+  dispatch,
+  getState
+) => {
+  const { user } = getState();
+  dispatch({ type: UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS });
+  dispatch(
+    remoteUpload(
+      '/api/v1/antibiotic_consumption_stats',
+      user,
+      'AntibioticConsumptionStat',
+      uploadMapper
+    )
+  );
+};
 
 export const fetchAntibioticConsumptionStats = antibioticId => async (
   dispatch,

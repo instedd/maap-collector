@@ -1,5 +1,7 @@
+import snakeCaseKeys from 'snakecase-keys';
+
 import db from '../db';
-import { fetchPaginated } from '../utils/fetch';
+import { fetchPaginated, fetchAuthenticated } from '../utils/fetch';
 
 import { syncLabs } from './labs';
 import { syncSpecimenSources } from './specimenSources';
@@ -10,7 +12,9 @@ import { syncAntibiotics } from './antibiotics';
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
 const UPDATE_PENDING_COUNT = 'UPDATE_PENDING_COUNT';
+const UPDATE_PENDING_UPLOAD_COUNT = 'UPDATE_PENDING_UPLOAD_COUNT';
 const REDUCE_PENDING_COUNT = 'REDUCE_PENDING_COUNT';
+const REDUCE_PENDING_UPLOAD_COUNT = 'REDUCE_PENDING_COUNT';
 
 // TODO: We should honor this order, currently the async process randomizes everything
 export const entities = [
@@ -61,9 +65,12 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
     url,
     user.auth,
     {
-      updated_at_gth: oldestDate
+      qs: {
+        updated_at_gth: oldestDate
+      }
     },
     (res, { total_count: totalCount, current_page: currentPage }) => {
+      if (totalCount === 0) return;
       if (currentPage === '1')
         dispatch({
           type: UPDATE_PENDING_COUNT,
@@ -91,6 +98,47 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
   );
 };
 
-// export const remoteUpload = (/* url, user, entityName, mapper */) => async () => {}
+export const remoteUpload = (
+  url,
+  user,
+  entityName,
+  mapper
+) => async dispatch => {
+  const initializedDb = await db.initializeForUser(user);
+  const { sequelize } = initializedDb;
+  const entity = initializedDb[entityName];
+  const collectionToCreate = await entity.findAll({
+    where: sequelize.literal('remoteId is NULL')
+  });
+  if (collectionToCreate.length === 0) return;
+  dispatch({
+    type: UPDATE_PENDING_UPLOAD_COUNT,
+    entity: entityName,
+    count: collectionToCreate.length
+  });
+  collectionToCreate.forEach(currentEntity => {
+    fetchAuthenticated(url, user.auth, {
+      method: 'POST',
+      body: snakeCaseKeys({ [entityName]: mapper(currentEntity) })
+    })
+      .then(res => currentEntity.update({ remoteId: res.id }))
+      .then(() =>
+        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: entityName })
+      )
+      .catch(e => console.log(e));
+  });
 
-export { SYNC_START, SYNC_STOP, UPDATE_PENDING_COUNT, REDUCE_PENDING_COUNT };
+  // TODO: Implement update
+  // const collectionToCreate = await entity.findAll({
+  //   where: sequelize.literal('updatedAt > lastSyncAt')
+  // })
+};
+
+export {
+  SYNC_START,
+  SYNC_STOP,
+  UPDATE_PENDING_COUNT,
+  UPDATE_PENDING_UPLOAD_COUNT,
+  REDUCE_PENDING_COUNT,
+  REDUCE_PENDING_UPLOAD_COUNT
+};

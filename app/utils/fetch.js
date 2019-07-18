@@ -1,9 +1,14 @@
 import { stringify } from 'query-string';
 import { API_URL } from '../constants/config';
 
-const fetchPaginated = async (url, auth, args, callback) => {
+const fetchPaginated = async (
+  url,
+  auth,
+  args = { body: {}, qs: {}, method: 'get' },
+  callback
+) => {
   const f = page =>
-    fetch(`${API_URL}${url}?${stringify({ ...args, page })}`, {
+    fetch(`${API_URL}${url}?${stringify({ ...args.qs, page })}`, {
       headers: auth
     }).then(res => res.json());
 
@@ -25,8 +30,15 @@ const fetchPaginated = async (url, auth, args, callback) => {
   return Promise.resolve();
 };
 
-const fetchAuthenticated = () => {
-  /* TODO: Implement this */
-};
+const fetchAuthenticated = (
+  url,
+  auth,
+  args = { body: {}, qs: {}, method: 'get' }
+) =>
+  fetch(`${API_URL}${url}?${stringify(args.qs)}`, {
+    method: args.method,
+    body: JSON.stringify(args.body),
+    headers: { ...auth, 'content-type': 'application/json' }
+  }).then(res => res.json());
 
 export { fetchPaginated, fetchAuthenticated };
