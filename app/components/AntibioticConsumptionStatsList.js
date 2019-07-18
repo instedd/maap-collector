@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import TextField, { Input } from '@material/react-text-field';
 import Select, { Option } from '@material/react-select';
+import MaterialIcon from '@material/react-material-icon';
 import type { Dispatch } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
@@ -61,7 +62,11 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
     return (
       <div>
         <Table
-          title={<Link to="/antibiotics">Go back</Link>}
+          title={
+            <Link to="/antibiotics">
+              <MaterialIcon icon="arrow_back" />
+            </Link>
+          }
           items={antibioticConsumptionStats.items}
           totalCount={antibioticConsumptionStats.totalCount}
           columns={[

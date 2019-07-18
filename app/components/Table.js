@@ -3,7 +3,7 @@ import Card from '@material/react-card';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 
-import './Table.css';
+import styles from './Table.css';
 
 const months = [
   'Jan',
@@ -54,7 +54,9 @@ const Table = ({
     <Grid align="left">
       <Row>
         <Cell cols={12}>
-          <h2>{title || `${totalCount} ${entityName}`}</h2>
+          <h2 className={styles.tableTitle}>
+            {title || `${totalCount} ${entityName}`}
+          </h2>
         </Cell>
       </Row>
     </Grid>

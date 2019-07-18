@@ -16,3 +16,8 @@ th {
   font-weight: normal;
   text-align: left;
 }
+
+.tableTitle,
+.tableTitle a {
+  color: #000;
+}
