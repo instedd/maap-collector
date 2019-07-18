@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+
 import TopAppBar, {
   TopAppBarFixedAdjust,
   TopAppBarRow,
@@ -11,15 +12,16 @@ import Tab from '@material/react-tab';
 import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import type { ContextRouter } from 'react-router';
 
 import routes from '../constants/routes';
 import styles from './NavBar.css';
 import SyncStatus from './SyncStatus';
 
-type Props = {
-  currentLab: number | null,
-  history: {}
+type StoreProps = {
+  currentLab: number | null
 };
+type Props = StoreProps & ContextRouter;
 type State = {};
 
 const mapStateToProps = ({ currentLab }) => ({

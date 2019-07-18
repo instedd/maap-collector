@@ -4,20 +4,20 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import type { ContextRouter } from 'react-router';
 import type { Dispatch } from '../reducers/types';
 import { fetchAntibiotics } from '../actions/antibiotics';
 import Table from './Table';
 
-type Props = {
+type StoreProps = {
   dispatch: Dispatch,
   antibiotics: {
     items: [],
     totalCount: number
-  },
-  history: {
-    push: {}
   }
 };
+type Props = StoreProps & ContextRouter;
+
 type State = {};
 
 const mapStateToProps = state => {
