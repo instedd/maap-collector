@@ -8,11 +8,15 @@ import {
 } from '../actions/sync';
 import type { Action } from './types';
 
-const initialState = {
+type State = {
+  synchronizing: boolean
+};
+
+const initialState: State = {
   synchronizing: false
 };
 
-export default function network(state = initialState, action: Action) {
+export default function network(state: State = initialState, action: Action) {
   switch (action.type) {
     case REDUCE_PENDING_COUNT:
       return {

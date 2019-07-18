@@ -17,7 +17,7 @@ import styles from './NavBar.css';
 import SyncStatus from './SyncStatus';
 
 type Props = {
-  currentLab: number,
+  currentLab: number | null,
   history: {}
 };
 type State = {};
