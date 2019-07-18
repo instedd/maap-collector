@@ -13,6 +13,7 @@ import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
+import { State } from '../reducers/types';
 
 import routes from '../constants/routes';
 import styles from './NavBar.css';
@@ -21,10 +22,9 @@ import SyncStatus from './SyncStatus';
 type StoreProps = {
   currentLab: number | null
 };
-type Props = StoreProps & ContextRouter;
-type State = {};
+type Props = State & StoreProps & ContextRouter;
 
-const mapStateToProps = ({ currentLab }) => ({
+const mapStateToProps = ({ currentLab }: State) => ({
   currentLab: currentLab || true
 });
 
