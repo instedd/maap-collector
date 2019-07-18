@@ -5,6 +5,7 @@ import { throttle } from 'lodash';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
+
 import { setNetworkOnline, setNetworkOffline } from './actions/network';
 import { loadState, saveState } from './utils/localStorage';
 import { syncStart } from './actions/sync';
@@ -22,7 +23,8 @@ store.subscribe(
 
 window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
 window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
-if (store.getState().user.data) store.dispatch(syncStart());
+if (store.getState().user.data)
+  setTimeout(() => store.dispatch(syncStart()), 300);
 
 render(
   <AppContainer>

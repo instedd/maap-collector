@@ -13,6 +13,10 @@
 @import '~@material/react-tab-scroller/dist/tab-scroller.css';
 @import '~@material/react-text-field/dist/text-field.css';
 @import '~@material/react-top-app-bar/dist/top-app-bar.css';
+@import '~@material/react-list/dist/list.css';
+@import '~@material/react-menu-surface/dist/menu-surface.css';
+@import '~@material/react-menu/dist/menu.css';
+@import '~@material/react-select/dist/select.css';
 
 @import './material-overrides.css';
 
@@ -29,4 +33,20 @@ body {
   height: 100vh;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   background: #e5e5e5;
+}
+
+h2 {
+  color: #000;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.full-width {
+  display: block;
+  width: 100%;
+}
+
+.highlight {
+  color: #ff5622;
 }

@@ -28,7 +28,7 @@ export const syncSpecimenSources = () => async (dispatch, getState) => {
 
 export const fetchSpecimenSources = () => async (dispatch, getState) => {
   const { user } = getState();
-  const { SpecimenSource } = db.initializeForUser(user);
+  const { SpecimenSource } = await db.initializeForUser(user);
 
   dispatch({ type: FETCH_SPECIMEN_SOURCES });
   SpecimenSource.findAll()

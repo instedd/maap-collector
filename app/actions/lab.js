@@ -5,7 +5,7 @@ const LAB_CREATED = 'LAB_CREATED';
 
 export const labCreate = fields => async (dispatch, getState) => {
   const { user } = getState();
-  const { Lab } = db.initializeForUser(user);
+  const { Lab } = await db.initializeForUser(user);
   dispatch({ type: LAB_CREATE, fields });
 
   await Lab.create(fields);

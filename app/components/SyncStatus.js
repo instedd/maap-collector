@@ -10,7 +10,10 @@ const mapStateToProps = ({ sync }) => ({ sync });
 const SyncStatus = ({ sync }: Props) => {
   // const total = sync.SpecimenSourceCount;
   const total = entities.reduce(
-    (previous, current) => previous + (sync[`${current.name}Count`] || 0),
+    (previous, current) =>
+      previous +
+      (sync[`${current.name}Count`] || 0) +
+      (sync[`${current.name}UploadCount`] || 0),
     0
   );
   return <div>{total}</div>;

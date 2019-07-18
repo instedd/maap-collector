@@ -31,15 +31,32 @@ type Props = {
   totalCount: number,
   items: [],
   columns: [],
-  fields: []
+  fields: [],
+  entityName?: string,
+  onClick?: () => void,
+  title?: string,
+  rowClassName?: () => [string],
+  lastRow?: typeof Component
 };
 
-const Table = ({ totalCount, items, columns, fields }: Props) => (
+const Table = ({
+  totalCount,
+  items,
+  columns,
+  fields,
+  entityName,
+  onClick,
+  title,
+  rowClassName,
+  lastRow
+}: Props) => (
   <Card>
     <Grid align="left">
       <Row>
         <Cell cols={12}>
-          <h2 className={styles.tableHeader}>{totalCount} facilities</h2>
+          <h2 className={styles.tableTitle}>
+            {title || `${totalCount} ${entityName}`}
+          </h2>
         </Cell>
       </Row>
     </Grid>
@@ -53,7 +70,11 @@ const Table = ({ totalCount, items, columns, fields }: Props) => (
       </thead>
       <tbody>
         {items.map(item => (
-          <tr key={`item-${item.id}`}>
+          <tr
+            className={rowClassName(item)}
+            key={`item-${item.id}`}
+            onClick={() => onClick(item)}
+          >
             {fields.map(field => (
               <td key={`item-${item.id}-${field}`}>
                 {parseField(item[field])}
@@ -61,6 +82,7 @@ const Table = ({ totalCount, items, columns, fields }: Props) => (
             ))}
           </tr>
         ))}
+        {lastRow}
       </tbody>
       <tfoot>
         <tr />
@@ -68,5 +90,13 @@ const Table = ({ totalCount, items, columns, fields }: Props) => (
     </table>
   </Card>
 );
+
+Table.defaultProps = {
+  onClick: () => {},
+  title: null,
+  entityName: '',
+  rowClassName: () => {},
+  lastRow: null
+};
 
 export default Table;

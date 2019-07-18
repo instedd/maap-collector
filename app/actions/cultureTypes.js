@@ -24,7 +24,7 @@ export const syncCultureTypes = () => async (dispatch, getState) => {
 
 export const fetchCultureType = () => async (dispatch, getState) => {
   const { user } = getState();
-  const { CultureType } = db.initializeForUser(user);
+  const { CultureType } = await db.initializeForUser(user);
 
   dispatch({ type: FETCH_CULTURE_TYPES });
   CultureType.findAll()
