@@ -55,5 +55,12 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
   - yarn build-e2e
   - yarn test-e2e
+
+deploy:
+  provider: script
+  script: "./deploy.sh"
+  skip_cleanup: true
+  on:
+    tags: true
 notifications:
   email: false
