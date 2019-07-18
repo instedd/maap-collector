@@ -1,5 +1,5 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "maap-collector",
   "productName": "ElectronReact",
   "version": "0.17.2",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
@@ -101,14 +101,14 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "pmallol",
-      "repo": "erb-sqlite",
+      "owner": "instedd",
+      "repo": "maap-collector",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/instedd/maap-collector.git"
   },
   "author": {
     "name": "Electron React Boilerplte Maintainers",
