@@ -18,7 +18,7 @@ const antibioticMapper = props => ({
 export const syncAntibiotics = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: SYNC_ANTIBIOTICS });
-  dispatch(
+  return dispatch(
     remoteSync('/api/v1/antibiotics', user, 'Antibiotic', antibioticMapper)
   );
 };

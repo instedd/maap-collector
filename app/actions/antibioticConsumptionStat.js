@@ -16,7 +16,7 @@ export const createAntibioticConsumptionStat = attributes => async (
   const record = await AntibioticConsumptionStat.create(attributes);
 
   dispatch({ type: SAVED_ANTIBIOTIC_CONSUMPTION_STAT, record });
-  dispatch(fetchAntibioticConsumptionStats(attributes.antibioticId));
+  return dispatch(fetchAntibioticConsumptionStats(attributes.antibioticId));
 };
 
 export {

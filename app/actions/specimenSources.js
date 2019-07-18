@@ -16,7 +16,7 @@ const specimenSourcesMapper = props => ({
 export const syncSpecimenSources = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: SYNC_SPECIMEN_SOURCES });
-  dispatch(
+  return dispatch(
     remoteSync(
       '/api/v1/specimen_sources',
       user,

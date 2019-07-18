@@ -42,9 +42,14 @@ export const entities = [
 
 export const syncStart = () => async dispatch => {
   dispatch({ type: SYNC_START });
-
   setTimeout(async () => {
-    entities.forEach(({ syncAction }) => dispatch(syncAction()));
+    // This way we ensure that the sync actions are runned in sequence instead of parallel
+    entities
+      .map(({ syncAction }) => syncAction)
+      .reduce(
+        (acc, current) => acc.then(() => dispatch(current())),
+        Promise.resolve(0)
+      );
   }, 300);
 };
 

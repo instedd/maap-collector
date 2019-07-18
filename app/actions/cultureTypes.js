@@ -17,7 +17,7 @@ export const syncCultureTypes = () => async (dispatch, getState) => {
   const { user } = getState();
 
   dispatch({ type: SYNC_CULTURE_TYPES });
-  dispatch(
+  return dispatch(
     remoteSync('/api/v1/culture_types', user, 'CultureType', cultureTypeMapper)
   );
 };

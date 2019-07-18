@@ -15,7 +15,7 @@ const labMapper = props => ({
 export const syncLabs = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: SYNC_LABS });
-  dispatch(remoteSync('/api/v1/labs', user, 'Lab', labMapper));
+  return dispatch(remoteSync('/api/v1/labs', user, 'Lab', labMapper));
 };
 
 export const fetchLabs = () => async (dispatch, getState) => {
