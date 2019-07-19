@@ -35,6 +35,11 @@ const tabs = [
     path: routes.HOME
   },
   {
+    name: 'Patient records',
+    icon: <MaterialIcon icon="assignment_ind" />,
+    path: '/patients/'
+  },
+  {
     name: 'Pharmacy stats',
     icon: <MaterialIcon icon="bar_chart" />,
     path: routes.ANTIBIOTIC_CONSUMPTION_DATA_INDEX

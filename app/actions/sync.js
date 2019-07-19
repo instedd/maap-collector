@@ -48,7 +48,7 @@ export const syncStart = () => async dispatch => {
       .map(({ syncAction }) => syncAction)
       .reduce(
         (acc, current) => acc.then(() => dispatch(current())),
-        Promise.resolve(0)
+        Promise.resolve()
       );
   }, 300);
 };
