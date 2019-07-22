@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import type { Dispatch, State } from '../reducers/types';
-import { fetchAntibiotics } from '../actions/antibiotics';
+import { fetchPatients } from '../actions/patients';
 import Table from './Table';
 
 type StoreProps = {
   dispatch: Dispatch,
-  antibiotics: {
+  patients: {
     items: [],
     totalCount: number
   }
@@ -19,8 +19,8 @@ type StoreProps = {
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, antibiotics } = state;
-  return { dispatch, antibiotics };
+  const { dispatch, patients } = state;
+  return { dispatch, patients };
 };
 
 class PatientList extends Component<Props, State> {
@@ -28,19 +28,24 @@ class PatientList extends Component<Props, State> {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchAntibiotics());
+    dispatch(fetchPatients());
   }
 
   render() {
-    const { antibiotics } = this.props;
+    const { patients } = this.props;
     return (
       <div>
         <Table
           entityName="patients"
-          items={antibiotics.items}
-          totalCount={antibiotics.totalCount}
-          columns={['Name']}
-          fields={['name']}
+          items={patients.items}
+          totalCount={patients.totalCount}
+          columns={[
+            'Patient ID',
+            'Gender',
+            'Year of birth',
+            'Level of education'
+          ]}
+          fields={['patientId', 'gender', 'yearOfBirth', 'levelOfEducation']}
         />
       </div>
     );

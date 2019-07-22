@@ -8,8 +8,6 @@ import Login from './containers/Login';
 import AntibioticsIndex from './containers/AntibioticsIndex';
 import AntibioticsDetail from './containers/AntibioticsDetail';
 import PatientsIndex from './containers/PatientsIndex';
-import PatientsNew from './containers/PatientsNew';
-// import NewAntibioticConsumptionStat from './containers/NewAntibioticConsumptionStat';
 
 const mapStateToProps = state => {
   const { user } = state;
@@ -56,7 +54,6 @@ const Router = () => (
         component={AntibioticsDetail}
       />
       <PrivateRoute exact path="/patients" component={PatientsIndex} />
-      <PrivateRoute exact path="/patients/new" component={PatientsNew} />
     </Switch>
   </App>
 );
