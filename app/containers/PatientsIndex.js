@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import type { RefObject } from 'react';
 import { connect } from 'react-redux';
 import style from '@material/react-fab/dist/fab.css';
 import { Fab } from '@material/react-fab';
@@ -30,7 +29,9 @@ const mapStateToProps = ({ sync }) => ({ sync });
 class PatientsIndex extends Component<Props, State> {
   props: Props;
 
-  child: RefObject<HTMLDivElement>;
+  child: {
+    handleSubmit: () => {}
+  };
 
   state: State = { modalIsOpen: false };
 
@@ -38,11 +39,6 @@ class PatientsIndex extends Component<Props, State> {
     this.setState({ modalIsOpen: false });
     if (e === 'accept') return this.child.handleSubmit();
   };
-
-  constructor(props) {
-    super(props);
-    this.child = React.createRef();
-  }
 
   render() {
     const { modalIsOpen } = this.state;
@@ -58,12 +54,10 @@ class PatientsIndex extends Component<Props, State> {
           <DialogTitle>New patient</DialogTitle>
           <DialogContent>
             <PatientsForm
-              ref={
+              ref={c => {
                 // $FlowFixMe
-                c => {
-                  this.child = c && c.getWrappedInstance();
-                }
-              }
+                this.child = c && c.getWrappedInstance();
+              }}
             />
           </DialogContent>
           <DialogFooter>
