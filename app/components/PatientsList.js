@@ -1,13 +1,13 @@
 // @flow
 
 import React, { Component } from 'react';
-
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
-import type { Dispatch, State } from '../reducers/types';
 import { fetchPatients } from '../actions/patients';
 import Table from './Table';
+
+import type { Dispatch, State } from '../reducers/types';
 
 type StoreProps = {
   dispatch: Dispatch,
@@ -32,7 +32,7 @@ class PatientList extends Component<Props, State> {
   }
 
   render() {
-    const { patients } = this.props;
+    const { patients, history } = this.props;
     return (
       <div>
         <Table
@@ -46,6 +46,7 @@ class PatientList extends Component<Props, State> {
             'Level of education'
           ]}
           fields={['patientId', 'gender', 'yearOfBirth', 'levelOfEducation']}
+          onClick={({ id }) => history.push(`/patients/${id}/entries`)}
         />
       </div>
     );
