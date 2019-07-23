@@ -101,9 +101,9 @@ app.on('ready', async () => {
     mainWindow.webContents.openDevTools();
   });
 
-  window.addEventListener('beforeunload', () => {
-    globalShortcut.unregisterAll();
-  });
+  // window.addEventListener('beforeunload', () => {
+  //   globalShortcut.unregisterAll();
+  // });
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 

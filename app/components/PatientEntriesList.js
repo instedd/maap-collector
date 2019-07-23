@@ -44,8 +44,8 @@ class PatientList extends Component<Props, State> {
           }
           items={patientEntries.items}
           totalCount={patientEntries.totalCount}
-          columns={['Chief complaint', 'patient id']}
-          fields={['chiefComplaint', 'patientId']}
+          columns={['Chief complaint']}
+          fields={['chiefComplaint']}
         />
       </div>
     );

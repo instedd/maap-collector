@@ -24,6 +24,26 @@
   right: 1rem;
 }
 
+.mdc-select__selected-text {
+  text-align: left;
+}
+
+.mdc-layout-grid__cell--align-middle {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.mdc-text-field.textarea {
+  height: auto;
+  min-height: 56px;
+}
+
+@for $columns from 1 through 12 {
+  .mdc-layout-grid__inner[align="center"] .mdc-layout-grid__cell--span-#{$columns} {
+    grid-column: #{((14 - $columns) / 2)} / #{(((14 - $columns) / 2) + $columns)};
+  }
+}
 @media (min-width: 1024px) {
   .app-fab--absolute {
     bottom: 1.5rem;

@@ -1368,6 +1368,15 @@
     "@material/react-ripple" "^0.14.1"
     classnames "^2.2.6"
 
+"@material/react-checkbox@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@material/react-checkbox/-/react-checkbox-0.15.0.tgz#0b90448ee95f7797f063477dcb0a79331077d13a"
+  integrity sha512-ce8RPho65SlMATjHbivP2GP7S7dr7ahhFqfuhL0a8dvLOhKl2CK+VQbaWEaoRcGGquCuVbetswpJFH11BIgQRQ==
+  dependencies:
+    "@material/checkbox" "^2.1.1"
+    "@material/react-ripple" "^0.15.0"
+    classnames "^2.2.6"
+
 "@material/react-dialog@^0.14.1":
   version "0.14.1"
   resolved "https://registry.yarnpkg.com/@material/react-dialog/-/react-dialog-0.14.1.tgz#01b5ee00e6e5704d719caf4bc647267fda5b63e4"
@@ -1494,6 +1503,16 @@
   version "0.14.1"
   resolved "https://registry.yarnpkg.com/@material/react-ripple/-/react-ripple-0.14.1.tgz#a5edeed1efd3207e78fb4eb8c62a9bc65124fb01"
   integrity sha512-UWrE6u7WiGihIB1eQfXr7pt2ZNLhphN4AQayz2x1ZTvKuQ4etGOyRkFeZcaBuv0Qb5f8UE76YsO+4yVUQsKGqQ==
+  dependencies:
+    "@material/dom" "^1.0.0"
+    "@material/ripple" "^1.0.0"
+    classnames "^2.2.6"
+    utility-types "^3.2.1"
+
+"@material/react-ripple@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@material/react-ripple/-/react-ripple-0.15.0.tgz#70adfec74942b4b5dab130e71cc5d0734f2257bb"
+  integrity sha512-8YPEpiQNOaq3QtMc1DBxVVqOg/XnoWDj/EJ8eW0xmB4HvXElztKNTZoIpAAuQMZ8jbyZkRJRiFDa33u+wLFDCg==
   dependencies:
     "@material/dom" "^1.0.0"
     "@material/ripple" "^1.0.0"
