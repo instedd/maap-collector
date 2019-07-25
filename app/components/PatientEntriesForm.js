@@ -22,8 +22,8 @@ type Props = State & StoreProps;
 class PatientEntriesForm extends Component<Props, State> {
   state: State = {
     location: '',
-    obstetric: '',
-    adminissionDate: new Date().toISOString().substr(0, 10),
+    department: '',
+    admissionDate: new Date().toISOString().substr(0, 10),
     dischargeDate: new Date().toISOString().substr(0, 10),
     weight: '',
     height: '',
@@ -68,9 +68,9 @@ class PatientEntriesForm extends Component<Props, State> {
   render() {
     const {
       location,
-      obstetric,
+      department,
       patientOutcomeAtDischarge,
-      adminissionDate,
+      admissionDate,
       dischargeDate,
       weight,
       height,
@@ -119,12 +119,14 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
             <Cell columns={8}>
               <Select
-                label="Obstetric"
+                label="Department"
                 className="full-width"
-                value={obstetric}
+                value={department}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ obstetric: item.getAttribute('data-value') });
+                  this.setState({
+                    department: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -143,9 +145,9 @@ class PatientEntriesForm extends Component<Props, State> {
               >
                 <Input
                   type="date"
-                  value={adminissionDate}
+                  value={admissionDate}
                   onChange={e =>
-                    this.setState({ adminissionDate: e.currentTarget.value })
+                    this.setState({ admissionDate: e.currentTarget.value })
                   }
                 />
               </TextField>
