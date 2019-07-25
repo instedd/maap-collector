@@ -3,17 +3,19 @@ import React, { Component } from 'react';
 
 type Props = {
   value: string,
-  onChange: SyntheticKeyboardEvent<HTMLInputElement> => {},
+  onChange: (SyntheticKeyboardEvent<HTMLTextAreaElement>) => void,
   label: string,
   rows?: number
-}
+};
 
 type State = {
   focus: boolean
-}
+};
 
 class TextArea extends Component<Props, State> {
-  state = { focus: false };
+  static defaultProps: { rows: number };
+
+  state: State = { focus: false };
 
   render() {
     const { value, onChange, rows, label } = this.props;
@@ -47,5 +49,9 @@ class TextArea extends Component<Props, State> {
     );
   }
 }
+
+TextArea.defaultProps = {
+  rows: 4
+};
 
 export default TextArea;

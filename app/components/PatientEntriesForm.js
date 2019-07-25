@@ -23,7 +23,6 @@ class PatientEntriesForm extends Component<Props, State> {
   state: State = {
     location: '',
     obstetric: '',
-    patientOutcomeAtDischarge: '',
     adminissionDate: new Date().toISOString().substr(0, 10),
     dischargeDate: new Date().toISOString().substr(0, 10),
     weight: '',
@@ -67,14 +66,33 @@ class PatientEntriesForm extends Component<Props, State> {
   }
 
   render() {
-    const { location, obstetric, patientOutcomeAtDischarge, adminissionDate, 
-            dischargeDate, weight, height, pregnancyStatus, prematureBirth, 
-            chiefComplaint, patientTransferred, primaryDiagnosis, 
-            primaryDiagnosisIcdCode, acuteMyocardialInfarction, chf, 
-            notMentioned, other, antibioticsPrescribed, antibiotic, 
-            antibioticConsumption, patientWasOnAnIndwellingMedicalDevice, 
-            medicalDevice, infectionAcquisition, dischargeDiagnostic, 
-            dischargeDiagnosticIcdCode } = this.state;
+    const {
+      location,
+      obstetric,
+      patientOutcomeAtDischarge,
+      adminissionDate,
+      dischargeDate,
+      weight,
+      height,
+      pregnancyStatus,
+      prematureBirth,
+      chiefComplaint,
+      patientTransferred,
+      primaryDiagnosis,
+      primaryDiagnosisIcdCode,
+      acuteMyocardialInfarction,
+      chf,
+      notMentioned,
+      other,
+      antibioticsPrescribed,
+      antibiotic,
+      antibioticConsumption,
+      patientWasOnAnIndwellingMedicalDevice,
+      medicalDevice,
+      infectionAcquisition,
+      dischargeDiagnostic,
+      dischargeDiagnosticIcdCode
+    } = this.state;
     const { history, patientId } = this.props;
     return (
       <form onSubmit={this.handleSubmit}>
@@ -184,7 +202,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 value={pregnancyStatus}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ pregnancyStatus: item.getAttribute('data-value') });
+                  this.setState({
+                    pregnancyStatus: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -198,7 +218,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 value={prematureBirth}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ prematureBirth: item.getAttribute('data-value') });
+                  this.setState({
+                    prematureBirth: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -255,7 +277,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 <Input
                   value={primaryDiagnosisIcdCode}
                   onChange={e =>
-                    this.setState({ primaryDiagnosisIcdCode: e.currentTarget.value })
+                    this.setState({
+                      primaryDiagnosisIcdCode: e.currentTarget.value
+                    })
                   }
                 />
               </TextField>
@@ -347,7 +371,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 value={antibioticConsumption}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ antibioticConsumption: item.getAttribute('data-value') });
+                  this.setState({
+                    antibioticConsumption: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -385,7 +411,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 value={medicalDevice}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ medicalDevice: item.getAttribute('data-value') });
+                  this.setState({
+                    medicalDevice: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -403,7 +431,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 value={infectionAcquisition}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ infectionAcquisition: item.getAttribute('data-value') });
+                  this.setState({
+                    infectionAcquisition: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -421,7 +451,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 value={dischargeDiagnostic}
                 enhanced
                 onEnhancedChange={(index, item) => {
-                  this.setState({ dischargeDiagnostic: item.getAttribute('data-value') });
+                  this.setState({
+                    dischargeDiagnostic: item.getAttribute('data-value')
+                  });
                 }}
               >
                 <Option value="pomsky">Pomsky</Option>
@@ -433,7 +465,9 @@ class PatientEntriesForm extends Component<Props, State> {
                 <Input
                   value={dischargeDiagnosticIcdCode}
                   onChange={e =>
-                    this.setState({ dischargeDiagnosticIcdCode: e.currentTarget.value })
+                    this.setState({
+                      dischargeDiagnosticIcdCode: e.currentTarget.value
+                    })
                   }
                 />
               </TextField>
@@ -445,7 +479,10 @@ class PatientEntriesForm extends Component<Props, State> {
               <TextArea
                 value={patientOutcomeAtDischarge}
                 label="Patient outcome at discharge"
-                onChange={e => this.setState({ patientOutcomeAtDischarge: e.target.value })}
+                onChange={e =>
+                  // $FlowFixMe
+                  this.setState({ patientOutcomeAtDischarge: e.target.value })
+                }
               />
             </Cell>
           </Row>
