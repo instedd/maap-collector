@@ -280,6 +280,7 @@
     "dotenv": "^8.0.0",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
+    "electron-store": "^4.0.0",
     "electron-updater": "^3.1.6",
     "history": "^4.7.2",
     "lodash": "^4.17.11",

@@ -1,6 +1,10 @@
+const Store = require('electron-store');
+
+const store = new Store();
+
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('state');
+    const serializedState = store.get('state');
     if (serializedState === null) {
       return undefined;
     }
@@ -13,7 +17,7 @@ export const loadState = () => {
 export const saveState = state => {
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
+    store.set('state', serializedState);
   } catch {
     // ignore write errors
   }
