@@ -12,6 +12,7 @@
  */
 import { app, BrowserWindow, globalShortcut } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import mkdirp from 'mkdirp';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
@@ -60,6 +61,8 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
+  console.log(`${app.getPath('userData')}/maap/app/db/storage`);
+  mkdirp(`${app.getPath('userData')}/maap/app/db/storage`);
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
