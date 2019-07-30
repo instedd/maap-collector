@@ -4,6 +4,7 @@ import { AppContainer } from 'react-hot-loader';
 import { throttle } from 'lodash';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import './app.global.scss';
 
 import { setNetworkOnline, setNetworkOffline } from './actions/network';
