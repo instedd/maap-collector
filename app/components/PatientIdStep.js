@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextField, { Input } from '@material/react-text-field';
 
 import XlsxManager from '../utils/xlsxManager';
-import { setPhiData } from '../actions/labRecordImport';
+import { setPatientIdData } from '../actions/labRecordImport';
 
 type ComponentProps = {};
 
@@ -15,7 +15,7 @@ class PatientIdStep extends Component<Props> {
     const newRows = [...rows];
     newRows[rowIndex][cellIndex] = { v: e.target.value };
     dispatch(
-      setPhiData({
+      setPatientIdData({
         rows: newRows
       })
     );
@@ -29,7 +29,7 @@ class PatientIdStep extends Component<Props> {
     const rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
 
     dispatch(
-      setPhiData({
+      setPatientIdData({
         columns: row,
         rows
       })
