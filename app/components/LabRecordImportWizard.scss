@@ -1,52 +1,43 @@
-.wizardHeader {
+.wizardFooter {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 70px;
-  width: 100%;
-  border-bottom: 1px solid grey;
-  justify-content: center;
-  align-items: center;
-}
+  border-top: 1px solid #e5e5e5;
 
-.wizardHeaderStep {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-
-  i {
-    display: flex;
-    width: 24px;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 24px;
-    font-style: normal;
-    margin-right: 16px;
-    margin-left: 16px;
-    background: rgba(0, 0, 0, 0.1);
-    color: #999;
-  }
-
-  &.active {
+  button {
+    color: #ff634a;
     font-weight: bold;
+    padding-left: 30px;
+    padding-right: 30px;
 
-    i {
-      color: white;
-      background: #ff5722;
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &[role='cancel'] {
+      color: #999;
     }
   }
+}
 
-  &::after {
-    content: '';
-    position: absolute;
-    height: 12px;
-    min-width: 73px;
-    margin-left: 12px;
-    margin-right: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
+.wizardBody {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 43px;
+  min-height: 643px;
 
-  &:last-child::after {
-    border: none;
+  h2 {
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    margin-bottom: 77px;
+    text-transform: uppercase;
   }
 }

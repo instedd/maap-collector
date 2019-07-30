@@ -4,12 +4,12 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
-import { fetchLabs } from '../actions/labs';
+import { fetchLabRecords } from '../actions/labRecords';
 import Table from './Table';
 
 type Props = {
   dispatch: Dispatch,
-  labs: {
+  labRecords: {
     items: [],
     totalCount: number
   }
@@ -17,8 +17,8 @@ type Props = {
 type State = {};
 
 const mapStateToProps = state => {
-  const { dispatch, labs } = state;
-  return { dispatch, labs };
+  const { dispatch, labRecords } = state;
+  return { dispatch, labRecords };
 };
 
 class LabRecordsList extends Component<Props, State> {
@@ -26,19 +26,35 @@ class LabRecordsList extends Component<Props, State> {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchLabs());
+    dispatch(fetchLabRecords());
   }
 
   render() {
-    const { labs } = this.props;
+    const { labRecords } = this.props;
     return (
       <div>
         <Table
-          entityName="labs"
-          items={labs.items}
-          totalCount={labs.totalCount}
-          columns={['Name', 'Address', '', 'Last activity']}
-          fields={['name', 'address', 'ownership', 'updatedAt']}
+          entityName="Lab records"
+          items={labRecords.items}
+          totalCount={labRecords.totalCount}
+          columns={[
+            'Patiend ID',
+            'Specimen type',
+            'Specimen source',
+            'Method',
+            'Cultures',
+            'Growth',
+            'Date'
+          ]}
+          fields={[
+            'patientID',
+            'specimentType',
+            'specimenSource',
+            'Method',
+            'Cultures',
+            'growth',
+            'date'
+          ]}
         />
       </div>
     );

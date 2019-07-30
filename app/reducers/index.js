@@ -5,6 +5,8 @@ import network from './network';
 import user from './user';
 import lab from './lab';
 import labs from './labs';
+import labRecords from './labRecords';
+import labRecordImport from './labRecordImport';
 import sync from './sync';
 import specimenSources from './specimenSources';
 import antibioticConsumptionStats from './antibioticConsumptionStats';
@@ -22,6 +24,8 @@ export default function createRootReducer(history: {}) {
       user,
       lab,
       labs,
+      labRecordImport,
+      labRecords,
       sync,
       specimenSources,
       antibioticConsumptionStats,
