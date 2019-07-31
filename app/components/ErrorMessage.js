@@ -1,10 +1,11 @@
 // @flow
 
-import React, { Component } from 'react';
+import type { Node } from 'react';
+import React from 'react';
 import style from './ErrorMessage.scss';
 
 type Props = {
-  children: typeof Component
+  children: Node | string
 };
 
 const ErrorMessage = ({ children }: Props) => (
