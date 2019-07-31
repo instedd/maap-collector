@@ -14,9 +14,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import { State } from '../reducers/types';
+import { userLoggedOut } from '../actions/user';
 
 import routes from '../constants/routes';
-import styles from './NavBar.css';
+import styles from './NavBar.scss';
 import SyncStatus from './SyncStatus';
 
 type StoreProps = {
@@ -24,8 +25,9 @@ type StoreProps = {
 };
 type Props = State & StoreProps & ContextRouter;
 
-const mapStateToProps = ({ currentLab }: State) => ({
-  currentLab: currentLab || true
+const mapStateToProps = ({ currentLab, user }: State) => ({
+  currentLab: currentLab || true,
+  user
 });
 
 const tabs = [
@@ -48,10 +50,18 @@ const tabs = [
 class NavBar extends Component<Props, State> {
   props: Props;
 
-  state: State;
+  state: State = { userDropwdownOpen: false };
+
+  handleSignOut = e => {
+    const { dispatch } = this.props;
+    e.preventDefault();
+
+    dispatch(userLoggedOut());
+  };
 
   render() {
-    const { currentLab, history } = this.props;
+    const { userDropwdownOpen } = this.state;
+    const { currentLab, history, user } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
@@ -62,7 +72,31 @@ class NavBar extends Component<Props, State> {
               </TopAppBarTitle>
               <SyncStatus />
             </TopAppBarSection>
-            <TopAppBarSection align="end" />
+
+            <TopAppBarSection align="end">
+              <TopAppBarTitle
+                className={styles.navBarAccount}
+                onClick={() =>
+                  this.setState({ userDropwdownOpen: !userDropwdownOpen })
+                }
+              >
+                {user.data.username}
+                <MaterialIcon icon="arrow_drop_down" />
+
+                <ul
+                  className={[
+                    userDropwdownOpen ? styles.open : '',
+                    styles.navBarDropdown
+                  ].join(' ')}
+                >
+                  <li>
+                    <a href="#" onClick={this.handleSignOut}>
+                      Sign out
+                    </a>
+                  </li>
+                </ul>
+              </TopAppBarTitle>
+            </TopAppBarSection>
           </TopAppBarRow>
           {currentLab && (
             <TopAppBarRow>

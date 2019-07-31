@@ -2,21 +2,25 @@
 import * as React from 'react';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import { connect } from 'react-redux';
 
 import NavBar from '../components/NavBar';
 
 type Props = {
-  children: React.Node
+  children: React.Node,
+  user: { data: {} }
 };
 
-export default class App extends React.Component<Props> {
+const mapStateToProps = ({ user }) => ({ user });
+
+class App extends React.Component<Props> {
   props: Props;
 
   render() {
-    const { children } = this.props;
+    const { children, user } = this.props;
     return (
       <div>
-        <NavBar />
+        {user.data && <NavBar />}
         <Grid align="middle">
           <Row>
             <Cell columns={12}>{children}</Cell>
@@ -26,3 +30,5 @@ export default class App extends React.Component<Props> {
     );
   }
 }
+
+export default connect(mapStateToProps)(App);

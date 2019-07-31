@@ -18,7 +18,7 @@ export default function network(state = initialState, action: Action) {
         }
       };
     case USER_LOGGED_OUT:
-      return { ...state, data: null };
+      return { ...state, data: null, auth: null };
     default:
       return state;
   }
