@@ -11,7 +11,11 @@ type Props = {
   dispatch: Dispatch,
   labRecords: {
     items: [],
-    totalCount: number
+    totalCount: number,
+    offset: number,
+    limit: number,
+    prevPage: number | null,
+    nextPage: number | null
   }
 };
 type State = {};
@@ -30,13 +34,19 @@ class LabRecordsList extends Component<Props, State> {
   }
 
   render() {
-    const { labRecords } = this.props;
+    const { labRecords, dispatch } = this.props;
     return (
       <div>
         <Table
           entityName="Lab records"
           items={labRecords.items}
+          pagination
           totalCount={labRecords.totalCount}
+          offset={labRecords.offset}
+          limit={labRecords.limit}
+          prevPage={labRecords.prevPage}
+          nextPage={labRecords.nextPage}
+          onReload={() => dispatch(fetchLabRecords())}
           columns={[
             'Patiend ID',
             'Specimen type',

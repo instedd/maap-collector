@@ -29,11 +29,11 @@ class PatientList extends Component<Props, State> {
 
   componentDidMount() {
     const { dispatch, patientId } = this.props;
-    dispatch(fetchPatientEntries(patientId));
+    dispatch(fetchPatientEntries({ patientId }));
   }
 
   render() {
-    const { patientEntries } = this.props;
+    const { patientEntries, dispatch, patientId } = this.props;
     return (
       <div>
         <Table
@@ -42,8 +42,14 @@ class PatientList extends Component<Props, State> {
               <MaterialIcon icon="arrow_back" />
             </Link>
           }
+          pagination
           items={patientEntries.items}
           totalCount={patientEntries.totalCount}
+          offset={patientEntries.offset}
+          limit={patientEntries.limit}
+          prevPage={patientEntries.prevPage}
+          nextPage={patientEntries.nextPage}
+          onReload={() => dispatch(fetchPatientEntries({ patientId }))}
           columns={[
             'Location',
             'Department',

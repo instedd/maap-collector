@@ -8,7 +8,7 @@ const initialState = {
 export default function counter(state = initialState, action: Action) {
   switch (action.type) {
     case FETCHED_LAB_RECORDS:
-      return { ...state, items: action.items, totalCount: action.totalCount };
+      return { ...state, ...action };
     // case LAB_FIELD_UPDATED:
     //   return { ...state };
     default:

@@ -1,9 +1,12 @@
 import React from 'react';
 import Card from '@material/react-card';
+import MaterialIcon from '@material/react-material-icon';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import { withRouter } from 'react-router-dom';
+import type { ContextRouter } from 'react-router';
 
-import styles from './Table.css';
+import styles from './Table.scss';
 
 const months = [
   'Jan',
@@ -27,7 +30,7 @@ const parseField = field => {
 const formatDate = field =>
   `${months[field.getMonth()]} ${field.getDay()}, ${field.getFullYear()}`;
 
-type Props = {
+type ComponentProps = {
   totalCount: number,
   items: [],
   columns: [],
@@ -36,8 +39,16 @@ type Props = {
   onClick?: () => void,
   title?: string,
   rowClassName?: () => [string],
-  lastRow?: typeof Component
+  lastRow?: typeof Component,
+  pagination?: boolean,
+  nextPage?: number | null,
+  prevPage?: number | null,
+  offset?: number | null,
+  limit?: number | null,
+  onReload?: () => void
 };
+
+type Props = ComponentProps & ContextRouter;
 
 const Table = ({
   totalCount,
@@ -48,7 +59,14 @@ const Table = ({
   onClick,
   title,
   rowClassName,
-  lastRow
+  lastRow,
+  pagination,
+  prevPage,
+  nextPage,
+  offset,
+  limit,
+  history,
+  onReload
 }: Props) => (
   <Card>
     <Grid align="left">
@@ -84,10 +102,37 @@ const Table = ({
         ))}
         {lastRow}
       </tbody>
-      <tfoot>
-        <tr />
-      </tfoot>
     </table>
+    {pagination && (
+      <div className={styles.tablePagination}>
+        {Math.min(offset + 1, totalCount)} -{' '}
+        {Math.min(offset + limit, totalCount)} of {totalCount}
+        <a
+          href=""
+          className={prevPage ? 'cursor-pointer' : styles.disabled}
+          onClick={e => {
+            e.preventDefault();
+            if (!prevPage) return;
+            history.push({ search: `page=${prevPage}` });
+            onReload();
+          }}
+        >
+          <MaterialIcon icon="keyboard_arrow_left" />
+        </a>
+        <a
+          href=""
+          className={nextPage ? 'cursor-pointer' : styles.disabled}
+          onClick={e => {
+            e.preventDefault();
+            if (!nextPage) return;
+            history.push({ search: `page=${nextPage}` });
+            onReload();
+          }}
+        >
+          <MaterialIcon icon="keyboard_arrow_right" />
+        </a>
+      </div>
+    )}
   </Card>
 );
 
@@ -96,7 +141,13 @@ Table.defaultProps = {
   title: null,
   entityName: '',
   rowClassName: () => {},
-  lastRow: null
+  lastRow: null,
+  pagination: false,
+  offset: null,
+  limit: null,
+  onReload: () => {},
+  prevPage: null,
+  nextPage: null
 };
 
-export default Table;
+export default withRouter(Table);

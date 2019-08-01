@@ -1,22 +1,28 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import TextField, { Input } from '@material/react-text-field';
 import Select, { Option } from '@material/react-select';
 import MaterialIcon from '@material/react-material-icon';
+import type { ContextRouter } from 'react-router';
 import type { Dispatch } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
 import Table from './Table';
 import RowForm from './RowForm';
 
-type Props = {
+type ComponentProps = {
   dispatch: Dispatch,
   antibioticConsumptionStats: {
     items: [],
-    totalCount: number
+    totalCount: number,
+    totalPages: number,
+    offset: number,
+    limit: number,
+    prevPage: number,
+    nextPage: number
   },
   antibioticId: string
 };
@@ -29,6 +35,8 @@ type State = {
   recipientUnit?: string
 };
 
+type Props = ComponentProps & ContextRouter;
+
 const mapStateToProps = state => {
   const { dispatch, antibioticConsumptionStats } = state;
   return { dispatch, antibioticConsumptionStats };
@@ -38,18 +46,28 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   state: State = {};
 
   handleSubmit = () => {
-    const { dispatch, antibioticId } = this.props;
+    const {
+      dispatch,
+      antibioticId,
+      history,
+      antibioticConsumptionStats
+    } = this.props;
 
-    dispatch(createAntibioticConsumptionStat({ ...this.state, antibioticId }));
+    return dispatch(
+      createAntibioticConsumptionStat({ ...this.state, antibioticId })
+    ).then(() => {
+      history.push({ search: `page=${antibioticConsumptionStats.totalPages}` });
+      return dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+    });
   };
 
   componentDidMount() {
     const { dispatch, antibioticId } = this.props;
-    dispatch(fetchAntibioticConsumptionStats(antibioticId));
+    dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
   }
 
   render() {
-    const { antibioticConsumptionStats } = this.props;
+    const { antibioticConsumptionStats, dispatch, antibioticId } = this.props;
     const {
       date,
       issued,
@@ -67,8 +85,16 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <MaterialIcon icon="arrow_back" />
             </Link>
           }
+          pagination
           items={antibioticConsumptionStats.items}
           totalCount={antibioticConsumptionStats.totalCount}
+          offset={antibioticConsumptionStats.offset}
+          limit={antibioticConsumptionStats.limit}
+          prevPage={antibioticConsumptionStats.prevPage}
+          nextPage={antibioticConsumptionStats.nextPage}
+          onReload={() =>
+            dispatch(fetchAntibioticConsumptionStats({ antibioticId }))
+          }
           columns={[
             'Date',
             'Issued',
@@ -146,4 +172,6 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(AntibioticConsumptionStatsList);
+export default connect(mapStateToProps)(
+  withRouter(AntibioticConsumptionStatsList)
+);

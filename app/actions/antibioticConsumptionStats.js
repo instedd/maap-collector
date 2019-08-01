@@ -1,6 +1,6 @@
 import snakeCaseKeys from 'snakecase-keys';
-import db from '../db';
 import { remoteSync, remoteUpload } from './sync';
+import { fetchEntity } from './fetch';
 
 const UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS =
   'UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS';
@@ -58,39 +58,9 @@ export const uploadAntibioticConsumptionStats = () => async (
   );
 };
 
-export const fetchAntibioticConsumptionStats = antibioticId => async (
-  dispatch,
-  getState
-) => {
-  const { user } = getState();
-  const { AntibioticConsumptionStat } = await db.initializeForUser(user);
-  dispatch({ type: FETCH_ANTIBIOTIC_CONSUMPTION_STATS });
-  const totalCount = await AntibioticConsumptionStat.count({
-    where: { antibioticId }
-  });
-  AntibioticConsumptionStat.findAll({ where: { antibioticId } })
-    .then(async items =>
-      //
-      // await Promise.all(
-      //   items.map(item =>
-      //     // TODO: Generate this dinamically from relations
-      //     // item.getFacility().then(facility => {
-      //     //   // eslint-disable-next-line
-      //     //   item.facility = facility;
-      //     //   return facility;
-      //     // })
-      //   )
-      // );
-      dispatch({
-        type: FETCHED_ANTIBIOTIC_CONSUMPTION_STATS,
-        items,
-        totalCount
-      })
-    )
-    .catch(error =>
-      dispatch({ type: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED, error })
-    );
-};
+export const fetchAntibioticConsumptionStats = fetchEntity(
+  'AntibioticConsumptionStat'
+);
 
 export {
   FETCH_ANTIBIOTIC_CONSUMPTION_STATS,

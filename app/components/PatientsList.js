@@ -32,13 +32,19 @@ class PatientList extends Component<Props, State> {
   }
 
   render() {
-    const { patients, history } = this.props;
+    const { patients, history, dispatch } = this.props;
     return (
       <div>
         <Table
           entityName="patients"
-          items={patients.items}
+          pagination
           totalCount={patients.totalCount}
+          items={patients.items}
+          offset={patients.offset}
+          limit={patients.limit}
+          prevPage={patients.prevPage}
+          nextPage={patients.nextPage}
+          onReload={() => dispatch(fetchPatients())}
           columns={[
             'Patient ID',
             'Gender',

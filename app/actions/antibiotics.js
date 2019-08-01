@@ -1,5 +1,5 @@
-import db from '../db';
 import { remoteSync } from './sync';
+import { fetchEntity } from './fetch';
 
 const FETCH_ANTIBIOTICS = 'FETCH_ANTIBIOTICS';
 const FETCHED_ANTIBIOTICS = 'FETCHED_ANTIBIOTICS';
@@ -23,14 +23,6 @@ export const syncAntibiotics = () => async (dispatch, getState) => {
   );
 };
 
-export const fetchAntibiotics = () => async (dispatch, getState) => {
-  const { user } = getState();
-  const { Antibiotic } = await db.initializeForUser(user);
-  dispatch({ type: FETCH_ANTIBIOTICS });
-  const totalCount = await Antibiotic.count();
-  Antibiotic.findAll({ limit: 15 })
-    .then(items => dispatch({ type: FETCHED_ANTIBIOTICS, items, totalCount }))
-    .catch(error => dispatch({ type: FETCH_ANTIBIOTICS_FAILED, error }));
-};
+export const fetchAntibiotics = fetchEntity('Antibiotic');
 
 export { FETCH_ANTIBIOTICS, FETCHED_ANTIBIOTICS, FETCH_ANTIBIOTICS_FAILED };
