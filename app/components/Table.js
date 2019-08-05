@@ -105,8 +105,11 @@ const Table = ({
     </table>
     {pagination && (
       <div className={styles.tablePagination}>
-        {Math.min(offset + 1, totalCount)} -{' '}
-        {Math.min(offset + limit, totalCount)} of {totalCount}
+        {`${Math.min(offset + 1, totalCount)} - ${Math.min(
+          offset + limit,
+          totalCount
+        )} `}
+        of {totalCount}
         <a
           href=""
           className={prevPage ? 'cursor-pointer' : styles.disabled}
