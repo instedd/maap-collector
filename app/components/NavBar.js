@@ -20,13 +20,15 @@ import routes from '../constants/routes';
 import styles from './NavBar.scss';
 import SyncStatus from './SyncStatus';
 
+import { exitFacility } from '../actions/facility';
+
 type StoreProps = {
-  currentLab: number | null
+  lab: *
 };
 type Props = State & StoreProps & ContextRouter;
 
-const mapStateToProps = ({ currentLab, user }: State) => ({
-  currentLab: currentLab || true,
+const mapStateToProps = ({ facility, user }: State) => ({
+  facility,
   user
 });
 
@@ -61,16 +63,28 @@ class NavBar extends Component<Props, State> {
 
   render() {
     const { userDropwdownOpen } = this.state;
-    const { currentLab, history, user } = this.props;
+    const { history, user, facility, dispatch } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
           <TopAppBarRow>
             <TopAppBarSection align="start">
               <TopAppBarTitle className={styles.navBarTitle}>
-                MAAP
+                <div
+                  tabIndex="0"
+                  role="button"
+                  onClick={() => dispatch(exitFacility())}
+                  onKeyPress={() => dispatch(exitFacility())}
+                >
+                  MAAP
+                </div>
               </TopAppBarTitle>
               <SyncStatus />
+              {facility && (
+                <div className={styles.navBarCurrentFacility}>
+                  At site: {facility.dataValues.name}
+                </div>
+              )}
             </TopAppBarSection>
 
             <TopAppBarSection align="end">
@@ -98,7 +112,7 @@ class NavBar extends Component<Props, State> {
               </TopAppBarTitle>
             </TopAppBarSection>
           </TopAppBarRow>
-          {currentLab && (
+          {facility && (
             <TopAppBarRow>
               <TabBar activeIndex={null} className={styles.navBarTabs}>
                 {tabs.map(tab => (
@@ -117,7 +131,7 @@ class NavBar extends Component<Props, State> {
           )}
         </TopAppBar>
         <TopAppBarFixedAdjust />
-        {currentLab && <TopAppBarFixedAdjust />}
+        {facility && <TopAppBarFixedAdjust />}
       </div>
     );
   }
