@@ -44,6 +44,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
     const { file, headerRow } = labRecordImport;
     const sheet = new XlsxManager(file.path);
     const row = sheet.row(headerRow - 1);
+    console.log(row, file.path);
 
     dispatch(
       setPhiData({

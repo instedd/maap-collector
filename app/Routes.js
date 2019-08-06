@@ -11,6 +11,7 @@ import PatientsIndex from './containers/PatientsIndex';
 import PatientEntriesIndex from './containers/PatientEntriesIndex';
 import PatientEntriesNew from './containers/PatientEntriesNew';
 import LabRecordsImport from './containers/LabRecordsImport';
+import LabRecordsDetail from './containers/LabRecordsDetail';
 
 const mapStateToProps = state => {
   const { user } = state;
@@ -71,6 +72,11 @@ const Router = () => (
         exact
         path="/lab_records/import"
         component={LabRecordsImport}
+      />
+      <PrivateRoute
+        exact
+        path="/lab_records/:id"
+        component={LabRecordsDetail}
       />
     </Switch>
   </App>

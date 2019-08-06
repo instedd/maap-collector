@@ -6,12 +6,15 @@ import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
 import DropZone from './DropZone';
 import PatientIdStep from './PatientIdStep';
+import type { Dispatch } from '../reducers/types';
 import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
-import { setFileData } from '../actions/labRecordImport';
+import { setFileData, createLabRecord } from '../actions/labRecordImport';
 import style from './LabRecordImportWizard.scss';
 
-type Props = {};
+type Props = {
+  dispatch: Dispatch
+};
 
 type State = {
   currentStep: number
@@ -36,8 +39,9 @@ class LabRecordsImport extends Component<Props, State> {
   state: State = { currentStep: 0 };
 
   handleNext = () => {
+    const { dispatch } = this.props;
     const { currentStep } = this.state;
-    if (currentStep === STEPS.length - 1) return;
+    if (currentStep === STEPS.length - 1) return dispatch(createLabRecord());
     this.setState({ currentStep: currentStep + 1 });
   };
 

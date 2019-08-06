@@ -7,9 +7,9 @@ import type { Action } from './types';
 
 const initialState = {
   file: null,
-  headerRow: '',
-  dataRowsFrom: '',
-  dataRowsTo: '',
+  headerRow: '3',
+  dataRowsFrom: '4',
+  dataRowsTo: '34',
   columns: [],
   rows: [],
   patientOrLabRecordId: {},

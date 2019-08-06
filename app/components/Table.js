@@ -87,14 +87,14 @@ const Table = ({
         </tr>
       </thead>
       <tbody>
-        {items.map(item => (
+        {items.map((item, index) => (
           <tr
             className={rowClassName(item)}
-            key={`item-${item.id}`}
+            key={`item-${item.id || index}`}
             onClick={() => onClick(item)}
           >
             {fields.map(field => (
-              <td key={`item-${item.id}-${field}`}>
+              <td key={`item-${item.id || index}-${field}`}>
                 {parseField(item[field])}
               </td>
             ))}

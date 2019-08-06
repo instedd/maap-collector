@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import type { ContextRouter } from 'react-router';
 import type { Dispatch } from '../reducers/types';
 import { fetchLabRecords } from '../actions/labRecords';
 import Table from './Table';
@@ -17,7 +19,7 @@ type Props = {
     prevPage: number | null,
     nextPage: number | null
   }
-};
+} & ContextRouter;
 type State = {};
 
 const mapStateToProps = state => {
@@ -34,7 +36,7 @@ class LabRecordsList extends Component<Props, State> {
   }
 
   render() {
-    const { labRecords, dispatch } = this.props;
+    const { labRecords, dispatch, history } = this.props;
     return (
       <div>
         <Table
@@ -47,28 +49,13 @@ class LabRecordsList extends Component<Props, State> {
           prevPage={labRecords.prevPage}
           nextPage={labRecords.nextPage}
           onReload={() => dispatch(fetchLabRecords())}
-          columns={[
-            'Patiend ID',
-            'Specimen type',
-            'Specimen source',
-            'Method',
-            'Cultures',
-            'Growth',
-            'Date'
-          ]}
-          fields={[
-            'patientID',
-            'specimentType',
-            'specimenSource',
-            'Method',
-            'Cultures',
-            'growth',
-            'date'
-          ]}
+          onClick={({ id }) => history.push(`/lab_records/${id}`)}
+          columns={['File', 'Created at']}
+          fields={['fileName', 'filePath', 'createdAt']}
         />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(LabRecordsList);
+export default connect(mapStateToProps)(withRouter(LabRecordsList));

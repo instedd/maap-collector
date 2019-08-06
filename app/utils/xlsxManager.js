@@ -43,7 +43,7 @@ class XlsxManager {
       (col, index) =>
         this.currentSheet[
           xlsx.utils.encode_cell({ r: parseInt(rowNumber, 10), c: index })
-        ]
+        ] || { v: '', w: '', t: '', h: '', r: '' }
     );
   }
 }

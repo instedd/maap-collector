@@ -5,7 +5,8 @@ class LabRecord extends Model {}
 const model = sequelize =>
   LabRecord.init(
     {
-      labNumber: { type: Sequelize.STRING }
+      fileName: { type: Sequelize.STRING },
+      filePath: { type: Sequelize.STRING }
     },
     { sequelize, modelName: model.modelName }
   );

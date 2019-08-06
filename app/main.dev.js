@@ -62,6 +62,7 @@ app.on('window-all-closed', () => {
 
 app.on('ready', async () => {
   mkdirp(`${app.getPath('userData')}/maap/app/db/storage`);
+  mkdirp(`${app.getPath('userData')}/maap/app/storage`);
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
