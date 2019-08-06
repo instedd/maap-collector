@@ -17,7 +17,8 @@ const store = configureStore({ preloadedState: persistedState });
 store.subscribe(
   throttle(() => {
     saveState({
-      user: store.getState().user
+      user: store.getState().user,
+      facility: store.getState().facility
     });
   }, 1000)
 );

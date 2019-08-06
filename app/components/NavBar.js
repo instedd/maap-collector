@@ -82,7 +82,7 @@ class NavBar extends Component<Props, State> {
               <SyncStatus />
               {facility && (
                 <div className={styles.navBarCurrentFacility}>
-                  At site: {facility.dataValues.name}
+                  At site: {facility.name}
                 </div>
               )}
             </TopAppBarSection>
