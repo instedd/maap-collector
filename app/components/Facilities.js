@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { fetchLabs } from '../actions/labs';
+import { enterFacility } from '../actions/facility';
 import Table from './Table';
 
 type Props = {
@@ -21,7 +22,7 @@ const mapStateToProps = state => {
   return { dispatch, labs };
 };
 
-class Labs extends Component<Props, State> {
+class Facilities extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
@@ -30,7 +31,7 @@ class Labs extends Component<Props, State> {
   }
 
   render() {
-    const { labs } = this.props;
+    const { labs, dispatch } = this.props;
     return (
       <div>
         <Table
@@ -39,10 +40,11 @@ class Labs extends Component<Props, State> {
           totalCount={labs.totalCount}
           columns={['Name', 'Address', 'Ownership', 'Last activity']}
           fields={['name', 'address', 'ownership', 'updatedAt']}
+          onClick={facility => dispatch(enterFacility(facility))}
         />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(Labs);
+export default connect(mapStateToProps)(Facilities);

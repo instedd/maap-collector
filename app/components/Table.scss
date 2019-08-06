@@ -17,6 +17,11 @@ th {
   text-align: left;
 }
 
+tr:hover {
+  background-color: rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
 .tableTitle,
 .tableTitle a {
   color: #000;

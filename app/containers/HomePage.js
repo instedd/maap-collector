@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Fab from '@material/react-fab';
 import MaterialIcon from '@material/react-material-icon';
 import LabRecordsList from '../components/LabRecordsList';
+import Facilities from '../components/Facilities';
 
 type Props = {
   sync: {
@@ -11,19 +12,20 @@ type Props = {
   },
   history: {
     push: string => void
-  }
+  },
+  facility: *
 };
 
-const mapStateToProps = ({ sync }) => ({ sync });
+const mapStateToProps = ({ sync, facility }) => ({ sync, facility });
 
 class HomePage extends Component<Props> {
   props: Props;
 
   render() {
-    const { history } = this.props;
+    const { history, facility } = this.props;
     return (
       <div>
-        <LabRecordsList />
+        {facility ? <LabRecordsList /> : <Facilities />}
         <Fab
           className="mdc-fab app-fab--absolute"
           icon={<MaterialIcon icon="add" />}
