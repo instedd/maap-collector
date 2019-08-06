@@ -20,7 +20,7 @@ export const syncAntibiotics = () => async (dispatch, getState) => {
   dispatch({ type: SYNC_ANTIBIOTICS });
   return dispatch(
     remoteSync('/api/v1/antibiotics', user, 'Antibiotic', antibioticMapper)
-  );
+  ).then(() => dispatch(fetchAntibiotics()));
 };
 
 export const fetchAntibiotics = fetchEntity('Antibiotic');
