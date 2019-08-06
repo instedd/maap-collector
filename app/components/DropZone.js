@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
+import { remote } from 'electron';
 import styles from './DropZone.scss';
 
 type Props = {
@@ -103,7 +104,20 @@ class DropZone extends Component<Props, State> {
             <div className={styles.message}>
               <MaterialIcon icon="insert_drive_file" />
               Drop your files here (Excel) or&nbsp;
-              <a href="#">Browse</a>
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault();
+                  const files = remote.dialog.showOpenDialog({
+                    properties: ['openFile']
+                  });
+                  if (!files) return;
+                  console.log(files);
+                  onChange({ file: { name: files[0], path: files[0] } });
+                }}
+              >
+                Browse
+              </a>
             </div>
           )}
         </div>
