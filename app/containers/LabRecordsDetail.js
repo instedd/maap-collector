@@ -20,7 +20,7 @@ class PatientsIndex extends Component<Props, State> {
 
     return (
       <div>
-        <LabRecordsDetailList patientId={match.params.id} />
+        <LabRecordsDetailList labRecordId={match.params.id} />
       </div>
     );
   }

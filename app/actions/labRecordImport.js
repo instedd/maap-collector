@@ -27,7 +27,8 @@ export const createLabRecord = () => async (dispatch, getState) => {
 
     const labRecord = await LabRecord.create({
       filePath: newFilePath,
-      fileName
+      fileName,
+      ...labRecordImportState
     });
 
     dispatch({ type: 'CREATED_LAB_RECORD', id: labRecord.id });

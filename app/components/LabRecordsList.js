@@ -51,7 +51,7 @@ class LabRecordsList extends Component<Props, State> {
           onReload={() => dispatch(fetchLabRecords())}
           onClick={({ id }) => history.push(`/lab_records/${id}`)}
           columns={['File', 'Created at']}
-          fields={['fileName', 'filePath', 'createdAt']}
+          fields={['id', 'fileName', 'filePath', 'createdAt']}
         />
       </div>
     );

@@ -23,15 +23,27 @@ class PatientIdStep extends Component<Props> {
 
   componentDidMount() {
     const { labRecordImport, dispatch } = this.props;
-    const { file, dataRowsFrom, dataRowsTo } = labRecordImport;
+    const {
+      file,
+      dataRowsFrom,
+      dataRowsTo,
+      patientOrLabRecordId,
+      phi,
+      date
+    } = labRecordImport;
     const sheet = new XlsxManager(file.path);
-    const row = sheet.row(labRecordImport.headerRow - 1);
+    const headerRow = sheet.row(labRecordImport.headerRow - 1);
     const rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
+    const columnsToKeep = headerRow.reduce((acc, current, index) => {
+      if (patientOrLabRecordId[current.v] || phi[current.v] || date[current.v])
+        acc.push(index);
+      return acc;
+    }, []);
 
     dispatch(
       setPatientIdData({
-        columns: row,
-        rows
+        columns: columnsToKeep.map(index => headerRow[index]),
+        rows: rows.map(row => columnsToKeep.map(index => row[index]))
       })
     );
   }

@@ -44,11 +44,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
     const { file, headerRow } = labRecordImport;
     const sheet = new XlsxManager(file.path);
     const row = sheet.row(headerRow - 1);
-    console.log(row, file.path);
 
     dispatch(
       setPhiData({
-        columns: row,
+        columns: row.filter(i => i.v !== ''),
         patientOrLabRecordId: row.reduce(
           (acc, current) => ({ ...acc, [current.v]: null }),
           {}

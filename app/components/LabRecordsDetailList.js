@@ -7,10 +7,9 @@ import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import { fetchLabRecord } from '../actions/labRecords';
 import { setPhiData } from '../actions/labRecordImport';
-import XlsxManager from '../utils/xlsxManager';
 import Table from './Table';
 
-import type { Dispatch, State } from '../reducers/types';
+import { Dispatch, State } from '../reducers/types';
 
 type StoreProps = {
   dispatch: Dispatch,
@@ -31,15 +30,12 @@ class PatientList extends Component<Props, State> {
 
   async componentDidMount() {
     const { dispatch, labRecordId } = this.props;
-    const labRecord = await dispatch(fetchLabRecord({ labRecordId }));
+    const labRecord = await dispatch(fetchLabRecord(labRecordId));
 
-    const { filePath, dataRowsFrom = 4, dataRowsTo = 34 } = labRecord;
-    const sheet = new XlsxManager(filePath);
-    const row = sheet.row(2);
-    const rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
+    const { rows, columns } = labRecord;
     dispatch(
       setPhiData({
-        columns: row,
+        columns,
         rows
       })
     );

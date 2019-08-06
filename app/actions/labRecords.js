@@ -13,7 +13,7 @@ export const fetchLabRecord = labRecordId => async (dispatch, getState) => {
   const { user } = getState();
   const { LabRecord } = await db.initializeForUser(user);
 
-  const labRecord = await LabRecord.findOne({ id: labRecordId });
+  const labRecord = await LabRecord.findOne({ where: { id: labRecordId } });
   dispatch({ type: FETCHED_LAB_RECORD, labRecord });
 
   return labRecord;

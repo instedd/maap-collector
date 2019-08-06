@@ -6,7 +6,15 @@ const model = sequelize =>
   LabRecord.init(
     {
       fileName: { type: Sequelize.STRING },
-      filePath: { type: Sequelize.STRING }
+      filePath: { type: Sequelize.STRING },
+      headerRow: { type: Sequelize.INTEGER },
+      dataRowsFrom: { type: Sequelize.INTEGER },
+      dataRowsTo: { type: Sequelize.INTEGER },
+      rows: { type: Sequelize.JSONB },
+      columns: { type: Sequelize.JSONB },
+      patientOrLabRecordId: { type: Sequelize.JSONB },
+      phi: { type: Sequelize.JSONB },
+      date: { type: Sequelize.JSONB }
     },
     { sequelize, modelName: model.modelName }
   );
