@@ -1,6 +1,7 @@
+/* Global */
 :root {
-  --mdc-theme-primary: #ff5722;
-  --mdc-theme-secondary: #333;
+  --mdc-theme-primary: var(--orange);
+  --mdc-theme-secondary: var(--dark-gray);
 }
 
 .mdc-top-app-bar {

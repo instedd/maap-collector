@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: space-between;
   height: 70px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--light-gray) ;
 
   button {
-    color: #ff634a;
     font-weight: bold;
+    color: var(--orange);
     padding-left: 30px;
     padding-right: 30px;
 
@@ -17,8 +17,8 @@
       align-items: center;
     }
 
-    &[role='cancel'] {
-      color: #999;
+    &[role='cancel'], &:first-child {
+      color: var(--medium-gray);
     }
   }
 }
@@ -32,9 +32,9 @@
   min-height: 643px;
 
   h2 {
-    color: #000;
     font-size: 16px;
     font-weight: 500;
+    color: var(--black);
     line-height: 24px;
     text-align: center;
     margin-bottom: 77px;

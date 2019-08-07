@@ -2,7 +2,7 @@
   display: flex;
   height: 70px;
   width: 100%;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--light-gray);
   justify-content: center;
   align-items: center;
 }
@@ -12,6 +12,7 @@
   justify-content: center;
   align-items: center;
   padding: 40px;
+  color: var(--medium-gray);
 
   i {
     display: flex;
@@ -23,16 +24,17 @@
     font-style: normal;
     margin-right: 16px;
     margin-left: 16px;
-    background: rgba(0, 0, 0, 0.1);
-    color: #999;
+    background: var(--transparent-gray);
+    color: var(--medium-gray);
   }
 
   &.active {
+    color: var(--black);
     font-weight: bold;
 
     i {
       color: white;
-      background: #ff5722;
+      background: var(--orange);
     }
   }
 
@@ -43,7 +45,7 @@
     min-width: 73px;
     margin-left: 12px;
     margin-right: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--transparent-gray);
   }
 
   &:last-child::after {

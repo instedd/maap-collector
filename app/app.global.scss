@@ -26,6 +26,17 @@
 @import '~font-work-sans/work-sans.css';
 @import './material-overrides.scss';
 
+:root {
+  --black: #000;
+  --white: #fff;
+  --light-gray: #e5e5e5;
+  --medium-gray: #999;
+  --dark-gray: #333;
+  --transparent-gray: rgba(0, 0, 0, 0.1);
+  --transparent-dark-gray: rgba(0, 0, 0, 0.2);
+  --orange: #ff5722;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -36,7 +47,7 @@
 body {
   position: relative;
   height: 100vh;
-  background: #e5e5e5;
+  background: var(--light-gray);
   overflow-x: hidden;
 }
 
@@ -52,7 +63,7 @@ h2 {
 }
 
 .highlight {
-  color: #ff5622;
+  color: var(--orange);
 }
 
 .text-center {

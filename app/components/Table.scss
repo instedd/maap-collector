@@ -8,11 +8,11 @@ tr {
 
 td,
 th {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid var(--transparent-gray);
   padding: 0 2rem;
 }
 th {
-  color: #999;
+  color: var(--medium-gray);
   font-weight: normal;
   text-align: left;
 }
@@ -24,7 +24,7 @@ tr:hover {
 
 .tableTitle,
 .tableTitle a {
-  color: #000;
+  color: var(--black);
 }
 
 .tablePagination {
@@ -32,18 +32,18 @@ tr:hover {
   justify-content: flex-end;
   align-items: flex-end;
   padding: 24px;
-  color: #999;
+  color: var(--medium-gray);
 
   a {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #999;
+    color: var(--medium-gray);
     text-decoration: none;
     transition: 0.3s ease-in;
   }
 }
 
 .disabled {
-  color: #ddd !important;
+  color: var(--light-gray) !important;
 }
