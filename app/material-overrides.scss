@@ -4,11 +4,37 @@
   --mdc-theme-secondary: var(--dark-gray);
 }
 
+/* Top Bar */
 .mdc-top-app-bar {
   background-color: var(--mdc-theme-secondary);
 }
 .mdc-top-app-bar__title {
   color: var(--mdc-theme-primary);
+  font-family: var(--ws-regular);
+  font-size: 1.5rem;
+}
+.mdc-tab,
+.mdc-top-app-bar__section--align-end .mdc-top-app-bar__title {
+  font-size: 1rem;
+  letter-spacing: normal;
+}
+
+.mdc-tab--active {
+  color: var(--white) !important;
+}
+
+/* Form Fields */
+.mdc-text-field__input,
+.mdc-floating-label,
+.mdc-list-item,
+.mdc-select__native-control,
+.mdc-select__selected-text {
+  font-size: .875rem;
+  font-family: var(--ws-regular);
+}
+
+.mdc-select__native-control, .mdc-select__selected-text {
+  text-align: left;
 }
 
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
@@ -38,6 +64,9 @@
 .mdc-text-field.textarea {
   height: auto;
   min-height: 56px;
+/* Button */
+.mdc-button__label {
+  font-family: 'work_sansbold', sans-serif;
 }
 
 @for $columns from 1 through 12 {

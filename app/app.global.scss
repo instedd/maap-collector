@@ -35,13 +35,16 @@
   --transparent-gray: rgba(0, 0, 0, 0.1);
   --transparent-dark-gray: rgba(0, 0, 0, 0.2);
   --orange: #ff5722;
+  --ws-regular: 'work_sansregular', sans-serif;
+  --ws-medium: 'work_sansmedium', sans-serif;
+  --ws-bold: 'work_sansbold', sans-serif;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Work Sans', sans-serif;
+  font-family: var(--ws-regular);
 }
 
 body {
@@ -49,12 +52,17 @@ body {
   height: 100vh;
   background: var(--light-gray);
   overflow-x: hidden;
+  font-size: 16px;
 }
 
 h2 {
   color: #000;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 400;
+}
+
+h4 {
+  font-size: .875em;
 }
 
 .full-width {
