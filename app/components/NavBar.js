@@ -61,9 +61,15 @@ class NavBar extends Component<Props, State> {
     dispatch(userLoggedOut());
   };
 
+  exitFacility = async () => {
+    const { dispatch, history } = this.props;
+    await dispatch(exitFacility());
+    history.push('/');
+  };
+
   render() {
     const { userDropwdownOpen } = this.state;
-    const { history, user, facility, dispatch } = this.props;
+    const { history, user, facility } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
@@ -73,8 +79,8 @@ class NavBar extends Component<Props, State> {
                 <div
                   tabIndex="0"
                   role="button"
-                  onClick={() => dispatch(exitFacility())}
-                  onKeyPress={() => dispatch(exitFacility())}
+                  onClick={() => this.exitFacility()}
+                  onKeyPress={() => this.exitFacility()}
                 >
                   MAAP
                 </div>
