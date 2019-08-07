@@ -35,12 +35,19 @@
 
 .mdc-select__native-control, .mdc-select__selected-text {
   text-align: left;
+  padding-bottom: 1rem;
 }
 
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
   color: var(--mdc-theme-primary);
 }
 
+.mdc-text-field.textarea {
+  height: auto;
+  min-height: 56px;
+}
+
+/* Fab button */
 .mdc-fab {
   background-color: var(--mdc-theme-primary);
 }
@@ -51,19 +58,13 @@
   right: 1rem;
 }
 
-.mdc-select__selected-text {
-  text-align: left;
-}
-
+/* Layout Grid */
 .mdc-layout-grid__cell--align-middle {
   display: flex;
   align-items: center;
   flex-direction: row;
 }
 
-.mdc-text-field.textarea {
-  height: auto;
-  min-height: 56px;
 /* Button */
 .mdc-button__label {
   font-family: 'work_sansbold', sans-serif;
