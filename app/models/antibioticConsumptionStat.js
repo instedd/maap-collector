@@ -22,10 +22,6 @@ const model = sequelize => {
     },
     { sequelize, modelName: model.modelName }
   );
-  m.belongsTo(sequelize.models.Lab, {
-    as: 'facility',
-    foreignKey: 'facilityId'
-  });
   // TODO: Abstract this to be generic and outside a hook
   m.addHook('beforeValidate', async instance => {
     // TODO: Get remote id's when only a local id is present

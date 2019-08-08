@@ -1,9 +1,9 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Lab extends Model {}
+class Site extends Model {}
 
 const model = sequelize =>
-  Lab.init(
+  Site.init(
     {
       name: { type: Sequelize.STRING },
       address: { type: Sequelize.STRING },
@@ -18,6 +18,6 @@ const model = sequelize =>
     { sequelize, modelName: model.modelName }
   );
 
-model.modelName = 'Lab';
+model.modelName = 'Site';
 
 export default model;

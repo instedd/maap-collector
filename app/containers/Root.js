@@ -9,7 +9,7 @@ type Props = {
   store: Store,
   history: {},
   network: {},
-  lab: {}
+  site: {}
 };
 
 export default class Root extends Component<Props> {

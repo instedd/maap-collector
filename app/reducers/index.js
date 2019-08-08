@@ -3,8 +3,8 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import network from './network';
 import user from './user';
-import facility from './facility';
-import labs from './labs';
+import site from './site';
+import sites from './sites';
 import labRecords from './labRecords';
 import labRecordImport from './labRecordImport';
 import sync from './sync';
@@ -22,8 +22,8 @@ export default function createRootReducer(history: {}) {
       router: routerReducer,
       network,
       user,
-      facility,
-      labs,
+      site,
+      sites,
       labRecordImport,
       labRecords,
       sync,

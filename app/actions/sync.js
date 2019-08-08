@@ -3,7 +3,7 @@ import snakeCaseKeys from 'snakecase-keys';
 import db from '../db';
 import { fetchPaginated, fetchAuthenticated } from '../utils/fetch';
 
-import { syncLabs } from './labs';
+import { syncSites } from './sites';
 import { syncSpecimenSources } from './specimenSources';
 import { syncCultureTypes } from './cultureTypes';
 import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
@@ -28,8 +28,8 @@ export const entities = [
     syncAction: syncCultureTypes
   },
   {
-    name: 'Lab',
-    syncAction: syncLabs
+    name: 'Site',
+    syncAction: syncSites
   },
   {
     name: 'Antibiotic',

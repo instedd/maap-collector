@@ -20,15 +20,15 @@ import routes from '../constants/routes';
 import styles from './NavBar.scss';
 import SyncStatus from './SyncStatus';
 
-import { exitFacility } from '../actions/facility';
+import { exitSite } from '../actions/site';
 
 type StoreProps = {
-  lab: *
+  site: *
 };
 type Props = State & StoreProps & ContextRouter;
 
-const mapStateToProps = ({ facility, user }: State) => ({
-  facility,
+const mapStateToProps = ({ site, user }: State) => ({
+  site,
   user
 });
 
@@ -61,15 +61,15 @@ class NavBar extends Component<Props, State> {
     dispatch(userLoggedOut());
   };
 
-  exitFacility = async () => {
+  exitSite = async () => {
     const { dispatch, history } = this.props;
-    await dispatch(exitFacility());
+    await dispatch(exitSite());
     history.push('/');
   };
 
   render() {
     const { userDropwdownOpen } = this.state;
-    const { history, user, facility } = this.props;
+    const { history, user, site } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
@@ -79,16 +79,16 @@ class NavBar extends Component<Props, State> {
                 <div
                   tabIndex="0"
                   role="button"
-                  onClick={() => this.exitFacility()}
-                  onKeyPress={() => this.exitFacility()}
+                  onClick={() => this.exitSite()}
+                  onKeyPress={() => this.exitSite()}
                 >
                   MAAP
                 </div>
               </TopAppBarTitle>
               <SyncStatus />
-              {facility && (
-                <div className={styles.navBarCurrentFacility}>
-                  At site: {facility.name}
+              {site && (
+                <div className={styles.navBarCurrentSite}>
+                  At site: {site.name}
                 </div>
               )}
             </TopAppBarSection>
@@ -118,7 +118,7 @@ class NavBar extends Component<Props, State> {
               </TopAppBarTitle>
             </TopAppBarSection>
           </TopAppBarRow>
-          {facility && (
+          {site && (
             <TopAppBarRow>
               <TabBar activeIndex={null} className={styles.navBarTabs}>
                 {tabs.map(tab => (
@@ -137,7 +137,7 @@ class NavBar extends Component<Props, State> {
           )}
         </TopAppBar>
         <TopAppBarFixedAdjust />
-        {facility && <TopAppBarFixedAdjust />}
+        {site && <TopAppBarFixedAdjust />}
       </div>
     );
   }

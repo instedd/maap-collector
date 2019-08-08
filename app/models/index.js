@@ -1,4 +1,4 @@
-import Lab from './lab';
+import Site from './site';
 import SpecimenSource from './specimenSource';
 import CultureType from './cultureType';
 import AntibioticConsumptionStat from './antibioticConsumptionStat';
@@ -8,7 +8,7 @@ import PatientEntry from './patientEntry';
 import LabRecord from './labRecord';
 
 export default {
-  Lab,
+  Site,
   LabRecord,
   SpecimenSource,
   CultureType,

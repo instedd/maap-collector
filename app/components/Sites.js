@@ -4,13 +4,13 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
-import { fetchLabs } from '../actions/labs';
-import { enterFacility } from '../actions/facility';
+import { fetchSites } from '../actions/sites';
+import { enterSite } from '../actions/site';
 import Table from './Table';
 
 type Props = {
   dispatch: Dispatch,
-  labs: {
+  sites: {
     items: [],
     totalCount: number
   }
@@ -18,33 +18,33 @@ type Props = {
 type State = {};
 
 const mapStateToProps = state => {
-  const { dispatch, labs } = state;
-  return { dispatch, labs };
+  const { dispatch, sites } = state;
+  return { dispatch, sites };
 };
 
-class Facilities extends Component<Props, State> {
+class Sites extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchLabs());
+    dispatch(fetchSites());
   }
 
   render() {
-    const { labs, dispatch } = this.props;
+    const { sites, dispatch } = this.props;
     return (
       <div>
         <Table
-          entityName="labs"
-          items={labs.items}
-          totalCount={labs.totalCount}
+          entityName="sites"
+          items={sites.items}
+          totalCount={sites.totalCount}
           columns={['Name', 'Address', 'Ownership', 'Last activity']}
           fields={['name', 'address', 'ownership', 'updatedAt']}
-          onClick={facility => dispatch(enterFacility(facility))}
+          onClick={site => dispatch(enterSite(site))}
         />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(Facilities);
+export default connect(mapStateToProps)(Sites);
