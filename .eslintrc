@@ -10,6 +10,7 @@
     "node": true
   },
   "rules": {
+    "react/no-array-index-key": "off",
     "arrow-parens": ["off"],
     "compat/compat": "error",
     "consistent-return": "off",
@@ -35,6 +36,8 @@
     "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": "off",
     "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/label-has-associated-control": "off",
     "no-console": "off",
     "no-use-before-define": "off",
     "no-multi-assign": "off",

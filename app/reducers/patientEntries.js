@@ -1,12 +1,14 @@
-// import { LAB_FIELD_UPDATE, LAB_FIELD_UPDATED } from '../actions/lab';
+import { FETCHED_PATIENT_ENTRIES } from '../actions/patientEntries';
 import type { Action } from './types';
 
-const initialState = {};
+const initialState = {
+  items: []
+};
 
 export default function counter(state = initialState, action: Action) {
   switch (action.type) {
-    // case LAB_FIELD_UPDATE:
-    //   return { ...state, ...action.changes };
+    case FETCHED_PATIENT_ENTRIES:
+      return { ...state, ...action };
     // case LAB_FIELD_UPDATED:
     //   return { ...state };
     default:

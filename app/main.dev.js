@@ -12,6 +12,7 @@
  */
 import { app, BrowserWindow, globalShortcut } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import mkdirp from 'mkdirp';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
@@ -60,6 +61,8 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
+  mkdirp(`${app.getPath('userData')}/maap/app/db/storage`);
+  mkdirp(`${app.getPath('userData')}/maap/app/storage`);
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -79,6 +82,7 @@ app.on('ready', async () => {
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // $FlowFixMe
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -96,12 +100,13 @@ app.on('ready', async () => {
   });
 
   globalShortcut.register('CommandOrControl+Shift+K', () => {
+    // $FlowFixMe
     mainWindow.webContents.openDevTools();
   });
 
-  window.addEventListener('beforeunload', () => {
-    globalShortcut.unregisterAll();
-  });
+  // window.addEventListener('beforeunload', () => {
+  //   globalShortcut.unregisterAll();
+  // });
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 

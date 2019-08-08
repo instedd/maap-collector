@@ -8,6 +8,7 @@ import { syncSpecimenSources } from './specimenSources';
 import { syncCultureTypes } from './cultureTypes';
 import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
 import { syncAntibiotics } from './antibiotics';
+import { syncLabRecords } from './labRecords';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -37,6 +38,10 @@ export const entities = [
   {
     name: 'AntibioticConsumptionStat',
     syncAction: syncAntibioticConsumptionStats
+  },
+  {
+    name: 'LabRecord',
+    syncAction: syncLabRecords
   }
 ];
 
@@ -48,7 +53,7 @@ export const syncStart = () => async dispatch => {
       .map(({ syncAction }) => syncAction)
       .reduce(
         (acc, current) => acc.then(() => dispatch(current())),
-        Promise.resolve(0)
+        Promise.resolve()
       );
   }, 300);
 };
@@ -63,15 +68,22 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
   const oldestEntity = await entity.findOne({
     order: [['lastSyncAt', 'DESC']]
   });
+  const newestRemoteIdEntity = await entity.findOne({
+    order: [['remoteId', 'DESC']]
+  });
   const oldestDate = oldestEntity
     ? new Date(oldestEntity.lastSyncAt).toUTCString()
+    : null;
+  const newestRemoteId = newestRemoteIdEntity
+    ? newestRemoteIdEntity.remoteId
     : null;
   return fetchPaginated(
     url,
     user.auth,
     {
       qs: {
-        updated_at_gth: oldestDate
+        updated_at_gth: oldestDate,
+        id_gth: newestRemoteId
       }
     },
     (res, { total_count: totalCount, current_page: currentPage }) => {
@@ -82,23 +94,29 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
           entity: entityName,
           count: totalCount
         });
-      res.forEach(async item => {
-        const mapped = mapper(item);
-        return (
-          entity
-            .findOrBuild({ where: { id: mapped.remoteId } })
-            // TODO: Do queries only if changed
-            // TODO: Only update if the remote is more recent (mapper.updated_at > lab.updatedAt). Otherwise
-            .then(([foundEntity]) => {
-              dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName });
-              return foundEntity.update({
+      Promise.all(
+        res.map(async item => {
+          const mapped = mapper(item);
+          return [
+            mapped,
+            await entity.findOrBuild({ where: { id: mapped.remoteId } })
+          ];
+          // TODO: Do queries only if changed
+        })
+      )
+        .then(items =>
+          items.map(([mapped, [foundEntity]]) =>
+            foundEntity
+              .update({
                 ...mapped,
                 lastSyncAt: new Date()
-              });
-            })
-            .catch(e => console.log(e))
-        );
-      });
+              })
+              .then(() =>
+                dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
+              )
+          )
+        )
+        .catch(e => console.log(e));
     }
   );
 };

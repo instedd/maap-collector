@@ -32,13 +32,19 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   }
 
   render() {
-    const { antibiotics, history } = this.props;
+    const { antibiotics, history, dispatch } = this.props;
     return (
       <div>
         <Table
           entityName="antibiotics"
           items={antibiotics.items}
           totalCount={antibiotics.totalCount}
+          offset={antibiotics.offset}
+          pagination
+          limit={antibiotics.limit}
+          prevPage={antibiotics.prevPage}
+          nextPage={antibiotics.nextPage}
+          onReload={() => dispatch(fetchAntibiotics())}
           columns={['Name', 'Strength', 'Form', 'Pack size', 'Brand']}
           fields={['name', 'strength', 'form', 'packSize', 'brand']}
           onClick={({ id }) => history.push(`/antibiotics/${id}`)}

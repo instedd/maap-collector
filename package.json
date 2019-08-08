@@ -260,6 +260,8 @@
     "@material/fab": "^3.0.0",
     "@material/react-button": "^0.14.1",
     "@material/react-card": "^0.13.0",
+    "@material/react-checkbox": "^0.15.0",
+    "@material/react-dialog": "^0.14.1",
     "@material/react-fab": "^0.14.1",
     "@material/react-icon-button": "^0.14.1",
     "@material/react-layout-grid": "^0.13.0",
@@ -278,10 +280,14 @@
     "dotenv": "^8.0.0",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
+    "electron-store": "^4.0.0",
     "electron-updater": "^3.1.6",
+    "font-work-sans": "^1.0.3",
     "history": "^4.7.2",
     "lodash": "^4.17.11",
+    "material-design-icons-iconfont": "^5.0.1",
     "node-pre-gyp": "^0.13.0",
+    "pluralize": "^8.0.0",
     "query-string": "^6.8.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -294,7 +300,8 @@
     "sequelize": "^5.8.9",
     "snakecase-keys": "^3.1.0",
     "source-map-support": "^0.5.6",
-    "sqlite3": "^4.0.4"
+    "sqlite3": "^4.0.4",
+    "xlsx": "^0.14.4"
   },
   "engines": {
     "node": "10.15.3",

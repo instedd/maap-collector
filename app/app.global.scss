@@ -17,27 +17,31 @@
 @import '~@material/react-menu-surface/dist/menu-surface.css';
 @import '~@material/react-menu/dist/menu.css';
 @import '~@material/react-select/dist/select.css';
+@import '~@material/react-dialog/dist/dialog.css';
+@import '~@material/react-checkbox/dist/checkbox.css';
+@import '~@material/react-fab/dist/fab.css';
+@import '~@material/react-radio/dist/radio.css';
 
-@import './material-overrides.css';
-
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import '~material-design-icons-iconfont/dist/material-design-icons.css';
+@import '~font-work-sans/work-sans.css';
+@import './material-overrides.scss';
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Work Sans', sans-serif;
 }
 
 body {
   position: relative;
   height: 100vh;
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
   background: #e5e5e5;
+  overflow-x: hidden;
 }
 
 h2 {
   color: #000;
-  font-family: 'Roboto', sans-serif;
   font-size: 20px;
   font-weight: 400;
 }
@@ -49,4 +53,16 @@ h2 {
 
 .highlight {
   color: #ff5622;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.margin-top {
+  margin-top: 15px;
 }

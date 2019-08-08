@@ -1,0 +1,13 @@
+import { fetchEntity } from './fetch';
+
+const FETCH_PATIENT_ENTRIES = 'FETCH_PATIENT_ENTRIES';
+const FETCHED_PATIENT_ENTRIES = 'FETCHED_PATIENT_ENTRIES';
+const FETCH_PATIENT_ENTRIES_FAILED = 'FETCH_PATIENT_ENTRIES_FAILED';
+
+export const fetchPatientEntries = fetchEntity('PatientEntry');
+
+export {
+  FETCH_PATIENT_ENTRIES,
+  FETCHED_PATIENT_ENTRIES,
+  FETCH_PATIENT_ENTRIES_FAILED
+};

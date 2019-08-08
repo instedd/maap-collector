@@ -1,11 +1,14 @@
 import Sequelize from 'sequelize';
+import { remote } from 'electron';
 import * as models from '../models';
 
 const initialize = async (dbName, password) => {
   const sequelize = new Sequelize(null, null, password, {
     dialect: 'sqlite',
     dialectModulePath: '@journeyapps/sqlcipher',
-    storage: `app/db/storage/${dbName}.sqlite`,
+    storage: `${remote.app.getPath(
+      'userData'
+    )}/maap/app/db/storage/${dbName}.sqlite`,
     logging: false
   });
   const objects = Object.values(models.default)

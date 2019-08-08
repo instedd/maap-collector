@@ -1,0 +1,81 @@
+.dropzone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  min-width: 791px;
+  min-height: 420px;
+  border-radius: 4px;
+  color: #ccc;
+  transition: 0.3s ease-in;
+
+  i {
+    font-size: 48px;
+    color: #999;
+    margin-bottom: 12px;
+  }
+
+  .fileLimits {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px;
+    flex-wrap: wrap;
+
+    > *:first-child {
+      margin-bottom: 15px;
+    }
+  }
+
+  .message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 415px;
+
+    &.withFile {
+      align-items: flex-start;
+
+      .fileName {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        margin-bottom: 36px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
+        padding-left: 12px;
+        padding-right: 1px;
+
+        i {
+          font-size: 24px;
+          margin-bottom: 0;
+          margin-left: 6px;
+        }
+      }
+
+      h4 {
+        color: black;
+        font-weight: normal;
+      }
+
+      p {
+        color: #999;
+      }
+    }
+  }
+
+  a {
+    color: #ff5722;
+    text-decoration: none;
+  }
+
+  &.dragging {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+}

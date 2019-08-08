@@ -10,7 +10,7 @@ const USER_LOGGED_IN_FAILURE = 'USER_LOGGED_IN_FAILURE';
 export const requestLogin = (username, password) => dispatch => {
   // TODO: Support for offline login
   dispatch({ type: 'REQUEST_LOGIN' });
-  fetch(`${API_URL}/api/v1/auth/sign_in`, {
+  return fetch(`${API_URL}/api/v1/auth/sign_in`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

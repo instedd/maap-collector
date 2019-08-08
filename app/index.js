@@ -4,7 +4,8 @@ import { AppContainer } from 'react-hot-loader';
 import { throttle } from 'lodash';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
-import './app.global.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import './app.global.scss';
 
 import { setNetworkOnline, setNetworkOffline } from './actions/network';
 import { loadState, saveState } from './utils/localStorage';
@@ -16,7 +17,8 @@ const store = configureStore({ preloadedState: persistedState });
 store.subscribe(
   throttle(() => {
     saveState({
-      user: store.getState().user
+      user: store.getState().user,
+      facility: store.getState().facility
     });
   }, 1000)
 );

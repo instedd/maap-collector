@@ -14,18 +14,22 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import { State } from '../reducers/types';
+import { userLoggedOut } from '../actions/user';
 
 import routes from '../constants/routes';
-import styles from './NavBar.css';
+import styles from './NavBar.scss';
 import SyncStatus from './SyncStatus';
 
+import { exitFacility } from '../actions/facility';
+
 type StoreProps = {
-  currentLab: number | null
+  lab: *
 };
 type Props = State & StoreProps & ContextRouter;
 
-const mapStateToProps = ({ currentLab }: State) => ({
-  currentLab: currentLab || true
+const mapStateToProps = ({ facility, user }: State) => ({
+  facility,
+  user
 });
 
 const tabs = [
@@ -33,6 +37,11 @@ const tabs = [
     name: 'Lab Records',
     icon: <MaterialIcon icon="local_pharmacy" />,
     path: routes.HOME
+  },
+  {
+    name: 'Patient records',
+    icon: <MaterialIcon icon="assignment_ind" />,
+    path: '/patients/'
   },
   {
     name: 'Pharmacy stats',
@@ -43,23 +52,73 @@ const tabs = [
 class NavBar extends Component<Props, State> {
   props: Props;
 
-  state: State;
+  state: State = { userDropwdownOpen: false };
+
+  handleSignOut = e => {
+    const { dispatch } = this.props;
+    e.preventDefault();
+
+    dispatch(userLoggedOut());
+  };
+
+  exitFacility = async () => {
+    const { dispatch, history } = this.props;
+    await dispatch(exitFacility());
+    history.push('/');
+  };
 
   render() {
-    const { currentLab, history } = this.props;
+    const { userDropwdownOpen } = this.state;
+    const { history, user, facility } = this.props;
     return (
       <div>
         <TopAppBar className={styles.navBar}>
           <TopAppBarRow>
             <TopAppBarSection align="start">
               <TopAppBarTitle className={styles.navBarTitle}>
-                MAAP
+                <div
+                  tabIndex="0"
+                  role="button"
+                  onClick={() => this.exitFacility()}
+                  onKeyPress={() => this.exitFacility()}
+                >
+                  MAAP
+                </div>
               </TopAppBarTitle>
               <SyncStatus />
+              {facility && (
+                <div className={styles.navBarCurrentFacility}>
+                  At site: {facility.name}
+                </div>
+              )}
             </TopAppBarSection>
-            <TopAppBarSection align="end" />
+
+            <TopAppBarSection align="end">
+              <TopAppBarTitle
+                className={styles.navBarAccount}
+                onClick={() =>
+                  this.setState({ userDropwdownOpen: !userDropwdownOpen })
+                }
+              >
+                {user.data.username}
+                <MaterialIcon icon="arrow_drop_down" />
+
+                <ul
+                  className={[
+                    userDropwdownOpen ? styles.open : '',
+                    styles.navBarDropdown
+                  ].join(' ')}
+                >
+                  <li>
+                    <a href="#" onClick={this.handleSignOut}>
+                      Sign out
+                    </a>
+                  </li>
+                </ul>
+              </TopAppBarTitle>
+            </TopAppBarSection>
           </TopAppBarRow>
-          {currentLab && (
+          {facility && (
             <TopAppBarRow>
               <TabBar activeIndex={null} className={styles.navBarTabs}>
                 {tabs.map(tab => (
@@ -78,7 +137,7 @@ class NavBar extends Component<Props, State> {
           )}
         </TopAppBar>
         <TopAppBarFixedAdjust />
-        {currentLab && <TopAppBarFixedAdjust />}
+        {facility && <TopAppBarFixedAdjust />}
       </div>
     );
   }
