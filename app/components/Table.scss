@@ -3,13 +3,13 @@ table {
   width: 100%;
 }
 tr {
-  height: 3rem;
+  height: 4.5rem;
 }
 
 td,
 th {
   border-bottom: 1px solid var(--transparent-gray);
-  padding: 0 2rem;
+  padding: .5rem 2rem;
 }
 th {
   color: var(--medium-gray);
@@ -17,7 +17,7 @@ th {
   text-align: left;
 }
 
-tr:hover {
+tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.12);
   cursor: pointer;
 }
