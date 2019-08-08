@@ -54,9 +54,9 @@ class PatientIdStep extends Component<Props> {
     return (
       <div>
         <h2>Complete patient ID for record linking</h2>
-        <h2>
+        <h4>
           You could skip this and complete patient ID later from lab records
-        </h2>
+        </h4>
         <table>
           <thead>
             <tr>

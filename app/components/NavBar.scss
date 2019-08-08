@@ -1,5 +1,5 @@
 .navBar {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px 0 var(--transparent-dark-gray), 0 1px 3px 0 var(--transparent-gray);
 }
 .navBarTabs {
   align-self: flex-end;
@@ -8,14 +8,14 @@
   margin-right: 0.3em;
 }
 .navBarTabs button {
-  color: #fff;
+  color: var(--medium-gray);
   text-transform: initial;
 }
 .navBarAccount {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white !important;
+  color: var(--white) !important;
   position: relative;
   cursor: pointer;
   overflow: visible !important;
@@ -26,8 +26,8 @@
   left: 0;
   width: 300px;
   z-index: 999999999999;
-  background: white;
-  color: black;
+  background: var(--white);
+  color: var(--black);
   padding: 20px;
   display: none;
 
