@@ -2,6 +2,7 @@ import fs from 'fs';
 import { join } from 'path';
 import { remote } from 'electron';
 import db from '../db';
+import { syncStart } from './sync';
 
 const SET_FILE_DATA = 'SET_FILE_DATA';
 const SET_PHI_DATA = 'SET_PHI_DATA';
@@ -22,16 +23,20 @@ export const createLabRecord = () => async (dispatch, getState) => {
     `${fileName}.${(+new Date()).toString(10)}`
   );
   dispatch({ type: CREATING_LAB_RECORD });
-  fs.copyFile(file.path, newFilePath, async err => {
-    if (err) throw err;
+  return new Promise((resolve, reject) => {
+    fs.copyFile(file.path, newFilePath, async err => {
+      if (err) reject(err);
 
-    const labRecord = await LabRecord.create({
-      filePath: newFilePath,
-      fileName,
-      ...labRecordImportState
+      const labRecord = await LabRecord.create({
+        filePath: newFilePath,
+        fileName,
+        ...labRecordImportState
+      });
+
+      dispatch({ type: 'CREATED_LAB_RECORD', id: labRecord.id });
+      dispatch(syncStart());
+      resolve(labRecord);
     });
-
-    dispatch({ type: 'CREATED_LAB_RECORD', id: labRecord.id });
   });
 };
 

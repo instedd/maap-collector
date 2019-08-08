@@ -8,6 +8,7 @@ import { syncSpecimenSources } from './specimenSources';
 import { syncCultureTypes } from './cultureTypes';
 import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
 import { syncAntibiotics } from './antibiotics';
+import { syncLabRecords } from './labRecords';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -37,6 +38,10 @@ export const entities = [
   {
     name: 'AntibioticConsumptionStat',
     syncAction: syncAntibioticConsumptionStats
+  },
+  {
+    name: 'LabRecord',
+    syncAction: syncLabRecords
   }
 ];
 

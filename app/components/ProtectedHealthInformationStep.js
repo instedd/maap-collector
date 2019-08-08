@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Radio, { NativeRadioControl } from '@material/react-radio';
 import Checkbox from '@material/react-checkbox';
+import Select, { Option } from '@material/react-select';
 import { connect } from 'react-redux';
 import XlsxManager from '../utils/xlsxManager';
 import { setPhiData } from '../actions/labRecordImport';
@@ -26,14 +27,32 @@ class ProtectedHealthInformationStep extends Component<Props> {
     );
   };
 
-  handleCheckboxChange = (type, column) => e => {
+  handleCheckboxChange = (
+    type,
+    column,
+    trueValue = true,
+    falseValue = false
+  ) => e => {
     const { dispatch, labRecordImport } = this.props;
 
     dispatch(
       setPhiData({
         [type]: {
           ...labRecordImport[type],
-          [column]: e.target.checked
+          [column]: e.target.checked ? trueValue : falseValue
+        }
+      })
+    );
+  };
+
+  handleSelectChange = (type, column) => e => {
+    const { dispatch, labRecordImport } = this.props;
+
+    dispatch(
+      setPhiData({
+        [type]: {
+          ...labRecordImport[type],
+          [column]: e.target.value
         }
       })
     );
@@ -47,13 +66,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        columns: row.filter(i => i.v !== ''),
-        patientOrLabRecordId: row.reduce(
-          (acc, current) => ({ ...acc, [current.v]: null }),
-          {}
-        ),
-        phi: row.reduce((acc, current) => ({ ...acc, [current.v]: false }), {}),
-        date: row.reduce((acc, current) => ({ ...acc, [current.v]: false }), {})
+        columns: row,
+        patientOrLabRecordId: row.map(() => null),
+        phi: row.map(() => false),
+        date: row.map(() => null)
       })
     );
   }
@@ -74,50 +90,70 @@ class ProtectedHealthInformationStep extends Component<Props> {
               <th className="text-center">Lab record id</th>
               <th className="text-center">PHI</th>
               <th className="text-center">Date</th>
+              <th />
             </tr>
           </thead>
           <tbody>
-            {columns.map(column => (
-              <tr key={column.v}>
+            {columns.map((column, index) => (
+              <tr key={`row-${index}`}>
                 <td>{column.v}</td>
                 <td className="text-center">
-                  <Radio key={`patientOrLabRecordID-${column.v}`}>
+                  <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
                     <NativeRadioControl
-                      name={`patientOrLabRecordID-${column.v}`}
+                      name={`patientOrLabRecordID-${index}`}
                       value="patientId"
-                      disabled={date[column.v]}
-                      id={`patientOrLabRecordID-${column.v}`}
-                      checked={patientOrLabRecordId[column.v] === 'patientId'}
-                      onChange={this.handlePatientOrLabRecordIdChange(column.v)}
+                      disabled={date[index]}
+                      id={`patientOrLabRecordID-${index}`}
+                      checked={patientOrLabRecordId[index] === 'patientId'}
+                      onChange={this.handlePatientOrLabRecordIdChange(index)}
                     />
                   </Radio>
                 </td>
                 <td className="text-center">
-                  <Radio key={`patientOrLabRecordID-${column.v}`}>
+                  <Radio key={`patientOrLabRecordID-${index}-lab-record-id`}>
                     <NativeRadioControl
-                      name={`patientOrLabRecordID-${column.v}`}
+                      name={`patientOrLabRecordID-${index}`}
                       value="labRecordId"
-                      disabled={date[column.v]}
-                      id={`patientOrLabRecordID-${column.v}`}
-                      checked={patientOrLabRecordId[column.v] === 'labRecordId'}
-                      onChange={this.handlePatientOrLabRecordIdChange(column.v)}
+                      disabled={date[index]}
+                      id={`patientOrLabRecordID-${index}`}
+                      checked={patientOrLabRecordId[index] === 'labRecordId'}
+                      onChange={this.handlePatientOrLabRecordIdChange(index)}
                     />
                   </Radio>
                 </td>
                 <td className="text-center">
                   <Checkbox
                     nativeControlId="phi-checkbox"
-                    disabled={date[column.v]}
-                    checked={phi[column.v]}
-                    onChange={this.handleCheckboxChange('phi', column.v)}
+                    disabled={date[index]}
+                    checked={phi[index]}
+                    onChange={this.handleCheckboxChange('phi', index)}
                   />
                 </td>
                 <td className="text-center">
                   <Checkbox
                     nativeControlId="date-checkbox"
-                    checked={date[column.v]}
-                    onChange={this.handleCheckboxChange('date', column.v)}
+                    checked={!!date[index]}
+                    onChange={this.handleCheckboxChange(
+                      'date',
+                      index,
+                      'DDMMMYYYY',
+                      null
+                    )}
                   />
+                </td>
+                <td className="text-center">
+                  {date[index] ? (
+                    <Select
+                      value={date[index]}
+                      onChange={this.handleSelectChange('date', index)}
+                    >
+                      <Option value="DDMMMYYYY">DDMMMYYYY</Option>
+                      <Option value="DD/MM/YYYY">DD/MM/YYYY</Option>
+                      <Option value="MM/DD/YYYY">MM/DD/YYYY</Option>
+                    </Select>
+                  ) : (
+                    ''
+                  )}
                 </td>
               </tr>
             ))}

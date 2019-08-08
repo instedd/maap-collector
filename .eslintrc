@@ -10,6 +10,7 @@
     "node": true
   },
   "rules": {
+    "react/no-array-index-key": "off",
     "arrow-parens": ["off"],
     "compat/compat": "error",
     "consistent-return": "off",

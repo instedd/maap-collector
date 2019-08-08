@@ -14,7 +14,9 @@ const model = sequelize =>
       columns: { type: Sequelize.JSONB },
       patientOrLabRecordId: { type: Sequelize.JSONB },
       phi: { type: Sequelize.JSONB },
-      date: { type: Sequelize.JSONB }
+      date: { type: Sequelize.JSONB },
+      lastSyncAt: { type: Sequelize.DATE },
+      remoteId: { type: Sequelize.INTEGER }
     },
     { sequelize, modelName: model.modelName }
   );

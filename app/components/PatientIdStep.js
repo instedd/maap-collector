@@ -13,7 +13,7 @@ class PatientIdStep extends Component<Props> {
     const { labRecordImport, dispatch } = this.props;
     const { rows } = labRecordImport;
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { v: e.target.value };
+    newRows[rowIndex][cellIndex] = { w: e.target.value };
     dispatch(
       setPatientIdData({
         rows: newRows
@@ -35,7 +35,7 @@ class PatientIdStep extends Component<Props> {
     const headerRow = sheet.row(labRecordImport.headerRow - 1);
     const rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
     const columnsToKeep = headerRow.reduce((acc, current, index) => {
-      if (patientOrLabRecordId[current.v] || phi[current.v] || date[current.v])
+      if (patientOrLabRecordId[index] || phi[index] || date[index])
         acc.push(index);
       return acc;
     }, []);
@@ -60,18 +60,18 @@ class PatientIdStep extends Component<Props> {
         <table>
           <thead>
             <tr>
-              {columns.map(column => (
-                <th key={`column-${column.v}`}>{column.v}</th>
+              {columns.map((column, index) => (
+                <th key={`column-patient-id-${index}`}>{column.v}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((row, rowIndex) => (
-              <tr key={row[0].v}>
+              <tr key={`row-${rowIndex}`}>
                 {row.map((cell, index) => (
                   // eslint-disable-next-line
-                  <td key={`${row[0].v}-${index}`}>
-                    {patientOrLabRecordId[columns[index].v] === 'patientId' ? (
+                  <td key={`td-${index}`}>
+                    {patientOrLabRecordId[index] === 'patientId' ? (
                       <TextField>
                         <Input
                           type="text"
@@ -80,7 +80,7 @@ class PatientIdStep extends Component<Props> {
                         />
                       </TextField>
                     ) : (
-                      cell.v
+                      cell.w
                     )}
                   </td>
                 ))}

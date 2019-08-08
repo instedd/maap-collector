@@ -39,7 +39,7 @@ class XlsxManager {
   row(rowNumber) {
     const { end } = this.range;
 
-    return [...new Array(end.col)].map(
+    return [...new Array(end.col + 1)].map(
       (col, index) =>
         this.currentSheet[
           xlsx.utils.encode_cell({ r: parseInt(rowNumber, 10), c: index })

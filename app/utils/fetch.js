@@ -1,4 +1,5 @@
 import { stringify } from 'query-string';
+import { pick, identity } from 'lodash';
 import { API_URL } from '../constants/config';
 
 const fetchPaginated = async (
@@ -33,12 +34,23 @@ const fetchPaginated = async (
 const fetchAuthenticated = (
   url,
   auth,
-  args = { body: {}, qs: {}, method: 'get' }
+  args = {
+    body: {},
+    qs: {},
+    method: 'get',
+    headers: {},
+    contentType: 'application/json'
+  }
 ) =>
   fetch(`${API_URL}${url}?${stringify(args.qs)}`, {
     method: args.method,
-    body: JSON.stringify(args.body),
-    headers: { ...auth, 'content-type': 'application/json' }
+    body:
+      args.contentType === 'application/json'
+        ? JSON.stringify(args.body)
+        : args.body,
+    headers: pick(
+      { ...auth, ...args.headers, 'Content-Type': args.contentType },
+      identity
+    )
   }).then(res => res.json());
-
 export { fetchPaginated, fetchAuthenticated };
