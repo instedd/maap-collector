@@ -1,10 +1,15 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Patient extends Model {}
+class Patient extends Model {
+  get availablePatientId() {
+    return this.patientId || this.remotePatientId;
+  }
+}
 
 const model = sequelize =>
   Patient.init(
     {
+      remotePatientId: { type: Sequelize.STRING },
       patientId: {
         type: Sequelize.STRING,
         unique: {

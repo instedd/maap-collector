@@ -1,5 +1,6 @@
 import snakeCaseKeys from 'snakecase-keys';
 import camelCaseKeys from 'camelcase-keys';
+import { omit } from 'lodash';
 import { remoteUpload, remoteSync } from './sync';
 import { fetchEntity } from './fetch';
 
@@ -10,10 +11,14 @@ const SYNC_PATIENTS = 'SYNC_PATIENTS';
 const UPLOAD_PATIENTS = 'UPLOAD_PATIENTS';
 
 const mapper = attrs =>
-  camelCaseKeys({
-    ...attrs,
-    remoteId: attrs.id
-  });
+  omit(
+    camelCaseKeys({
+      ...attrs,
+      remoteId: attrs.id,
+      remotePatientId: attrs.patient_id
+    }),
+    ['patientId']
+  );
 const uploadMapper = attrs => snakeCaseKeys({ ...attrs.dataValues });
 
 export const fetchPatients = fetchEntity('Patient');

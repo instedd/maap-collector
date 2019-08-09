@@ -51,7 +51,12 @@ class PatientList extends Component<Props, State> {
             'Year of birth',
             'Level of education'
           ]}
-          fields={['patientId', 'gender', 'yearOfBirth', 'levelOfEducation']}
+          fields={[
+            'availablePatientId',
+            'gender',
+            'yearOfBirth',
+            'levelOfEducation'
+          ]}
           onClick={({ id }) => history.push(`/patients/${id}/entries`)}
         />
       </div>
