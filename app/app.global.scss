@@ -26,33 +26,54 @@
 @import '~font-work-sans/work-sans.css';
 @import './material-overrides.scss';
 
+:root {
+  --black: #000;
+  --white: #fff;
+  --light-gray: #e5e5e5;
+  --medium-gray: #999;
+  --dark-gray: #333;
+  --transparent-gray: rgba(0, 0, 0, 0.1);
+  --transparent-dark-gray: rgba(0, 0, 0, 0.2);
+  --orange: #ff5722;
+  --ws-regular: 'work_sansregular', sans-serif;
+  --ws-medium: 'work_sansmedium', sans-serif;
+  --ws-bold: 'work_sansbold', sans-serif;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Work Sans', sans-serif;
+  font-family: var(--ws-regular);
 }
 
 body {
   position: relative;
   height: 100vh;
-  background: #e5e5e5;
+  background: var(--light-gray);
   overflow-x: hidden;
+  font-size: 16px;
 }
 
 h2 {
   color: #000;
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 1.25rem;
 }
 
+h4 {
+  font-size: .875em;
+}
+
+.app {
+  padding: 2.25rem 6rem;
+}
 .full-width {
   display: block;
   width: 100%;
 }
 
 .highlight {
-  color: #ff5622;
+  color: var(--orange);
 }
 
 .text-center {

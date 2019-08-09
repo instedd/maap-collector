@@ -34,7 +34,7 @@ const mapStateToProps = ({ site, user }: State) => ({
 
 const tabs = [
   {
-    name: 'Lab Records',
+    name: 'Lab records',
     icon: <MaterialIcon icon="local_pharmacy" />,
     path: routes.HOME
   },

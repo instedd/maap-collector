@@ -21,7 +21,7 @@ class App extends React.Component<Props> {
     return (
       <div>
         {user.data && <NavBar />}
-        <Grid align="middle">
+        <Grid align="middle" className="app">
           <Row>
             <Cell columns={12}>{children}</Cell>
           </Row>

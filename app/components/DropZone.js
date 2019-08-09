@@ -62,7 +62,7 @@ class DropZone extends Component<Props, State> {
         >
           {file ? (
             <div className={[styles.message, styles.withFile].join(' ')}>
-              <h3>File</h3>
+              <h5>File</h5>
               <div className={styles.fileName}>
                 {file.name}
                 <MaterialIcon
