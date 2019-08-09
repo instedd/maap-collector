@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { join } from 'path';
+import { join, basename } from 'path';
 import { remote } from 'electron';
 import db from '../db';
 import { syncStart } from './sync';
@@ -16,7 +16,7 @@ export const createLabRecord = () => async (dispatch, getState) => {
   const { labRecordImport: labRecordImportState, user } = getState();
   const { LabRecord } = await db.initializeForUser(user);
   const { file } = labRecordImportState;
-  const fileName = file.name.split('/').pop();
+  const fileName = basename(file.path);
   const newFilePath = join(
     remote.app.getPath('userData'),
     '/maap/app/storage/',
