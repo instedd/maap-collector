@@ -11,6 +11,7 @@ import { syncAntibiotics } from './antibiotics';
 import { syncLabRecords } from './labRecords';
 import { syncPatients } from './patients';
 import { syncPatientEntries } from './patientEntries';
+import { syncClinicalServices } from './clinicalServices';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -52,6 +53,10 @@ export const entities = [
   {
     name: 'LabRecord',
     syncAction: syncLabRecords
+  },
+  {
+    name: 'ClinicalService',
+    syncAction: syncClinicalServices
   }
 ];
 

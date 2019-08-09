@@ -6,6 +6,7 @@ import Antibiotic from './antibiotic';
 import Patient from './patient';
 import PatientEntry from './patientEntry';
 import LabRecord from './labRecord';
+import ClinicalService from './clinicalService';
 
 export default {
   Site,
@@ -15,5 +16,6 @@ export default {
   AntibioticConsumptionStat,
   Antibiotic,
   Patient,
-  PatientEntry
+  PatientEntry,
+  ClinicalService
 };
