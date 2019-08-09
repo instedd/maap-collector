@@ -16,7 +16,8 @@ const FETCH_LAB_RECORDS_FAILED = 'FETCH_LAB_RECORDS_FAILED';
 const FETCHED_LAB_RECORD = 'FETCHED_LAB_RECORD';
 const FETCHING_LAB_RECORD = 'FETCHING_LAB_RECORD';
 
-const uploadMapper = attr => snakeCaseKeys({ ...attr });
+const uploadMapper = attr =>
+  snakeCaseKeys({ ...attr, date: Object.values(attr.date) });
 
 export const syncLabRecords = () => async (dispatch, getState) => {
   const { user } = getState();
