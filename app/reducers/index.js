@@ -12,6 +12,7 @@ import specimenSources from './specimenSources';
 import antibioticConsumptionStats from './antibioticConsumptionStats';
 import antibiotics from './antibiotics';
 import patients from './patients';
+import patient from './patient';
 import patientEntries from './patientEntries';
 
 export default function createRootReducer(history: {}) {
@@ -30,6 +31,7 @@ export default function createRootReducer(history: {}) {
       specimenSources,
       antibioticConsumptionStats,
       antibiotics,
+      patient,
       patients,
       patientEntries
     })

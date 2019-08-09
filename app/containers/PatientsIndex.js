@@ -36,8 +36,17 @@ class PatientsIndex extends Component<Props, State> {
   state: State = { modalIsOpen: false };
 
   handleModalClosing = e => {
-    this.setState({ modalIsOpen: false });
-    if (e === 'accept') return this.child.handleSubmit();
+    if (e !== 'confirm') return;
+    this.child
+      .handleSubmit()
+      .then(() => this.setState({ modalIsOpen: false }))
+      // Currently we can't keep the modal open, so we need to close it and open it again
+      // Check https://github.com/material-components/material-components-web-react/issues/772
+      .catch(() =>
+        this.setState({ modalIsOpen: false }, () =>
+          this.setState({ modalIsOpen: true })
+        )
+      );
   };
 
   render() {
@@ -62,7 +71,7 @@ class PatientsIndex extends Component<Props, State> {
           </DialogContent>
           <DialogFooter>
             <DialogButton action="dismiss">Cancel</DialogButton>
-            <DialogButton action="accept" isDefault>
+            <DialogButton action="confirm" isDefault>
               add
             </DialogButton>
           </DialogFooter>
