@@ -15,7 +15,9 @@ const siteMapper = props => ({
 export const syncSites = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: SITES_SYNC });
-  return dispatch(remoteSync('/api/v1/sites', user, 'Site', siteMapper));
+  return dispatch(remoteSync('/api/v1/sites', user, 'Site', siteMapper)).then(
+    () => dispatch(fetchSites())
+  );
 };
 
 export const fetchSites = () => async (dispatch, getState) => {
