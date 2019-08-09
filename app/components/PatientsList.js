@@ -19,20 +19,20 @@ type StoreProps = {
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, patients } = state;
-  return { dispatch, patients };
+  const { dispatch, patients, site } = state;
+  return { dispatch, patients, site };
 };
 
 class PatientList extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchPatients());
+    const { dispatch, site } = this.props;
+    dispatch(fetchPatients({ siteId: site.id }));
   }
 
   render() {
-    const { patients, history, dispatch } = this.props;
+    const { patients, history, dispatch, site } = this.props;
     return (
       <div>
         <Table
@@ -44,7 +44,7 @@ class PatientList extends Component<Props, State> {
           limit={patients.limit}
           prevPage={patients.prevPage}
           nextPage={patients.nextPage}
-          onReload={() => dispatch(fetchPatients())}
+          onReload={() => dispatch(fetchPatients({ siteId: site.id }))}
           columns={[
             'Patient ID',
             'Gender',

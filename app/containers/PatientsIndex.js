@@ -39,6 +39,7 @@ class PatientsIndex extends Component<Props, State> {
     if (e !== 'confirm') return;
     this.child
       .handleSubmit()
+      // $FlowFixMe
       .then(() => this.setState({ modalIsOpen: false }))
       // Currently we can't keep the modal open, so we need to close it and open it again
       // Check https://github.com/material-components/material-components-web-react/issues/772

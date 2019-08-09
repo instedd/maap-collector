@@ -10,7 +10,7 @@ const fetchEntity = entityName => (where = {}) => async (
   getState
 ) => {
   const pluralizedEntityName = constantCase(pluralize(entityName));
-  dispatch({ type: `FETCH_${pluralizedEntityName}` });
+  dispatch({ type: `FETCH_${pluralizedEntityName}`, where });
   const { user, router } = getState();
   const currentPage =
     parseInt(qs.parse(router.location.search.slice(1)).page, 10) || 1;

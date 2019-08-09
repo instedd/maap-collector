@@ -144,10 +144,11 @@ export const remoteUpload = (
     entity: entityName,
     count: collectionToCreate.length
   });
-  collectionToCreate.forEach(currentEntity => {
+  collectionToCreate.forEach(async currentEntity => {
+    const mapped = await Promise.resolve(mapper(currentEntity));
     fetchAuthenticated(url, user.auth, {
       method: 'POST',
-      body: snakeCaseKeys({ [entityName]: mapper(currentEntity) })
+      body: snakeCaseKeys({ [entityName]: mapped })
     })
       .then(res => currentEntity.update({ remoteId: res.id }))
       .then(() =>

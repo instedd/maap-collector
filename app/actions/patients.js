@@ -15,19 +15,22 @@ const mapper = attrs =>
     camelCaseKeys({
       ...attrs,
       remoteId: attrs.id,
-      remotePatientId: attrs.patient_id
+      remotePatientId: attrs.patient_id,
+      remoteSiteId: attrs.site_id
     }),
-    ['patientId']
+    ['patientId', 'siteId']
   );
-const uploadMapper = attrs => snakeCaseKeys({ ...attrs.dataValues });
+const uploadMapper = async attrs =>
+  snakeCaseKeys({ ...attrs.dataValues, siteId: await attrs.getRemoteSiteId() });
 
 export const fetchPatients = fetchEntity('Patient');
 export const syncPatients = () => async (dispatch, getState) => {
-  const { user } = getState();
+  const { user, site } = getState();
+  console.log(site);
   dispatch({ type: SYNC_PATIENTS });
   return dispatch(remoteSync('/api/v1/patients', user, 'Patient', mapper))
     .then(() => dispatch(uploadPatients()))
-    .then(() => dispatch(fetchPatients()));
+    .then(() => site && dispatch(fetchPatients({ siteId: site.id })));
 };
 
 export const uploadPatients = () => async (dispatch, getState) => {
