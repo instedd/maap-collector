@@ -1,4 +1,4 @@
-# Maap Store
+# Maap Collector
 
 ## Development environment
 
