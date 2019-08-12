@@ -1,0 +1,74 @@
+.cs {
+  --bg-gray: rgb(245, 245, 245);
+  --border-gray: rgba(0, 0, 0, 0.42);
+  --label: rgba(0, 0, 0, 0.6);
+  --border-pill: rgba(0, 0, 0, 0.1);
+  --hover-gray: rgba(0, 0, 0, 0.08);
+
+  .cs__control {
+    height: 3.5rem;
+    background-color: var(--bg-gray);
+    border: none;
+    border-bottom: solid 1px var(--border-gray);
+    border-radius: 4px 4px 0 0;
+    box-shadow: none;
+    &:hover {
+      background-color: var(--hover-gray);
+      border-bottom-color: var(--border-gray);
+    }
+    &--menu-is-open {
+      border-bottom: solid 1.8px var(--black) !important;
+    }
+  }
+  .cs__value-container {
+    font-size: .875rem;
+    padding-left: 1rem;
+    .cs__placeholder {
+      color: var(--label);
+    }
+    .cs__multi-value {
+      background-color: transparent;
+      border: solid 1px var(--border-pill);
+      border-radius: 13px;
+      &__label {
+        font-size: inherit;
+        padding: 3px 12px;
+      }
+      &__remove {
+        background-color: transparent;
+        color: var(--medium-gray);
+      }
+      &__remove:hover {
+        color: var(--black);
+      }
+    }
+  }
+  .cs__indicators {
+    .cs__indicator-separator {
+      width: 0px;
+    }
+    .cs__clear-indicator {
+      display: none;
+    }
+    .cs__indicator {
+      color: var(--label);
+    }
+  }
+  .cs__menu {
+    margin-top: 0px;
+    text-align: left;
+    border-radius: 4px;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    .cs__option {
+      font-size: .875rem;
+      padding-top: 1rem;
+      height: 3rem;
+
+      &--is-focused {
+        background-color: var(--bg-gray);
+      }
+    }
+  }
+}

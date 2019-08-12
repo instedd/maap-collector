@@ -12,6 +12,9 @@ import { withRouter } from 'react-router-dom';
 import { createPatientEntry } from '../actions/patientEntry';
 import TextArea from './TextArea';
 
+// Tested in this form:
+// import CombinedSelect from '../components/CombinedSelect';
+
 import type { Dispatch, State } from '../reducers/types';
 
 type StoreProps = {
