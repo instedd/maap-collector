@@ -26,7 +26,6 @@ const uploadMapper = async attrs =>
 export const fetchPatients = fetchEntity('Patient');
 export const syncPatients = () => async (dispatch, getState) => {
   const { user, site } = getState();
-  console.log(site);
   dispatch({ type: SYNC_PATIENTS });
   return dispatch(remoteSync('/api/v1/patients', user, 'Patient', mapper))
     .then(() => dispatch(uploadPatients()))
