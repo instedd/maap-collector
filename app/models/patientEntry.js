@@ -1,6 +1,12 @@
 import Sequelize, { Model } from 'sequelize';
 
 class PatientEntry extends Model {
+  get stayTimespanToText() {
+    return this.stayTimespan
+      ? `${Math.ceil(this.stayTimespan / (60 * 60 * 24))} Days`
+      : '';
+  }
+
   get patient() {
     // eslint-disable-next-line
     return this._modelOptions.sequelize.models.Patient.findOne({
@@ -18,6 +24,7 @@ const model = sequelize => {
     {
       location: { type: Sequelize.STRING },
       department: { type: Sequelize.STRING },
+      stayTimespan: { type: Sequelize.INTEGER },
       admissionDate: { type: Sequelize.DATE },
       dischargeDate: { type: Sequelize.DATE },
       weight: { type: Sequelize.STRING },

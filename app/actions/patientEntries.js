@@ -1,6 +1,7 @@
 import { omit } from 'lodash';
 import snakeCaseKeys from 'snakecase-keys';
 import camelCaseKeys from 'camelcase-keys';
+import moment from 'moment';
 
 import { fetchEntity } from './fetch';
 import { remoteSync, remoteUpload } from './sync';
@@ -18,13 +19,21 @@ const mapper = attrs =>
       remoteId: attrs.id,
       remotePatientId: attrs.patient_id
     }),
-    ['patientId', 'siteId', 'id']
+    ['patientId', 'siteId', 'id', 'admissionDate', 'dischargeDate']
   );
-const uploadMapper = async attrs =>
-  snakeCaseKeys({
+const uploadMapper = async attrs => {
+  const admissionDate = moment(attrs.admissionDate);
+  const dischargeDate = moment(attrs.dischargeDate);
+  const stayTimespan =
+    attrs.admissionDate && attrs.dischargeDate
+      ? moment.duration(dischargeDate.diff(admissionDate)).asSeconds()
+      : null;
+  return snakeCaseKeys({
     ...attrs.dataValues,
-    patientId: await attrs.getRemotePatientId()
+    patientId: await attrs.getRemotePatientId(),
+    stayTimespan
   });
+};
 
 export const fetchPatientEntries = fetchEntity('PatientEntry');
 export const syncPatientEntries = () => async (dispatch, getState) => {
