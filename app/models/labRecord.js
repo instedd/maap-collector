@@ -1,6 +1,17 @@
 import Sequelize, { Model } from 'sequelize';
 
-class LabRecord extends Model {}
+class LabRecord extends Model {
+  get site() {
+    // eslint-disable-next-line
+    return this._modelOptions.sequelize.models.Site.findOne({
+      where: { id: this.siteId }
+    });
+  }
+
+  getRemoteSiteId() {
+    return this.site.then(site => site && site.remoteId);
+  }
+}
 
 const model = sequelize =>
   LabRecord.init(
@@ -16,7 +27,8 @@ const model = sequelize =>
       phi: { type: Sequelize.JSONB },
       date: { type: Sequelize.JSONB },
       lastSyncAt: { type: Sequelize.DATE },
-      remoteId: { type: Sequelize.INTEGER }
+      remoteId: { type: Sequelize.INTEGER },
+      siteId: { type: Sequelize.INTEGER }
     },
     { sequelize, modelName: model.modelName }
   );

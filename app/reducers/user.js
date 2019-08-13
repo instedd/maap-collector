@@ -6,7 +6,6 @@ const initialState = {};
 export default function network(state = initialState, action: Action) {
   switch (action.type) {
     case USER_LOGGED_IN:
-      console.log(action.user);
       return {
         ...state,
         data: action.user,

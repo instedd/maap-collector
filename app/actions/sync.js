@@ -9,13 +9,14 @@ import { syncCultureTypes } from './cultureTypes';
 import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
 import { syncAntibiotics } from './antibiotics';
 import { syncLabRecords } from './labRecords';
+import { syncPatients } from './patients';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
 const UPDATE_PENDING_COUNT = 'UPDATE_PENDING_COUNT';
 const UPDATE_PENDING_UPLOAD_COUNT = 'UPDATE_PENDING_UPLOAD_COUNT';
 const REDUCE_PENDING_COUNT = 'REDUCE_PENDING_COUNT';
-const REDUCE_PENDING_UPLOAD_COUNT = 'REDUCE_PENDING_COUNT';
+const REDUCE_PENDING_UPLOAD_COUNT = 'REDUCE_PENDING_UPLOAD_COUNT';
 
 // TODO: We should honor this order, currently the async process randomizes everything
 export const entities = [
@@ -38,6 +39,10 @@ export const entities = [
   {
     name: 'AntibioticConsumptionStat',
     syncAction: syncAntibioticConsumptionStats
+  },
+  {
+    name: 'Patient',
+    syncAction: syncPatients
   },
   {
     name: 'LabRecord',
@@ -139,10 +144,11 @@ export const remoteUpload = (
     entity: entityName,
     count: collectionToCreate.length
   });
-  collectionToCreate.forEach(currentEntity => {
+  collectionToCreate.forEach(async currentEntity => {
+    const mapped = await Promise.resolve(mapper(currentEntity));
     fetchAuthenticated(url, user.auth, {
       method: 'POST',
-      body: snakeCaseKeys({ [entityName]: mapper(currentEntity) })
+      body: snakeCaseKeys({ [entityName]: mapped })
     })
       .then(res => currentEntity.update({ remoteId: res.id }))
       .then(() =>

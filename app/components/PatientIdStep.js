@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { at } from 'lodash';
 import TextField, { Input } from '@material/react-text-field';
 
 import XlsxManager from '../utils/xlsxManager';
@@ -43,14 +44,20 @@ class PatientIdStep extends Component<Props> {
     dispatch(
       setPatientIdData({
         columns: columnsToKeep.map(index => headerRow[index]),
-        rows: rows.map(row => columnsToKeep.map(index => row[index]))
+        columnsToKeep,
+        rows
       })
     );
   }
 
   render() {
     const { labRecordImport } = this.props;
-    const { columns, rows, patientOrLabRecordId } = labRecordImport;
+    const {
+      columns,
+      rows,
+      patientOrLabRecordId,
+      columnsToKeep
+    } = labRecordImport;
     return (
       <div>
         <h2>Complete patient ID for record linking</h2>
@@ -68,7 +75,7 @@ class PatientIdStep extends Component<Props> {
           <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={`row-${rowIndex}`}>
-                {row.map((cell, index) => (
+                {at(row, columnsToKeep).map((cell, index) => (
                   // eslint-disable-next-line
                   <td key={`td-${index}`}>
                     {patientOrLabRecordId[index] === 'patientId' ? (

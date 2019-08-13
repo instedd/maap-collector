@@ -10,7 +10,7 @@ const fetchEntity = entityName => (where = {}) => async (
   getState
 ) => {
   const pluralizedEntityName = constantCase(pluralize(entityName));
-  dispatch({ type: `FETCH_${pluralizedEntityName}` });
+  dispatch({ type: `FETCH_${pluralizedEntityName}`, where });
   const { user, router } = getState();
   const currentPage =
     parseInt(qs.parse(router.location.search.slice(1)).page, 10) || 1;
@@ -21,7 +21,7 @@ const fetchEntity = entityName => (where = {}) => async (
   const prevPage = currentPage > 1 ? currentPage - 1 : null;
   const nextPage = currentPage < totalPages ? currentPage + 1 : null;
   entity
-    .findAll({ where, offset, limit: PER_PAGE })
+    .findAll({ where, offset, limit: PER_PAGE, order: [['id', 'desc']] })
     .then(items =>
       dispatch({
         type: `FETCHED_${pluralizedEntityName}`,

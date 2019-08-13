@@ -39,7 +39,7 @@ class Sites extends Component<Props, State> {
           items={sites.items}
           totalCount={sites.totalCount}
           columns={['Name', 'Address', 'Ownership', 'Last activity']}
-          fields={['name', 'address', 'ownership', 'updatedAt']}
+          fields={['id', 'name', 'address', 'ownership', 'updatedAt']}
           onClick={site => dispatch(enterSite(site))}
         />
       </div>

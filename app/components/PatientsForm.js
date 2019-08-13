@@ -7,12 +7,15 @@ import TextField, { Input } from '@material/react-text-field';
 import Select, { Option } from '@material/react-select';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import type { Dispatch, State } from '../reducers/types';
+import ErrorMessage from './ErrorMessage';
 import { createPatient } from '../actions/patient';
 
 type StoreProps = {
   dispatch: Dispatch
 };
 type Props = State & StoreProps;
+
+const mapStateToProps = ({ patient }) => ({ patient });
 
 class PatientForm extends Component<Props, State> {
   state: State = {
@@ -24,13 +27,23 @@ class PatientForm extends Component<Props, State> {
 
   handleSubmit() {
     const { dispatch } = this.props;
-    dispatch(createPatient(this.state));
+    return dispatch(createPatient(this.state));
   }
 
   render() {
+    const { patient } = this.props;
     const { patientId, yearOfBirth, levelOfEducation, gender } = this.state;
     return (
       <Grid align="left">
+        {patient.errors.length > 0 && (
+          <Row>
+            <Cell columns={12}>
+              {patient.errors.map(error => (
+                <ErrorMessage key={error}>{error}</ErrorMessage>
+              ))}
+            </Cell>
+          </Row>
+        )}
         <Row>
           <Cell columns={12}>
             <TextField className="full-width" label="Patient ID">
@@ -90,7 +103,7 @@ class PatientForm extends Component<Props, State> {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   null,
   null,
   { withRef: true }
