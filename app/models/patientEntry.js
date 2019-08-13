@@ -1,9 +1,20 @@
 import Sequelize, { Model } from 'sequelize';
 
-class PatientEntry extends Model {}
+class PatientEntry extends Model {
+  get patient() {
+    // eslint-disable-next-line
+    return this._modelOptions.sequelize.models.Patient.findOne({
+      where: { id: this.patientId }
+    });
+  }
 
-const model = sequelize =>
-  PatientEntry.init(
+  getRemotePatientId() {
+    return this.patient.then(patient => patient && patient.remoteId);
+  }
+}
+
+const model = sequelize => {
+  const patientEntry = PatientEntry.init(
     {
       location: { type: Sequelize.STRING },
       department: { type: Sequelize.STRING },
@@ -30,10 +41,25 @@ const model = sequelize =>
       dischargeDiagnostic: { type: Sequelize.STRING },
       dischargeDiagnosticIcdCode: { type: Sequelize.STRING },
       patientOutcomeAtDischarge: { type: Sequelize.STRING },
-      patientId: { type: Sequelize.INTEGER }
+      patientId: { type: Sequelize.INTEGER },
+      lastSyncAt: { type: Sequelize.DATE },
+      remoteId: { type: Sequelize.INTEGER }
     },
     { sequelize, modelName: model.modelName }
   );
+  patientEntry.addHook('beforeValidate', async instance => {
+    // TODO: Get remote id's when only a local id is present
+    if (instance.remotePatientId) {
+      const patient = await sequelize.models.Patient.findOne({
+        where: { remoteId: instance.remotePatientId }
+      });
+      // eslint-disable-next-line
+      instance.patientId = patient.id;
+    }
+  });
+
+  return patientEntry;
+};
 
 model.modelName = 'PatientEntry';
 

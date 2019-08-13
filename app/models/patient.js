@@ -39,6 +39,7 @@ const model = sequelize => {
       levelOfEducation: { type: Sequelize.STRING },
       lastSyncAt: { type: Sequelize.DATE },
       remoteId: { type: Sequelize.INTEGER },
+      remoteSiteId: { type: Sequelize.INTEGER },
       siteId: {
         type: Sequelize.INTEGER,
         unique: {
@@ -62,7 +63,6 @@ const model = sequelize => {
   patient.addHook('beforeValidate', async instance => {
     // TODO: Get remote id's when only a local id is present
     if (instance.remoteSiteId) {
-      console.log('hook');
       const site = await sequelize.models.Site.findOne({
         where: { remoteId: instance.remoteSiteId }
       });

@@ -10,6 +10,7 @@ import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
 import { syncAntibiotics } from './antibiotics';
 import { syncLabRecords } from './labRecords';
 import { syncPatients } from './patients';
+import { syncPatientEntries } from './patientEntries';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -43,6 +44,10 @@ export const entities = [
   {
     name: 'Patient',
     syncAction: syncPatients
+  },
+  {
+    name: 'PatientEntry',
+    syncAction: syncPatientEntries
   },
   {
     name: 'LabRecord',
