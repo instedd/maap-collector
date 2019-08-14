@@ -68,8 +68,8 @@ class PatientList extends Component<Props, State> {
           items={labRecordImport.rows.map(i => i.map(({ w }) => w))}
           totalCount={labRecordImport.totalCount}
           onReload={() => dispatch(fetchLabRecord({ labRecordId }))}
-          columns={[labRecordImport.columns.map(({ w }) => w)]}
-          fields={[columns]}
+          columns={labRecordImport.columns.map(({ w }) => w)}
+          fields={columns}
         />
       </div>
     );
