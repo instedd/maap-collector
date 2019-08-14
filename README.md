@@ -26,6 +26,9 @@ $ yarn dev
 ### Useful commands
 
 ```
+# Identify any issues in staged files
+$ yarn precommit
+
 # Run tests
 $ yarn build-e2e
 $ yarn test-e2e
