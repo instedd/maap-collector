@@ -51,7 +51,7 @@ class PatientList extends Component<Props, State> {
     // This gets all the columns indexes that are patientOrLabRecordId, phi, or date
     const columns = [patientOrLabRecordId, phi, date]
       .map(values)
-      .reduce((acc, current) => current.map((e, i) => acc[i] || !!e), [])
+      .reduce((acc, current) => current.map((e, i) => acc[i] || e), [])
       .map((e, i) => (e ? i : false))
       .filter(e => e);
     return (
@@ -68,8 +68,8 @@ class PatientList extends Component<Props, State> {
           items={labRecordImport.rows.map(i => i.map(({ w }) => w))}
           totalCount={labRecordImport.totalCount}
           onReload={() => dispatch(fetchLabRecord({ labRecordId }))}
-          columns={labRecordImport.columns.map(({ w }) => w)}
-          fields={columns}
+          columns={[labRecordImport.columns.map(({ w }) => w)]}
+          fields={[columns]}
         />
       </div>
     );
