@@ -53,7 +53,7 @@ class PatientList extends Component<Props, State> {
           columns={[
             'Location',
             'Department',
-            'Stay timespan',
+            'Stay length',
             'Admission date',
             'Discharge date',
             'Discharge diagnostic'
