@@ -3,6 +3,7 @@
 import MaterialIcon from '@material/react-material-icon';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { values } from 'lodash';
 import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import { fetchLabRecord } from '../actions/labRecords';
@@ -44,6 +45,15 @@ class PatientList extends Component<Props, State> {
   render() {
     const { labRecordImport, dispatch, labRecordId, labRecords } = this.props;
     const { labRecord } = labRecords;
+    const { patientOrLabRecordId, phi, date } = {
+      ...{ ...labRecord }.dataValues
+    };
+    // This gets all the columns indexes that are patientOrLabRecordId, phi, or date
+    const columns = [patientOrLabRecordId, phi, date]
+      .map(values)
+      .reduce((acc, current) => current.map((e, i) => acc[i] || !!e), [])
+      .map((e, i) => (e ? i : false))
+      .filter(e => e);
     return (
       <div>
         <Table
@@ -59,7 +69,7 @@ class PatientList extends Component<Props, State> {
           totalCount={labRecordImport.totalCount}
           onReload={() => dispatch(fetchLabRecord({ labRecordId }))}
           columns={labRecordImport.columns.map(({ w }) => w)}
-          fields={labRecordImport.columns.map((_, index) => index)}
+          fields={columns}
         />
       </div>
     );
