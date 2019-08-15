@@ -10,11 +10,15 @@ import type { ContextRouter } from 'react-router';
 import type { Dispatch } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
+import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
 import RowForm from './RowForm';
 
 type ComponentProps = {
   dispatch: Dispatch,
+  antibiotic: {
+    name: string
+  },
   antibioticConsumptionStats: {
     items: [],
     totalCount: number,
@@ -38,8 +42,8 @@ type State = {
 type Props = ComponentProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, antibioticConsumptionStats } = state;
-  return { dispatch, antibioticConsumptionStats };
+  const { dispatch, antibioticConsumptionStats, antibiotic } = state;
+  return { dispatch, antibioticConsumptionStats, antibiotic };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
@@ -64,10 +68,16 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   componentDidMount() {
     const { dispatch, antibioticId } = this.props;
     dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+    dispatch(fetchAntibiotic(antibioticId));
   }
 
   render() {
-    const { antibioticConsumptionStats, dispatch, antibioticId } = this.props;
+    const {
+      antibioticConsumptionStats,
+      dispatch,
+      antibioticId,
+      antibiotic
+    } = this.props;
     const {
       date,
       issued,
@@ -81,9 +91,12 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       <div>
         <Table
           title={
-            <Link to="/antibiotics">
-              <MaterialIcon icon="arrow_back" />
-            </Link>
+            <>
+              <Link to="/antibiotics">
+                <MaterialIcon icon="arrow_back" />
+              </Link>
+              {antibiotic && antibiotic.name}
+            </>
           }
           pagination
           items={antibioticConsumptionStats.items}

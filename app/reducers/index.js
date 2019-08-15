@@ -11,6 +11,7 @@ import sync from './sync';
 import specimenSources from './specimenSources';
 import antibioticConsumptionStats from './antibioticConsumptionStats';
 import antibiotics from './antibiotics';
+import antibiotic from './antibiotic';
 import patients from './patients';
 import patient from './patient';
 import patientEntries from './patientEntries';
@@ -31,6 +32,7 @@ export default function createRootReducer(history: {}) {
       specimenSources,
       antibioticConsumptionStats,
       antibiotics,
+      antibiotic,
       patient,
       patients,
       patientEntries
