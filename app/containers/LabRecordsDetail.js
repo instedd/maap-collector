@@ -8,7 +8,7 @@ type Props = { match: { params: { id: string } } } & ContextRouter;
 
 type State = {};
 
-class PatientsIndex extends Component<Props, State> {
+class LabRecordsDetail extends Component<Props, State> {
   props: Props;
 
   child: {
@@ -26,4 +26,4 @@ class PatientsIndex extends Component<Props, State> {
   }
 }
 
-export default withRouter(PatientsIndex);
+export default withRouter(LabRecordsDetail);
