@@ -26,7 +26,7 @@ const mapStateToProps = state => {
   return { dispatch, labRecordImport, labRecords };
 };
 
-class PatientList extends Component<Props, State> {
+class LabRecordsDetailList extends Component<Props, State> {
   state: State = {};
 
   async componentDidMount() {
@@ -76,4 +76,4 @@ class PatientList extends Component<Props, State> {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(PatientList));
+export default withRouter(connect(mapStateToProps)(LabRecordsDetailList));
