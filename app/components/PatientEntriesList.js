@@ -21,8 +21,8 @@ type StoreProps = {
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, patientEntries, patient } = state;
-  return { dispatch, patientEntries, patient };
+  const { dispatch, patientEntriesList } = state;
+  return { dispatch, patientEntriesList };
 };
 
 class PatientList extends Component<Props, State> {
@@ -35,7 +35,8 @@ class PatientList extends Component<Props, State> {
   }
 
   render() {
-    const { patientEntries, dispatch, patientId, patient } = this.props;
+    const { dispatch, patientId, patientEntriesList } = this.props;
+    const { patientDisplayId, patientEntries } = patientEntriesList;
     return (
       <div>
         <Table
@@ -44,7 +45,7 @@ class PatientList extends Component<Props, State> {
               <Link to="/patients">
                 <MaterialIcon icon="arrow_back" />
               </Link>
-              {patient.dbPatient && patient.dbPatient.remotePatientId}
+              {patientDisplayId}
             </>
           }
           pagination
