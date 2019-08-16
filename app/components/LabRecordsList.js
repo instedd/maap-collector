@@ -41,7 +41,7 @@ class LabRecordsList extends Component<Props, State> {
     return (
       <div>
         <Table
-          entityName="Lab records"
+          entityName="Lab record files"
           items={labRecords.items}
           pagination
           totalCount={labRecords.totalCount}

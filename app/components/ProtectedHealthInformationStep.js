@@ -76,12 +76,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
   render() {
     const { labRecordImport } = this.props;
-    const { file, columns, patientOrLabRecordId, phi, date } = labRecordImport;
+    const { columns, patientOrLabRecordId, phi, date } = labRecordImport;
     return (
       <div>
-        <h2>
-          Specify which columns has protected health information {file.name}
-        </h2>
+        <h2>Specify which columns have protected health information</h2>
         <table>
           <thead>
             <tr>
