@@ -1,5 +1,9 @@
 .navBar {
-  box-shadow: 0 1px 2px 0 var(--transparent-dark-gray), 0 1px 3px 0 var(--transparent-gray);
+  box-shadow: 0 1px 2px 0 var(--transparent-dark-gray),
+    0 1px 3px 0 var(--transparent-gray);
+  i {
+    color: var(--medium-gray);
+  }
 }
 .navBarTabs {
   align-self: flex-end;
@@ -45,8 +49,22 @@
   }
 }
 .navBarCurrentSite {
-  margin-left: 1em;
+  margin: auto 1rem;
+  font-size: 1.5rem;
 }
 .navBarTitle {
   cursor: pointer;
+  margin-right: 1.25rem;
+}
+.navBarSync {
+  color: var(--medium-gray);
+  display: inherit;
+  align-items: center;
+  padding: 0.1rem 0.5rem 0.1rem 0.75rem;
+  border: solid 1px var(--transparent-dark-gray);
+  border-radius: 1rem;
+
+  i {
+    margin-left: 0.3rem;
+  }
 }

@@ -85,12 +85,14 @@ class NavBar extends Component<Props, State> {
                   MAAP
                 </div>
               </TopAppBarTitle>
-              <SyncStatus />
+              <MaterialIcon icon="keyboard_arrow_right" />
               {site && (
-                <div className={styles.navBarCurrentSite}>
-                  At site: {site.name}
-                </div>
+                <div className={styles.navBarCurrentSite}>{site.name}</div>
               )}
+              <div className={styles.navBarSync}>
+                <SyncStatus />
+                <MaterialIcon icon="arrow_upward" />
+              </div>
             </TopAppBarSection>
 
             <TopAppBarSection align="end">
