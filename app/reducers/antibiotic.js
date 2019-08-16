@@ -4,8 +4,7 @@ import type { Action, State } from './types';
 
 const initialState = null;
 
-// reducer en vez de counter???
-export default function counter(state: State = initialState, action: Action) {
+export default function(state: State = initialState, action: Action) {
   switch (action.type) {
     case FETCHED_ANTIBIOTIC:
       return action.antibiotic;

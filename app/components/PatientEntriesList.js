@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import { fetchPatientEntries } from '../actions/patientEntries';
+import { fetchPatient } from '../actions/patient';
 import Table from './Table';
 
 import type { Dispatch, State } from '../reducers/types';
@@ -20,8 +21,8 @@ type StoreProps = {
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, patientEntries } = state;
-  return { dispatch, patientEntries };
+  const { dispatch, patientEntries, patient } = state;
+  return { dispatch, patientEntries, patient };
 };
 
 class PatientList extends Component<Props, State> {
@@ -30,17 +31,21 @@ class PatientList extends Component<Props, State> {
   componentDidMount() {
     const { dispatch, patientId } = this.props;
     dispatch(fetchPatientEntries({ patientId }));
+    dispatch(fetchPatient(patientId));
   }
 
   render() {
-    const { patientEntries, dispatch, patientId } = this.props;
+    const { patientEntries, dispatch, patientId, patient } = this.props;
     return (
       <div>
         <Table
           title={
-            <Link to="/patients">
-              <MaterialIcon icon="arrow_back" />
-            </Link>
+            <>
+              <Link to="/patients">
+                <MaterialIcon icon="arrow_back" />
+              </Link>
+              {patient.dbPatient && patient.dbPatient.remotePatientId}
+            </>
           }
           pagination
           items={patientEntries.items}
