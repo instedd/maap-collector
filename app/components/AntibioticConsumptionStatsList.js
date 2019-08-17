@@ -16,17 +16,17 @@ import RowForm from './RowForm';
 
 type ComponentProps = {
   dispatch: Dispatch,
-  antibiotic: {
-    name: string
-  },
-  antibioticConsumptionStats: {
-    items: [],
-    totalCount: number,
-    totalPages: number,
-    offset: number,
-    limit: number,
-    prevPage: number,
-    nextPage: number
+  antibioticConsumptionStatsList: {
+    antibioticName: string,
+    antibioticConsumptionStats: {
+      items: [],
+      totalCount: number,
+      totalPages: number,
+      offset: number,
+      limit: number,
+      prevPage: number,
+      nextPage: number
+    }
   },
   antibioticId: string
 };
@@ -42,8 +42,8 @@ type State = {
 type Props = ComponentProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, antibioticConsumptionStats, antibiotic } = state;
-  return { dispatch, antibioticConsumptionStats, antibiotic };
+  const { dispatch, antibioticConsumptionStatsList } = state;
+  return { dispatch, antibioticConsumptionStatsList };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
@@ -54,13 +54,17 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       dispatch,
       antibioticId,
       history,
-      antibioticConsumptionStats
+      antibioticConsumptionStatsList
     } = this.props;
 
     return dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
     ).then(() => {
-      history.push({ search: `page=${antibioticConsumptionStats.totalPages}` });
+      history.push({
+        search: `page=${
+          antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
+        }`
+      });
       return dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
     });
   };
@@ -73,11 +77,11 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
 
   render() {
     const {
-      antibioticConsumptionStats,
       dispatch,
       antibioticId,
-      antibiotic
+      antibioticConsumptionStatsList
     } = this.props;
+    const { antibioticConsumptionStats } = antibioticConsumptionStatsList;
     const {
       date,
       issued,
@@ -95,7 +99,8 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <Link to="/antibiotics">
                 <MaterialIcon icon="arrow_back" />
               </Link>
-              {antibiotic && antibiotic.name}
+              {antibioticConsumptionStatsList &&
+                antibioticConsumptionStatsList.antibioticName}
             </>
           }
           pagination
