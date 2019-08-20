@@ -9,14 +9,11 @@ import { fetchPatientEntries } from '../actions/patientEntries';
 import { fetchPatient } from '../actions/patient';
 import Table from './Table';
 
-import type { Dispatch, State } from '../reducers/types';
+import type { Dispatch, State, Page } from '../reducers/types';
 
 type StoreProps = {
   dispatch: Dispatch,
-  patientEntries: {
-    items: [],
-    totalCount: number
-  }
+  patientEntries: Page
 };
 type Props = State & StoreProps & ContextRouter;
 

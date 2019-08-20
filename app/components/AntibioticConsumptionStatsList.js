@@ -7,7 +7,7 @@ import TextField, { Input } from '@material/react-text-field';
 import Select, { Option } from '@material/react-select';
 import MaterialIcon from '@material/react-material-icon';
 import type { ContextRouter } from 'react-router';
-import type { Dispatch } from '../reducers/types';
+import type { Dispatch, Page } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
 import { fetchAntibiotic } from '../actions/antibiotic';
@@ -18,15 +18,7 @@ type ComponentProps = {
   dispatch: Dispatch,
   antibioticConsumptionStatsList: {
     antibioticName: string,
-    antibioticConsumptionStats: {
-      items: [],
-      totalCount: number,
-      totalPages: number,
-      offset: number,
-      limit: number,
-      prevPage: number,
-      nextPage: number
-    }
+    antibioticConsumptionStats: Page
   },
   antibioticId: string
 };

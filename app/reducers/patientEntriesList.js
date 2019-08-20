@@ -7,7 +7,13 @@ import type { State, Action } from './types';
 const initialState = {
   patientDisplayId: null,
   patientEntries: {
-    items: []
+    items: [],
+    totalCount: 0,
+    totalPages: 0,
+    offset: 0,
+    limit: 0,
+    prevPage: 0,
+    nextPage: 0
   }
 };
 
