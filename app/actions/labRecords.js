@@ -39,11 +39,16 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
   const collectionToCreate = await LabRecord.findAll({
     where: sequelize.literal('remoteId is NULL')
   });
+  const collectionToUpdate = await LabRecord.findAll({
+    where: sequelize.literal(
+      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M', updatedAt) > strftime('%Y-%m-%d %H:%M', lastSyncAt)"
+    )
+  });
   if (collectionToCreate.length === 0) return;
   dispatch({
     type: UPDATE_PENDING_UPLOAD_COUNT,
     entity: 'LabRecord',
-    count: collectionToCreate.length
+    count: collectionToCreate.length + collectionToUpdate.length
   });
 
   collectionToCreate.forEach(async labRecord => {
@@ -85,12 +90,6 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
     )
   });
 
-  dispatch({
-    type: UPDATE_PENDING_UPLOAD_COUNT,
-    entity: 'LabRecord',
-    count: collectionToUpdate.length
-  });
-  console.log(collectionToUpdate);
   collectionToUpdate.forEach(async labRecord => {
     fetchAuthenticated(
       `/api/v1/lab_record_imports/${labRecord.remoteId}`,
