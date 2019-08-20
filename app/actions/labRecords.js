@@ -27,9 +27,15 @@ const uploadMapper = async (attr, record) =>
     }))
   });
 
-export const syncLabRecords = () => async (dispatch, getState) => {
+export const syncLabRecords = () => async dispatch =>
+  dispatch(uploadNewLabRecords()).then(() =>
+    dispatch(uploadUpdatedLabRecords())
+  );
+
+export const uploadNewLabRecords = () => async (dispatch, getState) => {
   const { user } = getState();
   const { LabRecord, sequelize } = await db.initializeForUser(user);
+
   const collectionToCreate = await LabRecord.findAll({
     where: sequelize.literal('remoteId is NULL')
   });
@@ -59,7 +65,45 @@ export const syncLabRecords = () => async (dispatch, getState) => {
       body,
       contentType: null
     })
-      .then(res => labRecord.update({ remoteId: res.id }))
+      .then(res =>
+        labRecord.update({ remoteId: res.id, lastSyncAt: new Date() })
+      )
+      .then(() =>
+        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
+      )
+      .catch(e => console.log(e));
+  });
+  return Promise.resolve();
+};
+
+export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
+  const { user } = getState();
+  const { LabRecord, sequelize } = await db.initializeForUser(user);
+  const collectionToUpdate = await LabRecord.findAll({
+    where: sequelize.literal(
+      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M', updatedAt) > strftime('%Y-%m-%d %H:%M', lastSyncAt)"
+    )
+  });
+
+  dispatch({
+    type: UPDATE_PENDING_UPLOAD_COUNT,
+    entity: 'LabRecord',
+    count: collectionToUpdate.length
+  });
+  console.log(collectionToUpdate);
+  collectionToUpdate.forEach(async labRecord => {
+    fetchAuthenticated(
+      `/api/v1/lab_record_imports/${labRecord.remoteId}`,
+      user.auth,
+      {
+        method: 'PUT',
+        body: { rows: labRecord.rows }
+      }
+    )
+      .then(() => {
+        const updatedAt = new Date();
+        return labRecord.update({ lastSyncAt: updatedAt, updatedAt });
+      })
       .then(() =>
         dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
       )

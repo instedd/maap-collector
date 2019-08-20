@@ -5,6 +5,7 @@ import MaterialIcon from '@material/react-material-icon';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
+import { isFunction } from 'lodash';
 
 import styles from './Table.scss';
 
@@ -93,11 +94,16 @@ const Table = ({
             key={`item-${item.id || index}`}
             onClick={() => onClick(item)}
           >
-            {fields.map(field => (
-              <td key={`item-${item.id || index}-${field}`}>
-                {parseField(item[field])}
-              </td>
-            ))}
+            {fields.map(
+              field =>
+                isFunction(field) ? (
+                  field(index)
+                ) : (
+                  <td key={`item-${item.id || index}-${field}`}>
+                    {parseField(item[field])}
+                  </td>
+                )
+            )}
           </tr>
         ))}
         {lastRow}
