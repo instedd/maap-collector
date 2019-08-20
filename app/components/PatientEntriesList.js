@@ -6,22 +6,20 @@ import { connect } from 'react-redux';
 import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import { fetchPatientEntries } from '../actions/patientEntries';
+import { fetchPatient } from '../actions/patient';
 import Table from './Table';
 
-import type { Dispatch, State } from '../reducers/types';
+import type { Dispatch, State, Page } from '../reducers/types';
 
 type StoreProps = {
   dispatch: Dispatch,
-  patientEntries: {
-    items: [],
-    totalCount: number
-  }
+  patientEntries: Page
 };
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, patientEntries } = state;
-  return { dispatch, patientEntries };
+  const { dispatch, patientEntriesList } = state;
+  return { dispatch, patientEntriesList };
 };
 
 class PatientList extends Component<Props, State> {
@@ -30,17 +28,22 @@ class PatientList extends Component<Props, State> {
   componentDidMount() {
     const { dispatch, patientId } = this.props;
     dispatch(fetchPatientEntries({ patientId }));
+    dispatch(fetchPatient(patientId));
   }
 
   render() {
-    const { patientEntries, dispatch, patientId } = this.props;
+    const { dispatch, patientId, patientEntriesList } = this.props;
+    const { patientDisplayId, patientEntries } = patientEntriesList;
     return (
       <div>
         <Table
           title={
-            <Link to="/patients">
-              <MaterialIcon icon="arrow_back" />
-            </Link>
+            <>
+              <Link to="/patients">
+                <MaterialIcon icon="arrow_back" />
+              </Link>
+              {patientDisplayId}
+            </>
           }
           pagination
           items={patientEntries.items}

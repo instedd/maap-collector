@@ -7,22 +7,18 @@ import TextField, { Input } from '@material/react-text-field';
 import Select, { Option } from '@material/react-select';
 import MaterialIcon from '@material/react-material-icon';
 import type { ContextRouter } from 'react-router';
-import type { Dispatch } from '../reducers/types';
+import type { Dispatch, Page } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
+import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
 import RowForm from './RowForm';
 
 type ComponentProps = {
   dispatch: Dispatch,
-  antibioticConsumptionStats: {
-    items: [],
-    totalCount: number,
-    totalPages: number,
-    offset: number,
-    limit: number,
-    prevPage: number,
-    nextPage: number
+  antibioticConsumptionStatsList: {
+    antibioticName: string,
+    antibioticConsumptionStats: Page
   },
   antibioticId: string
 };
@@ -38,8 +34,8 @@ type State = {
 type Props = ComponentProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, antibioticConsumptionStats } = state;
-  return { dispatch, antibioticConsumptionStats };
+  const { dispatch, antibioticConsumptionStatsList } = state;
+  return { dispatch, antibioticConsumptionStatsList };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
@@ -50,13 +46,17 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       dispatch,
       antibioticId,
       history,
-      antibioticConsumptionStats
+      antibioticConsumptionStatsList
     } = this.props;
 
     return dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
     ).then(() => {
-      history.push({ search: `page=${antibioticConsumptionStats.totalPages}` });
+      history.push({
+        search: `page=${
+          antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
+        }`
+      });
       return dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
     });
   };
@@ -64,10 +64,16 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   componentDidMount() {
     const { dispatch, antibioticId } = this.props;
     dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+    dispatch(fetchAntibiotic(antibioticId));
   }
 
   render() {
-    const { antibioticConsumptionStats, dispatch, antibioticId } = this.props;
+    const {
+      dispatch,
+      antibioticId,
+      antibioticConsumptionStatsList
+    } = this.props;
+    const { antibioticConsumptionStats } = antibioticConsumptionStatsList;
     const {
       date,
       issued,
@@ -81,9 +87,13 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       <div>
         <Table
           title={
-            <Link to="/antibiotics">
-              <MaterialIcon icon="arrow_back" />
-            </Link>
+            <>
+              <Link to="/antibiotics">
+                <MaterialIcon icon="arrow_back" />
+              </Link>
+              {antibioticConsumptionStatsList &&
+                antibioticConsumptionStatsList.antibioticName}
+            </>
           }
           pagination
           items={antibioticConsumptionStats.items}

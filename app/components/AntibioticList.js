@@ -23,7 +23,7 @@ const mapStateToProps = state => {
   return { dispatch, antibiotics };
 };
 
-class AntibioticConsumptionStatsList extends Component<Props, State> {
+class AntibioticList extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
@@ -54,6 +54,4 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
   }
 }
 
-export default withRouter(
-  connect(mapStateToProps)(AntibioticConsumptionStatsList)
-);
+export default withRouter(connect(mapStateToProps)(AntibioticList));

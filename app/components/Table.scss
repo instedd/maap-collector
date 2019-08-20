@@ -1,3 +1,7 @@
+h2 i {
+  margin-right: 1rem;
+  vertical-align: sub;
+}
 table {
   border-collapse: collapse;
   width: 100%;
@@ -9,7 +13,7 @@ tr {
 td,
 th {
   border-bottom: 1px solid var(--transparent-gray);
-  padding: .5rem 2rem;
+  padding: 0.5rem 2rem;
 }
 th {
   color: var(--medium-gray);
