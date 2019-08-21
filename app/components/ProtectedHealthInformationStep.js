@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Radio, { NativeRadioControl } from '@material/react-radio';
 import Checkbox from '@material/react-checkbox';
 import Select, { Option } from '@material/react-select';
+import { values } from 'lodash';
 import { connect } from 'react-redux';
 import XlsxManager from '../utils/xlsxManager';
 import { setPhiData } from '../actions/labRecordImport';
@@ -19,10 +20,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        patientOrLabRecordId: {
+        patientOrLabRecordId: values({
           ...patientOrLabRecordId,
           [column]: e.target.value
-        }
+        })
       })
     );
   };
@@ -37,10 +38,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        [type]: {
+        [type]: values({
           ...labRecordImport[type],
           [column]: e.target.checked ? trueValue : falseValue
-        }
+        })
       })
     );
   };
