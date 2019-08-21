@@ -9,12 +9,13 @@ import labRecords from './labRecords';
 import labRecordImport from './labRecordImport';
 import sync from './sync';
 import specimenSources from './specimenSources';
-import antibioticConsumptionStats from './antibioticConsumptionStats';
 import antibiotics from './antibiotics';
+import antibioticConsumptionStatsList from './antibioticConsumptionStatsList';
 import patients from './patients';
 import patient from './patient';
 import patientEntries from './patientEntries';
 import patientEntryEdit from './patientEntryEdit';
+import patientEntriesList from './patientEntriesList';
 
 export default function createRootReducer(history: {}) {
   const routerReducer = connectRouter(history)(() => {});
@@ -30,13 +31,14 @@ export default function createRootReducer(history: {}) {
       labRecords,
       sync,
       specimenSources,
-      antibioticConsumptionStats,
       antibiotics,
+      antibioticConsumptionStatsList,
       patient,
       patients,
       patientEntries,
 
-      patientEntryEdit
+      patientEntryEdit,
+      patientEntriesList
     })
   );
 }

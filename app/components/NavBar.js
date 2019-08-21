@@ -15,6 +15,7 @@ import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import { State } from '../reducers/types';
 import { userLoggedOut } from '../actions/user';
+import Logo from '../assets/logo.svg';
 
 import routes from '../constants/routes';
 import styles from './NavBar.scss';
@@ -82,15 +83,17 @@ class NavBar extends Component<Props, State> {
                   onClick={() => this.exitSite()}
                   onKeyPress={() => this.exitSite()}
                 >
-                  MAAP
+                  <img src={Logo} alt="Logo" />
                 </div>
               </TopAppBarTitle>
-              <SyncStatus />
+              <MaterialIcon icon="keyboard_arrow_right" />
               {site && (
-                <div className={styles.navBarCurrentSite}>
-                  At site: {site.name}
-                </div>
+                <div className={styles.navBarCurrentSite}>{site.name}</div>
               )}
+              <div className={styles.navBarSync}>
+                <SyncStatus />
+                <MaterialIcon icon="arrow_upward" />
+              </div>
             </TopAppBarSection>
 
             <TopAppBarSection align="end">

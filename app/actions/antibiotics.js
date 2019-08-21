@@ -1,5 +1,7 @@
+// @flow
 import { remoteSync } from './sync';
 import { fetchEntity } from './fetch';
+import type { Dispatch, State } from '../reducers/types';
 
 const FETCH_ANTIBIOTICS = 'FETCH_ANTIBIOTICS';
 const FETCHED_ANTIBIOTICS = 'FETCHED_ANTIBIOTICS';
@@ -15,7 +17,10 @@ const antibioticMapper = props => ({
   strengthUnit: props.strength_unit
 });
 
-export const syncAntibiotics = () => async (dispatch, getState) => {
+export const syncAntibiotics = () => async (
+  dispatch: Dispatch,
+  getState: () => State
+) => {
   const { user } = getState();
   dispatch({ type: SYNC_ANTIBIOTICS });
   return dispatch(

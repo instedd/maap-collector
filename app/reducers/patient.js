@@ -1,11 +1,13 @@
+// @flow
+
 import { SAVING_PATIENT_FAILED, SAVED_PATIENT } from '../actions/patient';
-import type { Action } from './types';
+import type { State, Action } from './types';
 
 const initialState = {
   errors: []
 };
 
-export default function counter(state = initialState, action: Action) {
+export default function(state: State = initialState, action: Action) {
   switch (action.type) {
     case SAVED_PATIENT:
       return { ...state, errors: [] };
