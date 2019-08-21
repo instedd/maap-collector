@@ -1,5 +1,3 @@
-// @flow
-
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import Button from '@material/react-button';
@@ -20,7 +18,11 @@ import type { Dispatch, State } from '../reducers/types';
 type StoreProps = {
   dispatch: Dispatch
 };
-type Props = State & StoreProps;
+type Props = State &
+  StoreProps & {
+    action: string,
+    defaultValues: {}
+  };
 
 class PatientEntriesForm extends Component<Props, State> {
   handleSubmit = async e => {

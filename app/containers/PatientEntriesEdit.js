@@ -6,8 +6,14 @@ import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import PatientEntriesForm from '../components/PatientEntriesForm';
 import { fetchPatientEntry } from '../actions/patientEntry';
+import { State } from '../reducers/types';
 
-type Props = ContextRouter;
+type Props = State &
+  ContextRouter & {
+    patientEntryEdit: {
+      item: {}
+    }
+  };
 
 const mapStateToProps = ({ patientEntryEdit }) => ({ patientEntryEdit });
 
