@@ -102,7 +102,7 @@ class LabRecordsDetailList extends Component<Props, State> {
           columns={labRecordImport.columns.map(({ w }) => w)}
           fields={columnTypes
             .map((e, i) => {
-              if (e) {
+              if (e !== null) {
                 if (patientOrLabRecordId[i] === 'patientId')
                   return row => this.patientField(row);
                 return i;
