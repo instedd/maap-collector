@@ -70,7 +70,10 @@ class PatientList extends Component<Props, State> {
             'dischargeDate',
             'dischargeDiagnostic',
             (_, current) => (
-              <Link to={`/patients/${patientId}/entries/${current.id}/edit`}>
+              <Link
+                to={`/patients/${patientId}/entries/${current.id}/edit`}
+                className="black-text"
+              >
                 <MaterialIcon icon="edit" />
               </Link>
             )

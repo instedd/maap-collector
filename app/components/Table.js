@@ -97,7 +97,7 @@ const Table = ({
             {fields.map(
               field =>
                 isFunction(field) ? (
-                  field(index, item)
+                  <td>{field(index, item)}</td>
                 ) : (
                   <td key={`item-${item.id || index}-${field}`}>
                     {parseField(item[field])}
