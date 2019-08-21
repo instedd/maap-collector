@@ -10,6 +10,8 @@ const model = sequelize =>
       location: { type: Sequelize.STRING },
       ownership: { type: Sequelize.STRING },
       hasFarmacy: { type: Sequelize.BOOLEAN },
+      hasLaboratory: { type: Sequelize.BOOLEAN },
+      hasHospital: { type: Sequelize.BOOLEAN },
       identifiedPatients: { type: Sequelize.BOOLEAN },
       permanentlyIdentifiedPatients: { type: Sequelize.BOOLEAN },
       lastSyncAt: { type: Sequelize.DATE },
