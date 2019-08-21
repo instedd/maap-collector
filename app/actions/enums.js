@@ -1,6 +1,7 @@
 import changeCase from 'change-case';
 import pluralize from 'pluralize';
 import { remoteSync } from './sync';
+import { fetchEntity } from './fetch';
 
 export const apiEntity = entity => `${pluralize(changeCase.snakeCase(entity))}`;
 
@@ -30,3 +31,5 @@ export const syncEntities = entity => () => async (dispatch, getState) => {
     remoteSync(`/api/v1/${apiEntity(entity)}`, user, entity, baseMapper)
   );
 };
+
+export const fetchEnum = entity => fetchEntity(entity);
