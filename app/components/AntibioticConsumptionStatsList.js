@@ -20,7 +20,10 @@ type ComponentProps = {
     antibioticName: string,
     antibioticConsumptionStats: Page
   },
-  antibioticId: string
+  antibioticId: string,
+  site: {
+    id: number
+  }
 };
 type State = {
   date?: Date,
@@ -28,18 +31,21 @@ type State = {
   quantity?: number,
   balance?: number,
   recipientFacility?: string,
-  recipientUnit?: string
+  recipientUnit?: string,
+  site: {
+    id: number
+  } | null
 };
 
 type Props = ComponentProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, antibioticConsumptionStatsList } = state;
-  return { dispatch, antibioticConsumptionStatsList };
+  const { dispatch, antibioticConsumptionStatsList, site } = state;
+  return { dispatch, antibioticConsumptionStatsList, site };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
-  state: State = {};
+  state: State = { site: null };
 
   handleSubmit = () => {
     const {
@@ -48,6 +54,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       history,
       antibioticConsumptionStatsList
     } = this.props;
+    const { site } = this.state;
 
     return dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
@@ -57,13 +64,20 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
           antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
         }`
       });
-      return dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+      return dispatch(
+        fetchAntibioticConsumptionStats({
+          antibioticId,
+          siteId: site && site.id
+        })
+      );
     });
   };
 
   componentDidMount() {
-    const { dispatch, antibioticId } = this.props;
-    dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+    const { dispatch, antibioticId, site } = this.props;
+    dispatch(
+      fetchAntibioticConsumptionStats({ antibioticId, siteId: site && site.id })
+    );
     dispatch(fetchAntibiotic(antibioticId));
   }
 
@@ -80,7 +94,8 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       quantity,
       balance,
       recipientFacility,
-      recipientUnit
+      recipientUnit,
+      site
     } = this.state;
 
     return (
@@ -103,7 +118,12 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
           prevPage={antibioticConsumptionStats.prevPage}
           nextPage={antibioticConsumptionStats.nextPage}
           onReload={() =>
-            dispatch(fetchAntibioticConsumptionStats({ antibioticId }))
+            dispatch(
+              fetchAntibioticConsumptionStats({
+                antibioticId,
+                siteId: site && site.id
+              })
+            )
           }
           columns={[
             'Date',
