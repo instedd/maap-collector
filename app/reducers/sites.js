@@ -1,4 +1,4 @@
-import { SITES_FETCHED } from '../actions/sites';
+import { FETCHED_SITES } from '../actions/sites';
 import type { Action } from './types';
 
 const initialState = {
@@ -7,7 +7,7 @@ const initialState = {
 
 export default function counter(state = initialState, action: Action) {
   switch (action.type) {
-    case SITES_FETCHED:
+    case FETCHED_SITES:
       return { ...state, ...action };
     default:
       return state;

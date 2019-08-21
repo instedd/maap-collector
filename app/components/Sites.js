@@ -12,7 +12,11 @@ type Props = {
   dispatch: Dispatch,
   sites: {
     items: [],
-    totalCount: number
+    totalCount: number,
+    offset: number,
+    limit: number,
+    prevPage: number,
+    nextPage: number
   }
 };
 type State = {};
@@ -36,10 +40,38 @@ class Sites extends Component<Props, State> {
       <div>
         <Table
           entityName="sites"
+          pagination
+          offset={sites.offset}
+          limit={sites.limit}
+          prevPage={sites.prevPage}
+          nextPage={sites.nextPage}
           items={sites.items}
           totalCount={sites.totalCount}
-          columns={['Name', 'Address', 'Ownership', 'Last activity']}
-          fields={['id', 'name', 'address', 'ownership', 'updatedAt']}
+          columns={[
+            'Id',
+            'Name',
+            'Address',
+            'Ownership',
+            'Type',
+            'Last activity'
+          ]}
+          fields={[
+            'id',
+            'name',
+            'address',
+            'ownership',
+            index => (
+              <td key={`item-${sites.items[index].id || index}-type`}>
+                {['hasFarmacy', 'hasLaboratory', 'hasHospital']
+                  .reduce((acc, key) => {
+                    if (sites.items[index][key]) acc.push(key.substr(3));
+                    return acc;
+                  }, [])
+                  .join(', ')}
+              </td>
+            ),
+            'updatedAt'
+          ]}
           onClick={site => dispatch(enterSite(site))}
         />
       </div>
