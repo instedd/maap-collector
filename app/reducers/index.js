@@ -14,6 +14,7 @@ import antibiotics from './antibiotics';
 import patients from './patients';
 import patient from './patient';
 import patientEntries from './patientEntries';
+import patientEntryEdit from './patientEntryEdit';
 
 export default function createRootReducer(history: {}) {
   const routerReducer = connectRouter(history)(() => {});
@@ -33,7 +34,9 @@ export default function createRootReducer(history: {}) {
       antibiotics,
       patient,
       patients,
-      patientEntries
+      patientEntries,
+
+      patientEntryEdit
     })
   );
 }

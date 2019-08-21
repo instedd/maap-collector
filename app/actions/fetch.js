@@ -39,5 +39,26 @@ const fetchEntity = entityName => (where = {}) => async (
     );
 };
 
+const fetchEntitySingular = entityName => (where = {}) => async (
+  dispatch,
+  getState
+) => {
+  const singularizedEntityName = constantCase(pluralize.singular(entityName));
+  dispatch({ type: `FETCH_${singularizedEntityName}`, where });
+  const { user } = getState();
+  const entity = (await db.initializeForUser(user))[entityName];
+  entity
+    .findOne({ where, order: [['id', 'desc']] })
+    .then(item =>
+      dispatch({
+        type: `FETCHED_${singularizedEntityName}`,
+        item: item.dataValues
+      })
+    )
+    .catch(error =>
+      dispatch({ type: `FETCH_${singularizedEntityName}_FAILED`, error })
+    );
+};
+
 // eslint-disable-next-line
-export { fetchEntity };
+export { fetchEntity, fetchEntitySingular };

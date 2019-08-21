@@ -81,9 +81,10 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
   const newestRemoteIdEntity = await entity.findOne({
     order: [['remoteId', 'DESC']]
   });
-  const oldestDate = oldestEntity
-    ? new Date(oldestEntity.lastSyncAt).toUTCString()
-    : null;
+  const oldestDate =
+    oldestEntity && oldestEntity.lastSyncAt
+      ? new Date(oldestEntity.lastSyncAt).toUTCString()
+      : null;
   const newestRemoteId = newestRemoteIdEntity
     ? newestRemoteIdEntity.remoteId
     : null;
@@ -143,12 +144,19 @@ export const remoteUpload = (
   const collectionToCreate = await entity.findAll({
     where: sequelize.literal('remoteId is NULL')
   });
+
+  const collectionToUpdate = await entity.findAll({
+    where: sequelize.literal(
+      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M', updatedAt) > strftime('%Y-%m-%d %H:%M', lastSyncAt)"
+    )
+  });
   if (collectionToCreate.length === 0) return;
   dispatch({
     type: UPDATE_PENDING_UPLOAD_COUNT,
     entity: entityName,
-    count: collectionToCreate.length
+    count: collectionToCreate.length + collectionToUpdate.length
   });
+
   collectionToCreate.forEach(async currentEntity => {
     const mapped = await Promise.resolve(mapper(currentEntity));
     fetchAuthenticated(url, user.auth, {
@@ -161,11 +169,39 @@ export const remoteUpload = (
       )
       .catch(e => console.log(e));
   });
+  return Promise.resolve();
+};
 
-  // TODO: Implement update
-  // const collectionToCreate = await entity.findAll({
-  //   where: sequelize.literal('updatedAt > lastSyncAt')
-  // })
+export const remoteUploadUpdate = (url, entityName, mapper) => async (
+  dispatch,
+  getState
+) => {
+  const { user } = getState();
+  const initializedDb = await db.initializeForUser(user);
+  const { sequelize } = initializedDb;
+  const entity = initializedDb[entityName];
+  const collectionToUpdate = await entity.findAll({
+    where: sequelize.literal(
+      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M', updatedAt) > strftime('%Y-%m-%d %H:%M', lastSyncAt)"
+    )
+  });
+
+  collectionToUpdate.forEach(async currentEntity => {
+    const mapped = await Promise.resolve(mapper(currentEntity));
+    fetchAuthenticated(url(currentEntity.remoteId), user.auth, {
+      method: 'PUT',
+      body: snakeCaseKeys({ [entityName]: mapped })
+    })
+      .then(() => {
+        const updatedAt = new Date();
+        return currentEntity.update({ lastSyncAt: updatedAt, updatedAt });
+      })
+      .then(() =>
+        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
+      )
+      .catch(e => console.log(e));
+  });
+  return Promise.resolve();
 };
 
 export {
