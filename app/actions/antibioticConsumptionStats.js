@@ -12,18 +12,21 @@ const FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED =
   'FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED';
 
 // TODO: Abstract this to a helper function
-const mapper = props => ({
-  ...props,
-  remoteId: props.id,
-  remoteAntibioticId: props.antibiotic_id,
-  recipientFacility: props.recipient_facility,
-  recipientUnit: props.recipient_unit,
-  antibioticId: null
+const mapper = attrs => ({
+  ...attrs,
+  remoteId: attrs.id,
+  remoteAntibioticId: attrs.antibiotic_id,
+  recipientFacility: attrs.recipient_facility,
+  recipientUnit: attrs.recipient_unit,
+  antibioticId: null,
+  remoteSiteId: attrs.site_id,
+  siteId: null
 });
 
-const uploadMapper = props => ({
+const uploadMapper = async props => ({
   ...snakeCaseKeys(props.dataValues),
-  id: props.dataValues.remoteId
+  id: props.dataValues.remoteId,
+  siteId: await props.getRemoteSiteId()
 });
 
 export const syncAntibioticConsumptionStats = () => async (
