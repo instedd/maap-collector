@@ -57,6 +57,10 @@ export const entities = [
   {
     name: 'ClinicalService',
     syncAction: syncEntities('ClinicalService')
+  },
+  {
+    name: 'PatientLocation',
+    syncAction: syncEntities('PatientLocation')
   }
 ];
 
