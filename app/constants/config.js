@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const {
-  API_URL = 'http://localhost:3000',
+  API_URL = 'https://maap-stg.instedd.org',
   ELECTRON_ENV = 'development'
 } = process.env;
 

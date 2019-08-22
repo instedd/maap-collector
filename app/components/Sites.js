@@ -82,7 +82,6 @@ class Sites extends Component<Props, State> {
       prevState.hasHospital !== hasHospital
     ) {
       const { dispatch } = this.props;
-      console.log(this.getSearchConditions());
       dispatch(fetchSites(this.getSearchConditions()));
     }
   }
