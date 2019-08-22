@@ -9,7 +9,7 @@ type Props = {
   label: string,
   className: string,
   value: null | string,
-  onSelectionChange: string => void,
+  onSelectionChange: (string | null) => void,
   entityName: string,
   enumState: EnumState,
   dispatch: *
@@ -49,7 +49,10 @@ class EnumSelector extends Component<Props> {
         value={value || ''}
         enhanced
         onEnhancedChange={(index, item) => {
-          onSelectionChange(item.getAttribute('data-value'));
+          let selection = item.getAttribute('data-value');
+          if (selection === '') selection = null;
+
+          onSelectionChange(selection);
         }}
       >
         {enumState.options.map(o => (
