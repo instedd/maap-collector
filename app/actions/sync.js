@@ -81,6 +81,7 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
   const initializedDb = await db.initializeForUser(user);
   const entity = initializedDb[entityName];
   const oldestEntity = await entity.findOne({
+    where: initializedDb.sequelize.literal("lastSyncAt IS NOT 'Invalid date'"),
     order: [['lastSyncAt', 'DESC']]
   });
   const newestRemoteIdEntity = await entity.findOne({
@@ -147,7 +148,7 @@ export const remoteUpload = (
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
   const collectionToCreate = await entity.findAll({
-    where: sequelize.literal('remoteId is NULL')
+    where: sequelize.literal("remoteId is NULL OR remoteId = ''")
   });
 
   const collectionToUpdate = await entity.findAll({
@@ -197,10 +198,11 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
       method: 'PUT',
       body: snakeCaseKeys({ [entityName]: mapped })
     })
-      .then(() => {
-        const updatedAt = new Date();
-        return currentEntity.update({ lastSyncAt: updatedAt, updatedAt });
-      })
+      .then(() =>
+        currentEntity
+          .update({ lastSyncAt: new Date() })
+          .then(res => console.log(res))
+      )
       .then(() =>
         dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
       )

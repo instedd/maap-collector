@@ -13,6 +13,7 @@ import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptio
 import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
 import RowForm from './RowForm';
+import { syncStart } from '../actions/sync';
 
 type ComponentProps = {
   dispatch: Dispatch,
@@ -23,7 +24,8 @@ type ComponentProps = {
   antibioticId: string,
   site: {
     id: number
-  }
+  },
+  onEditClick: (number, {}) => void
 };
 type State = {
   date?: Date,
@@ -64,6 +66,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
           antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
         }`
       });
+      dispatch(syncStart());
       return dispatch(
         fetchAntibioticConsumptionStats({
           antibioticId,
@@ -86,7 +89,8 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       dispatch,
       antibioticId,
       antibioticConsumptionStatsList,
-      site
+      site,
+      onEditClick
     } = this.props;
     const { antibioticConsumptionStats } = antibioticConsumptionStatsList;
     const {
@@ -131,15 +135,23 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
             'Quantity',
             'Balance',
             'Recipient facility',
-            'Recipient unit'
+            'Recipient unit',
+            ''
           ]}
           fields={[
+            'remoteId',
             'date',
             'issuedText',
             'quantity',
             'balance',
             'recipientFacility',
-            'recipientUnit'
+            'recipientUnit',
+            (_, current) => (
+              <MaterialIcon
+                icon="edit"
+                onClick={e => onEditClick(e, current)}
+              />
+            )
           ]}
           rowClassName={item => [item.issued ? 'highlight' : '']}
           lastRow={

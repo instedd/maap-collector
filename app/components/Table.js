@@ -29,7 +29,11 @@ const parseField = field => {
 };
 
 const formatDate = field =>
-  `${months[field.getMonth()]} ${field.getDay()}, ${field.getFullYear()}`;
+  // eslint-disable-next-line
+  !isNaN(field)
+    ? `${months[field.getMonth()]} ${field.getDate() +
+        1}, ${field.getFullYear()}`
+    : '';
 
 type ComponentProps = {
   totalCount: number,
