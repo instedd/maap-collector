@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import Sequelize from 'sequelize';
 import { connect } from 'react-redux';
+import Checkbox from '@material/react-checkbox';
+
 import type { Dispatch } from '../reducers/types';
 import { fetchSites } from '../actions/sites';
 import { enterSite } from '../actions/site';
@@ -20,7 +22,10 @@ type Props = {
   }
 };
 type State = {
-  searchText: string
+  searchText: string,
+  hasFarmacy: boolean,
+  hasLaboratory: boolean,
+  hasHospital: boolean
 };
 
 const mapStateToProps = state => {
@@ -30,19 +35,36 @@ const mapStateToProps = state => {
 
 class Sites extends Component<Props, State> {
   state: State = {
-    searchText: ''
+    searchText: '',
+    hasFarmacy: true,
+    hasLaboratory: true,
+    hasHospital: true
   };
 
   getSearchConditions() {
-    const { searchText } = this.state;
-    if (!searchText) return {};
+    const { searchText, hasFarmacy, hasLaboratory, hasHospital } = this.state;
+    const searchConditions = {};
+    if (searchText)
+      searchConditions[Sequelize.Op.or] = [
+        { name: { [Sequelize.Op.like]: `%${searchText}%` } },
+        { address: { [Sequelize.Op.like]: `%${searchText}%` } },
+        { ownership: { [Sequelize.Op.like]: `%${searchText}%` } },
+        { id: { [Sequelize.Op.like]: `%${searchText}%` } }
+      ];
     return {
-      [Sequelize.Op.or]: {
-        name: { [Sequelize.Op.like]: `%${searchText}%` },
-        address: { [Sequelize.Op.like]: `%${searchText}%` },
-        ownership: { [Sequelize.Op.like]: `%${searchText}%` },
-        id: { [Sequelize.Op.like]: `%${searchText}%` }
-      }
+      ...searchConditions,
+      [Sequelize.Op.or]: [
+        {
+          [Sequelize.Op.and]: [
+            { hasFarmacy: false },
+            { hasLaboratory: false },
+            { hasHospital: false }
+          ]
+        },
+        hasFarmacy && { hasFarmacy },
+        hasLaboratory && { hasLaboratory },
+        hasHospital && { hasHospital }
+      ]
     };
   }
 
@@ -52,15 +74,22 @@ class Sites extends Component<Props, State> {
   }
 
   componentDidUpdate(_, prevState) {
-    const { searchText } = this.state;
-    if (prevState.searchText !== searchText) {
+    const { searchText, hasFarmacy, hasLaboratory, hasHospital } = this.state;
+    if (
+      prevState.searchText !== searchText ||
+      prevState.hasFarmacy !== hasFarmacy ||
+      prevState.hasLaboratory !== hasLaboratory ||
+      prevState.hasHospital !== hasHospital
+    ) {
       const { dispatch } = this.props;
+      console.log(this.getSearchConditions());
       dispatch(fetchSites(this.getSearchConditions()));
     }
   }
 
   render() {
     const { sites, dispatch } = this.props;
+    const { hasFarmacy, hasHospital, hasLaboratory } = this.state;
     return (
       <div>
         <Table
@@ -97,9 +126,32 @@ class Sites extends Component<Props, State> {
           ]}
           onClick={site => dispatch(enterSite(site))}
           search={value => {
-            console.log(value);
             this.setState({ searchText: value });
           }}
+          filters={
+            <>
+              <Checkbox
+                nativeControlId="filter-farmacy"
+                checked={hasFarmacy}
+                onChange={e => this.setState({ hasFarmacy: e.target.checked })}
+              />
+              <label htmlFor="filter-farmacy">Farmacy</label>
+              <Checkbox
+                nativeControlId="filter-laboratory"
+                checked={hasLaboratory}
+                onChange={e =>
+                  this.setState({ hasLaboratory: e.target.checked })
+                }
+              />
+              <label htmlFor="filter-laboratory">Laboratory</label>
+              <Checkbox
+                nativeControlId="filter-hospital"
+                checked={hasHospital}
+                onChange={e => this.setState({ hasHospital: e.target.checked })}
+              />
+              <label htmlFor="filter-hospital">Hospital</label>
+            </>
+          }
         />
       </div>
     );

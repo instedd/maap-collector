@@ -48,7 +48,8 @@ type ComponentProps = {
   offset?: number | null,
   limit?: number | null,
   onReload?: () => void,
-  search?: () => void
+  search?: () => void,
+  filters?: typeof Component
 };
 
 type Props = ComponentProps & ContextRouter;
@@ -68,7 +69,8 @@ class Table extends Component<Props, State> {
     onReload: () => {},
     prevPage: null,
     nextPage: null,
-    search: null
+    search: null,
+    filters: null
   };
 
   render() {
@@ -89,20 +91,29 @@ class Table extends Component<Props, State> {
       limit,
       history,
       onReload,
-      search
+      search,
+      filters
     } = this.props;
     const { searchText, searchTimeout } = this.state;
     return (
       <Card>
         <Grid align="left" className="full-width">
           <Row>
-            <Cell columns={search ? 9 : 12}>
+            <Cell
+              columns={12 - (search ? 3 : 0) - (filters ? 6 : 0)}
+              align="middle"
+            >
               <h2 className={styles.tableTitle}>
                 {title || `${totalCount} ${entityName}`}
               </h2>
             </Cell>
+            {filters && (
+              <Cell columns={6} align="middle">
+                {filters}
+              </Cell>
+            )}
             {search && (
-              <Cell columns={3}>
+              <Cell columns={3} align="middle" className={styles.filters}>
                 <TextField
                   outlined
                   onTrailingIconSelect={() => ''}
