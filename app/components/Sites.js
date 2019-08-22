@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-
+import Sequelize from 'sequelize';
 import { connect } from 'react-redux';
 import type { Dispatch } from '../reducers/types';
 import { fetchSites } from '../actions/sites';
@@ -19,7 +19,9 @@ type Props = {
     nextPage: number
   }
 };
-type State = {};
+type State = {
+  searchText: string
+};
 
 const mapStateToProps = state => {
   const { dispatch, sites } = state;
@@ -27,11 +29,34 @@ const mapStateToProps = state => {
 };
 
 class Sites extends Component<Props, State> {
-  state: State = {};
+  state: State = {
+    searchText: ''
+  };
+
+  getSearchConditions() {
+    const { searchText } = this.state;
+    if (!searchText) return {};
+    return {
+      [Sequelize.Op.or]: {
+        name: { [Sequelize.Op.like]: `%${searchText}%` },
+        address: { [Sequelize.Op.like]: `%${searchText}%` },
+        ownership: { [Sequelize.Op.like]: `%${searchText}%` },
+        id: { [Sequelize.Op.like]: `%${searchText}%` }
+      }
+    };
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchSites());
+    dispatch(fetchSites(this.getSearchConditions()));
+  }
+
+  componentDidUpdate(_, prevState) {
+    const { searchText } = this.state;
+    if (prevState.searchText !== searchText) {
+      const { dispatch } = this.props;
+      dispatch(fetchSites(this.getSearchConditions()));
+    }
   }
 
   render() {
@@ -47,6 +72,7 @@ class Sites extends Component<Props, State> {
           nextPage={sites.nextPage}
           items={sites.items}
           totalCount={sites.totalCount}
+          onReload={() => dispatch(fetchSites(this.getSearchConditions()))}
           columns={[
             'Id',
             'Name',
@@ -73,6 +99,10 @@ class Sites extends Component<Props, State> {
             'updatedAt'
           ]}
           onClick={site => dispatch(enterSite(site))}
+          search={value => {
+            console.log(value);
+            this.setState({ searchText: value });
+          }}
         />
       </div>
     );

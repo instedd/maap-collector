@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Card from '@material/react-card';
 import MaterialIcon from '@material/react-material-icon';
+import TextField, { Input } from '@material/react-text-field';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { withRouter } from 'react-router-dom';
@@ -46,117 +47,153 @@ type ComponentProps = {
   prevPage?: number | null,
   offset?: number | null,
   limit?: number | null,
-  onReload?: () => void
+  onReload?: () => void,
+  search?: () => void
 };
 
 type Props = ComponentProps & ContextRouter;
 
-const Table = ({
-  totalCount,
-  items,
-  columns,
-  fields,
-  entityName,
-  onClick,
-  title,
-  rowClassName,
-  lastRow,
-  pagination,
-  prevPage,
-  nextPage,
-  offset,
-  limit,
-  history,
-  onReload
-}: Props) => (
-  <Card>
-    <Grid align="left">
-      <Row>
-        <Cell cols={12}>
-          <h2 className={styles.tableTitle}>
-            {title || `${totalCount} ${entityName}`}
-          </h2>
-        </Cell>
-      </Row>
-    </Grid>
-    <table>
-      <thead>
-        <tr>
-          {columns.map(column => (
-            <th key={column}>{column}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((item, index) => (
-          <tr
-            className={rowClassName(item)}
-            key={`item-${item.id || index}`}
-            onClick={() => onClick(item)}
-          >
-            {fields.map(
-              field =>
-                isFunction(field) ? (
-                  <td>{field(index, item)}</td>
-                ) : (
-                  <td key={`item-${item.id || index}-${field}`}>
-                    {parseField(item[field])}
-                  </td>
-                )
-            )}
-          </tr>
-        ))}
-        {lastRow}
-      </tbody>
-    </table>
-    {pagination && (
-      <div className={styles.tablePagination}>
-        {`${Math.min(offset + 1, totalCount)} - ${Math.min(
-          offset + limit,
-          totalCount
-        )} `}
-        of {totalCount}
-        <a
-          href=""
-          className={prevPage ? 'cursor-pointer' : styles.disabled}
-          onClick={e => {
-            e.preventDefault();
-            if (!prevPage) return;
-            history.push({ search: `page=${prevPage}` });
-            onReload();
-          }}
-        >
-          <MaterialIcon icon="keyboard_arrow_left" />
-        </a>
-        <a
-          href=""
-          className={nextPage ? 'cursor-pointer' : styles.disabled}
-          onClick={e => {
-            e.preventDefault();
-            if (!nextPage) return;
-            history.push({ search: `page=${nextPage}` });
-            onReload();
-          }}
-        >
-          <MaterialIcon icon="keyboard_arrow_right" />
-        </a>
-      </div>
-    )}
-  </Card>
-);
+class Table extends Component<Props, State> {
+  state: State = {};
 
-Table.defaultProps = {
-  onClick: () => {},
-  title: null,
-  entityName: '',
-  rowClassName: () => {},
-  lastRow: null,
-  pagination: false,
-  offset: null,
-  limit: null,
-  onReload: () => {},
-  prevPage: null,
-  nextPage: null
-};
+  static defaultProps: Props = {
+    onClick: () => {},
+    title: null,
+    entityName: '',
+    rowClassName: () => {},
+    lastRow: null,
+    pagination: false,
+    offset: null,
+    limit: null,
+    onReload: () => {},
+    prevPage: null,
+    nextPage: null,
+    search: null
+  };
+
+  render() {
+    const {
+      totalCount,
+      items,
+      columns,
+      fields,
+      entityName,
+      onClick,
+      title,
+      rowClassName,
+      lastRow,
+      pagination,
+      prevPage,
+      nextPage,
+      offset,
+      limit,
+      history,
+      onReload,
+      search
+    } = this.props;
+    const { searchText, searchTimeout } = this.state;
+    return (
+      <Card>
+        <Grid align="left" className="full-width">
+          <Row>
+            <Cell columns={search ? 9 : 12}>
+              <h2 className={styles.tableTitle}>
+                {title || `${totalCount} ${entityName}`}
+              </h2>
+            </Cell>
+            {search && (
+              <Cell columns={3}>
+                <TextField
+                  outlined
+                  onTrailingIconSelect={() => ''}
+                  trailingIcon={
+                    <MaterialIcon icon="search" className={styles.searchIcon} />
+                  }
+                >
+                  <Input
+                    value={searchText}
+                    onChange={e => {
+                      clearTimeout(searchTimeout);
+                      this.setState({
+                        searchText: e.currentTarget.value,
+                        searchTimeout: setTimeout(() => {
+                          const { searchText: text } = this.state;
+                          search(text);
+                        }, 200)
+                      });
+                    }}
+                  />
+                </TextField>
+              </Cell>
+            )}
+          </Row>
+        </Grid>
+        <table>
+          <thead>
+            <tr>
+              {columns.map(column => (
+                <th key={column}>{column}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, index) => (
+              <tr
+                className={rowClassName(item)}
+                key={`item-${item.id || index}`}
+                onClick={() => onClick(item)}
+              >
+                {fields.map(
+                  field =>
+                    isFunction(field) ? (
+                      <td>{field(index, item)}</td>
+                    ) : (
+                      <td key={`item-${item.id || index}-${field}`}>
+                        {parseField(item[field])}
+                      </td>
+                    )
+                )}
+              </tr>
+            ))}
+            {lastRow}
+          </tbody>
+        </table>
+        {pagination && (
+          <div className={styles.tablePagination}>
+            {`${Math.min(offset + 1, totalCount)} - ${Math.min(
+              offset + limit,
+              totalCount
+            )} `}
+            of {totalCount}
+            <a
+              href=""
+              className={prevPage ? 'cursor-pointer' : styles.disabled}
+              onClick={e => {
+                e.preventDefault();
+                if (!prevPage) return;
+                history.push({ search: `page=${prevPage}` });
+                onReload();
+              }}
+            >
+              <MaterialIcon icon="keyboard_arrow_left" />
+            </a>
+            <a
+              href=""
+              className={nextPage ? 'cursor-pointer' : styles.disabled}
+              onClick={e => {
+                e.preventDefault();
+                if (!nextPage) return;
+                history.push({ search: `page=${nextPage}` });
+                onReload();
+              }}
+            >
+              <MaterialIcon icon="keyboard_arrow_right" />
+            </a>
+          </div>
+        )}
+      </Card>
+    );
+  }
+}
 
 export default withRouter(Table);
