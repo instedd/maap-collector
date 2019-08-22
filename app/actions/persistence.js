@@ -10,12 +10,13 @@ const updateEntity = (entityName: string) => (id: number, attributes) => async (
   dispatch({ type: `UPDATING_${singularizedEntityName}`, id });
   const { user } = getState();
   const entity = (await db.initializeForUser(user))[entityName];
-
+  const attributesToApply = { ...attributes };
+  if (attributesToApply.lastSyncAt === '') attributesToApply.lastSyncAt = null;
   return entity
     .findOne({ where: { id } })
     .then(ent =>
       ent
-        .update(attributes)
+        .update(attributesToApply)
         .then(record =>
           dispatch({ type: `UPDATED_${singularizedEntityName}`, record })
         )

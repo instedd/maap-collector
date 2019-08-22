@@ -1,5 +1,5 @@
 import snakeCaseKeys from 'snakecase-keys';
-import { remoteSync, remoteUpload } from './sync';
+import { remoteSync, remoteUpload, remoteUploadUpdate } from './sync';
 import { fetchEntity } from './fetch';
 
 const UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS =
@@ -51,10 +51,17 @@ export const uploadAntibioticConsumptionStats = () => async (
 ) => {
   const { user } = getState();
   dispatch({ type: UPLOAD_ANTIBIOTIC_CONSUMPTION_STATS });
-  dispatch(
+  await dispatch(
     remoteUpload(
       '/api/v1/antibiotic_consumption_stats',
       user,
+      'AntibioticConsumptionStat',
+      uploadMapper
+    )
+  );
+  await dispatch(
+    remoteUploadUpdate(
+      id => `/api/v1/antibiotic_consumption_stats/${id}`,
       'AntibioticConsumptionStat',
       uploadMapper
     )
