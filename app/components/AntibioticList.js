@@ -11,8 +11,8 @@ import { fetchAntibiotics } from '../actions/antibiotics';
 import Table from './Table';
 
 type StoreProps = {
-  dispatch?: Dispatch,
-  antibiotics?: {
+  dispatch: Dispatch,
+  antibiotics: {
     items: [],
     totalCount: number,
     offset: number,
