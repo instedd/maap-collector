@@ -2,12 +2,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Select, { Option } from '@material/react-select';
+import { EnumState } from '../reducers/types';
 import { fetchEnum } from '../actions/enums';
-
-type EnumOption = {
-  id: string,
-  name: string
-};
 
 type Props = {
   label: string,
@@ -15,28 +11,36 @@ type Props = {
   value: null | string,
   onSelectionChange: string => void,
   entityName: string,
-  options: EnumOption[],
+  enumState: EnumState,
   dispatch: *
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const options = state[ownProps.entityName];
-  return { options, dispatch: state.dispatch };
+  const enumState = state[ownProps.entityName];
+  return { enumState, dispatch: state.dispatch };
 };
 
 class EnumSelector extends Component<Props> {
   componentDidMount() {
-    const { options, dispatch, entityName } = this.props;
+    const { enumState, dispatch, entityName } = this.props;
 
-    if (!options) {
+    if (enumState.state === 'notLoaded') {
       dispatch(fetchEnum(entityName)());
     }
   }
 
   render() {
-    const { label, value, onSelectionChange, options, className } = this.props;
+    const {
+      label,
+      value,
+      onSelectionChange,
+      enumState,
+      className
+    } = this.props;
 
-    if (!options || !options.length) return 'Loading selector...';
+    if (enumState === 'notLoaded') return `Loading ${label} selector...`;
+    if (enumState === 'failed')
+      return `Failed loading ${label}, please reload the app or contact support`;
 
     return (
       <Select
@@ -48,7 +52,7 @@ class EnumSelector extends Component<Props> {
           onSelectionChange(item.getAttribute('data-value'));
         }}
       >
-        {options.map(o => (
+        {enumState.options.map(o => (
           <Option key={o.id} value={o.id}>
             {o.name}
           </Option>

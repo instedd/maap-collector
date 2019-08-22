@@ -1,7 +1,10 @@
 import * as enumActions from '../actions/enums';
 
 export default function enumReducer(entity) {
-  const initialState = null;
+  const initialState = {
+    state: 'notLoaded',
+    options: []
+  };
 
   const fetchAction = enumActions.fetchAction(entity);
   const fetchedAction = enumActions.fetchedAction(entity);
@@ -10,11 +13,20 @@ export default function enumReducer(entity) {
   return function reducer(state = initialState, action: Action) {
     switch (action.type) {
       case fetchAction:
-        return null;
+        return {
+          state: 'loading',
+          options: []
+        };
       case fetchedAction:
-        return action.items.map(i => i.dataValues);
+        return {
+          state: 'loaded',
+          options: action.items.map(i => i.dataValues)
+        };
       case failedAction:
-        return null;
+        return {
+          state: 'failed',
+          options: []
+        };
       default:
         return state;
     }

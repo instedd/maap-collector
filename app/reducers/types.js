@@ -20,3 +20,13 @@ export type Page = {
   prevPage: number,
   nextPage: number
 };
+
+export type EnumOption = {
+  id: string,
+  name: string
+};
+
+export type EnumState = {
+  state: 'notLoaded' | 'loaded' | 'failed',
+  options: EnumOption[]
+};
