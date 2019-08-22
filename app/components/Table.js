@@ -144,9 +144,11 @@ class Table extends Component<Props, State> {
                 onClick={() => onClick(item)}
               >
                 {fields.map(
-                  field =>
+                  (field, fieldIndex) =>
                     isFunction(field) ? (
-                      <td>{field(index, item)}</td>
+                      <td key={`item-${item.id || index}-${fieldIndex}`}>
+                        {field(item, index)}
+                      </td>
                     ) : (
                       <td key={`item-${item.id || index}-${field}`}>
                         {parseField(item[field])}

@@ -86,16 +86,13 @@ class Sites extends Component<Props, State> {
             'name',
             'address',
             'ownership',
-            index => (
-              <td key={`item-${sites.items[index].id || index}-type`}>
-                {['hasFarmacy', 'hasLaboratory', 'hasHospital']
-                  .reduce((acc, key) => {
-                    if (sites.items[index][key]) acc.push(key.substr(3));
-                    return acc;
-                  }, [])
-                  .join(', ')}
-              </td>
-            ),
+            site =>
+              ['hasFarmacy', 'hasLaboratory', 'hasHospital']
+                .reduce((acc, key) => {
+                  if (site[key]) acc.push(key.substr(3));
+                  return acc;
+                }, [])
+                .join(', '),
             'updatedAt'
           ]}
           onClick={site => dispatch(enterSite(site))}
