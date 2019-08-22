@@ -52,9 +52,9 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       dispatch,
       antibioticId,
       history,
-      antibioticConsumptionStatsList
+      antibioticConsumptionStatsList,
+      site
     } = this.props;
-    const { site } = this.state;
 
     return dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
@@ -85,7 +85,8 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
     const {
       dispatch,
       antibioticId,
-      antibioticConsumptionStatsList
+      antibioticConsumptionStatsList,
+      site
     } = this.props;
     const { antibioticConsumptionStats } = antibioticConsumptionStatsList;
     const {
@@ -94,8 +95,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       quantity,
       balance,
       recipientFacility,
-      recipientUnit,
-      site
+      recipientUnit
     } = this.state;
 
     return (
