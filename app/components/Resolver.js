@@ -24,4 +24,9 @@ export default class Resolver extends React.Component {
   }
 }
 
-Resolver.propTypes = { promise: PropTypes.func.isRequired };
+Resolver.propTypes = {
+  promise: PropTypes.objectOf({
+    then: PropTypes.func,
+    catch: PropTypes.func
+  }).isRequired
+};
