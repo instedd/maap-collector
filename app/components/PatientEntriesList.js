@@ -59,7 +59,8 @@ class PatientList extends Component<Props, State> {
             'Stay length',
             'Admission date',
             'Discharge date',
-            'Discharge diagnostic'
+            'Discharge diagnostic',
+            ''
           ]}
           fields={[
             'location',
@@ -67,7 +68,15 @@ class PatientList extends Component<Props, State> {
             'stayTimespanToText',
             'admissionDate',
             'dischargeDate',
-            'dischargeDiagnostic'
+            'dischargeDiagnostic',
+            (_, current) => (
+              <Link
+                to={`/patients/${patientId}/entries/${current.id}/edit`}
+                className="black-text"
+              >
+                <MaterialIcon icon="edit" />
+              </Link>
+            )
           ]}
         />
       </div>

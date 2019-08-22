@@ -10,6 +10,7 @@ import AntibioticsDetail from './containers/AntibioticsDetail';
 import PatientsIndex from './containers/PatientsIndex';
 import PatientEntriesIndex from './containers/PatientEntriesIndex';
 import PatientEntriesNew from './containers/PatientEntriesNew';
+import PatientEntriesEdit from './containers/PatientEntriesEdit';
 import LabRecordsImport from './containers/LabRecordsImport';
 import LabRecordsDetail from './containers/LabRecordsDetail';
 
@@ -62,6 +63,11 @@ const Router = () => (
         exact
         path="/patients/:id/entries"
         component={PatientEntriesIndex}
+      />
+      <PrivateRoute
+        exact
+        path="/patients/:id/entries/:patientEntryId/edit"
+        component={PatientEntriesEdit}
       />
       <PrivateRoute
         exact

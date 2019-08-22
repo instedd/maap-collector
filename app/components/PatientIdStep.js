@@ -40,7 +40,6 @@ class PatientIdStep extends Component<Props> {
         acc.push(index);
       return acc;
     }, []);
-
     if (!values(patientOrLabRecordId).some(i => i === 'patientId')) {
       headerRow.push({ v: 'Manual Patient Id', w: 'Manual Patient Id' });
       date.push(null);
@@ -70,6 +69,7 @@ class PatientIdStep extends Component<Props> {
       patientOrLabRecordId,
       columnsToKeep
     } = labRecordImport;
+
     return (
       <div>
         <h2>Complete patient ID for record linking</h2>

@@ -1,5 +1,3 @@
-// @flow
-
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import Button from '@material/react-button';
@@ -9,7 +7,10 @@ import MaterialIcon from '@material/react-material-icon';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { createPatientEntry } from '../actions/patientEntry';
+import {
+  createPatientEntry,
+  updatePatientEntry
+} from '../actions/patientEntry';
 import TextArea from './TextArea';
 
 import type { Dispatch, State } from '../reducers/types';
@@ -17,48 +18,77 @@ import type { Dispatch, State } from '../reducers/types';
 type StoreProps = {
   dispatch: Dispatch
 };
-type Props = State & StoreProps;
+type Props = State &
+  StoreProps & {
+    action: string,
+    defaultValues: {}
+  };
 
 class PatientEntriesForm extends Component<Props, State> {
-  state: State = {
-    location: '',
-    department: '',
-    admissionDate: new Date().toISOString().substr(0, 10),
-    dischargeDate: new Date().toISOString().substr(0, 10),
-    weight: '',
-    height: '',
-    pregnancyStatus: '',
-    prematureBirth: '',
-    chiefComplaint: '',
-    patientTransferred: false,
-    primaryDiagnosis: '',
-    primaryDiagnosisIcdCode: '',
-    acuteMyocardialInfarction: false,
-    chf: false,
-    notMentioned: false,
-    other: false,
-    antibioticsPrescribed: '',
-    antibiotic: '',
-    antibioticConsumption: '',
-    patientWasOnAnIndwellingMedicalDevice: '',
-    medicalDevice: '',
-    infectionAcquisition: '',
-    dischargeDiagnostic: '',
-    dischargeDiagnosticIcdCode: '',
-    patientOutcomeAtDischarge: ''
-  };
-
   handleSubmit = async e => {
     e.preventDefault();
-    const { dispatch, history, patientId } = this.props;
-    await dispatch(
-      createPatientEntry({
-        ...this.state,
-        patientId
-      })
-    );
+    const { dispatch, history, patientId, patientEntryId } = this.props;
+    if (patientEntryId) {
+      await dispatch(
+        updatePatientEntry(patientEntryId, {
+          ...this.state,
+          patientId,
+          patientEntryId
+        })
+      );
+    } else {
+      await dispatch(
+        createPatientEntry({
+          ...this.state,
+          patientId
+        })
+      );
+    }
     history.push(`/patients/${patientId}/entries`);
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      location: '',
+      department: '',
+      weight: '',
+      height: '',
+      pregnancyStatus: '',
+      prematureBirth: '',
+      chiefComplaint: '',
+      patientTransferred: false,
+      primaryDiagnosis: '',
+      primaryDiagnosisIcdCode: '',
+      acuteMyocardialInfarction: false,
+      chf: false,
+      notMentioned: false,
+      other: false,
+      antibioticsPrescribed: '',
+      antibiotic: '',
+      antibioticConsumption: '',
+      patientWasOnAnIndwellingMedicalDevice: '',
+      medicalDevice: '',
+      infectionAcquisition: '',
+      dischargeDiagnostic: '',
+      dischargeDiagnosticIcdCode: '',
+      patientOutcomeAtDischarge: '',
+      ...Object.keys(props.defaultValues).reduce((acc, cur) => {
+        if (props.defaultValues[cur] === null) {
+          acc[cur] = '';
+        } else {
+          acc[cur] = props.defaultValues[cur];
+        }
+        return acc;
+      }, {}),
+      admissionDate: (props.defaultValues.admissionDate || new Date())
+        .toISOString()
+        .substr(0, 10),
+      dischargeDate: (props.defaultValues.dischargeDate || new Date())
+        .toISOString()
+        .substr(0, 10)
+    };
+  }
 
   componentDidMount() {
     // This is a patch for the checkbox, otherwise they show a ripple of the screensize on mouseover
@@ -93,13 +123,13 @@ class PatientEntriesForm extends Component<Props, State> {
       dischargeDiagnostic,
       dischargeDiagnosticIcdCode
     } = this.state;
-    const { history, patientId } = this.props;
+    const { history, patientId, action } = this.props;
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid>
           <Row>
             <Cell>
-              <h2>New entry</h2>
+              <h2>{action} entry</h2>
             </Cell>
           </Row>
           <Row align="center">
@@ -506,6 +536,11 @@ class PatientEntriesForm extends Component<Props, State> {
     );
   }
 }
+
+PatientEntriesForm.defaultProps = {
+  action: 'New',
+  defaultValues: {}
+};
 
 export default withRouter(
   connect(

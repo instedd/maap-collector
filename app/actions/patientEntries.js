@@ -4,7 +4,7 @@ import camelCaseKeys from 'camelcase-keys';
 import moment from 'moment';
 
 import { fetchEntity } from './fetch';
-import { remoteSync, remoteUpload } from './sync';
+import { remoteSync, remoteUpload, remoteUploadUpdate } from './sync';
 
 const FETCH_PATIENT_ENTRIES = 'FETCH_PATIENT_ENTRIES';
 const FETCHED_PATIENT_ENTRIES = 'FETCHED_PATIENT_ENTRIES';
@@ -47,8 +47,16 @@ export const syncPatientEntries = () => async (dispatch, getState) => {
 export const uploadPatientEntries = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: UPLOAD_PATIENT_ENTRIES_STATS });
-  dispatch(
+  await dispatch(
     remoteUpload('/api/v1/patient_entries', user, 'PatientEntry', uploadMapper)
+  );
+
+  await dispatch(
+    remoteUploadUpdate(
+      id => `/api/v1/patient_entries/${id}`,
+      'PatientEntry',
+      uploadMapper
+    )
   );
 };
 
