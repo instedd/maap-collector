@@ -31,6 +31,14 @@ export const entities = [
     syncAction: syncCultureTypes
   },
   {
+    name: 'ClinicalService',
+    syncAction: syncEntities('ClinicalService')
+  },
+  {
+    name: 'PatientLocation',
+    syncAction: syncEntities('PatientLocation')
+  },
+  {
     name: 'Site',
     syncAction: syncSites
   },
@@ -53,14 +61,6 @@ export const entities = [
   {
     name: 'LabRecord',
     syncAction: syncLabRecords
-  },
-  {
-    name: 'ClinicalService',
-    syncAction: syncEntities('ClinicalService')
-  },
-  {
-    name: 'PatientLocation',
-    syncAction: syncEntities('PatientLocation')
   }
 ];
 
