@@ -14,15 +14,30 @@ class PatientEntry extends Model {
     });
   }
 
+  get patientLocation() {
+    // eslint-disable-next-line
+    return this._modelOptions.sequelize.models.PatientLocation.findOne({
+      where: { id: this.patientLocationId }
+    });
+  }
+
+  get patientLocationName() {
+    return this.patientLocation.then(l => l && l.name);
+  }
+
   getRemotePatientId() {
     return this.patient.then(patient => patient && patient.remoteId);
+  }
+
+  getRemotePatientLocationId() {
+    return this.patientLocation.then(location => location && location.remoteId);
   }
 }
 
 const model = sequelize => {
   const patientEntry = PatientEntry.init(
     {
-      location: { type: Sequelize.STRING },
+      patientLocationId: { type: Sequelize.INTEGER },
       department: { type: Sequelize.STRING },
       stayTimespan: { type: Sequelize.INTEGER },
       admissionDate: { type: Sequelize.DATE },
@@ -55,13 +70,20 @@ const model = sequelize => {
     { sequelize, modelName: model.modelName }
   );
   patientEntry.addHook('beforeValidate', async instance => {
-    // TODO: Get remote id's when only a local id is present
     if (instance.remotePatientId) {
       const patient = await sequelize.models.Patient.findOne({
         where: { remoteId: instance.remotePatientId }
       });
       // eslint-disable-next-line
       instance.patientId = patient.id;
+    }
+
+    if (instance.remotePatientLocationId) {
+      const patientLocation = await sequelize.models.PatientLocation.findOne({
+        where: { remoteId: instance.remotePatientLocationId }
+      });
+      // eslint-disable-next-line
+      instance.patientLocationId = patientLocation.id;
     }
   });
 

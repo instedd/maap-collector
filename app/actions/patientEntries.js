@@ -17,7 +17,8 @@ const mapper = attrs =>
     camelCaseKeys({
       ...attrs,
       remoteId: attrs.id,
-      remotePatientId: attrs.patient_id
+      remotePatientId: attrs.patient_id,
+      remotePatientLocationId: attrs.patient_location_id
     }),
     ['patientId', 'siteId', 'id', 'admissionDate', 'dischargeDate']
   );
@@ -31,6 +32,7 @@ const uploadMapper = async attrs => {
   return snakeCaseKeys({
     ...attrs.dataValues,
     patientId: await attrs.getRemotePatientId(),
+    patientLocationId: await attrs.getRemotePatientLocationId(),
     stayTimespan
   });
 };

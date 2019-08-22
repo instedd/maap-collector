@@ -12,6 +12,7 @@ import {
   updatePatientEntry
 } from '../actions/patientEntry';
 import TextArea from './TextArea';
+import EnumSelector from './EnumSelector';
 
 import type { Dispatch, State } from '../reducers/types';
 
@@ -50,7 +51,7 @@ class PatientEntriesForm extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      location: '',
+      patientLocationId: '',
       department: '',
       weight: '',
       height: '',
@@ -97,7 +98,7 @@ class PatientEntriesForm extends Component<Props, State> {
 
   render() {
     const {
-      location,
+      patientLocationId,
       department,
       patientOutcomeAtDischarge,
       admissionDate,
@@ -134,18 +135,15 @@ class PatientEntriesForm extends Component<Props, State> {
           </Row>
           <Row align="center">
             <Cell columns={8}>
-              <Select
+              <EnumSelector
                 label="Location"
                 className="full-width"
-                value={location}
-                enhanced
-                onEnhancedChange={(index, item) => {
-                  this.setState({ location: item.getAttribute('data-value') });
-                }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+                entityName="PatientLocation"
+                onSelectionChange={selectedId =>
+                  this.setState({ patientLocationId: selectedId })
+                }
+                value={patientLocationId}
+              />
             </Cell>
             <Cell columns={8}>
               <Select

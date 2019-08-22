@@ -15,6 +15,7 @@ import patients from './patients';
 import patient from './patient';
 import patientEntryEdit from './patientEntryEdit';
 import patientEntriesList from './patientEntriesList';
+import enumReducer from './enums';
 
 export default function createRootReducer(history: {}) {
   const routerReducer = connectRouter(history)(() => {});
@@ -34,9 +35,9 @@ export default function createRootReducer(history: {}) {
       antibioticConsumptionStatsList,
       patient,
       patients,
-
       patientEntryEdit,
-      patientEntriesList
+      patientEntriesList,
+      PatientLocation: enumReducer('PatientLocation')
     })
   );
 }

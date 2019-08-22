@@ -8,6 +8,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { fetchPatientEntries } from '../actions/patientEntries';
 import { fetchPatient } from '../actions/patient';
 import Table from './Table';
+import Resolver from './Resolver';
 
 import type { Dispatch, State, Page } from '../reducers/types';
 
@@ -63,7 +64,7 @@ class PatientList extends Component<Props, State> {
             ''
           ]}
           fields={[
-            'location',
+            (_, current) => <Resolver promise={current.patientLocationName} />,
             'department',
             'stayTimespanToText',
             'admissionDate',
