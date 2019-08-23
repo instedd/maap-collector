@@ -5,6 +5,7 @@ import db from '../db';
 import { syncStart } from './sync';
 import { fetchPatients } from './patients';
 import type { Dispatch, State } from '../reducers/types';
+import { updateEntity } from './persistence';
 
 const SAVING_PATIENT = 'SAVING_PATIENT';
 const SAVING_PATIENT_FAILED = 'SAVING_PATIENT_FAILED';
@@ -41,6 +42,8 @@ export const createPatient = (attributes: Attributes) => async (
       throw e;
     });
 };
+
+export const updatePatient = updateEntity('Patient');
 
 export const fetchPatient = (patientId: string) => async (
   dispatch: Dispatch,

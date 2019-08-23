@@ -1,7 +1,7 @@
 import snakeCaseKeys from 'snakecase-keys';
 import camelCaseKeys from 'camelcase-keys';
 import { omit } from 'lodash';
-import { remoteUpload, remoteSync } from './sync';
+import { remoteUpload, remoteUploadUpdate, remoteSync } from './sync';
 import { fetchEntity } from './fetch';
 
 const FETCH_PATIENTS = 'FETCH_PATIENTS';
@@ -36,7 +36,12 @@ export const syncPatients = () => async (dispatch, getState) => {
 export const uploadPatients = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: UPLOAD_PATIENTS });
-  dispatch(remoteUpload('/api/v1/patients', user, 'Patient', uploadMapper));
+  await dispatch(
+    remoteUpload('/api/v1/patients', user, 'Patient', uploadMapper)
+  );
+  await dispatch(
+    remoteUploadUpdate(id => `/api/v1/patients/${id}`, 'Patient', uploadMapper)
+  );
 };
 
 export { FETCH_PATIENTS, FETCHED_PATIENTS, FETCH_PATIENTS_FAILED };
