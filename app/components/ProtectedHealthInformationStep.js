@@ -20,9 +20,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        patientOrLabRecordId: values({
-          ...patientOrLabRecordId,
-          [column]: e.target.value
+        patientOrLabRecordId: patientOrLabRecordId.map((value, index) => {
+          if (value === e.target.value) return null;
+          if (index === column) return e.target.value;
+          return value;
         })
       })
     );
@@ -99,7 +100,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
                 <td className="text-center">
                   <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
                     <NativeRadioControl
-                      name={`patientOrLabRecordID-${index}`}
+                      name="patientId"
                       value="patientId"
                       disabled={date[index]}
                       id={`patientOrLabRecordID-${index}`}
@@ -111,7 +112,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
                 <td className="text-center">
                   <Radio key={`patientOrLabRecordID-${index}-lab-record-id`}>
                     <NativeRadioControl
-                      name={`patientOrLabRecordID-${index}`}
+                      name="labRecordId"
                       value="labRecordId"
                       disabled={date[index]}
                       id={`patientOrLabRecordID-${index}`}

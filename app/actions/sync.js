@@ -120,7 +120,7 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
           const mapped = mapper(item);
           return [
             mapped,
-            await entity.findOrBuild({ where: { id: mapped.remoteId } })
+            await entity.findOrBuild({ where: { remoteId: mapped.remoteId } })
           ];
           // TODO: Do queries only if changed
         })

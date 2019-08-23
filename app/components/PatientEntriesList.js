@@ -64,13 +64,13 @@ class PatientList extends Component<Props, State> {
             ''
           ]}
           fields={[
-            (_, current) => <Resolver promise={current.patientLocationName} />,
+            current => <Resolver promise={current.patientLocationName} />,
             'department',
             'stayTimespanToText',
             'admissionDate',
             'dischargeDate',
             'dischargeDiagnostic',
-            (_, current) => (
+            current => (
               <Link
                 to={`/patients/${patientId}/entries/${current.id}/edit`}
                 className="black-text"

@@ -31,6 +31,14 @@ tbody tr:hover {
   color: var(--black);
 }
 
+.filters {
+  text-align: right;
+}
+
+.searchIcon {
+  color: var(--medium-gray);
+}
+
 .tablePagination {
   display: flex;
   justify-content: flex-end;
