@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import db from '../db';
 import { remoteSync } from './sync';
 
@@ -8,10 +9,14 @@ const SYNC_CULTURE_TYPES = 'SYNC_CULTURE_TYPES';
 const SYNC_CULTURE_TYPES_FAILED = 'SYNC_CULTURE_TYPES_FAILED';
 
 // TODO: Abstract this to a helper function
-const cultureTypeMapper = props => ({
-  ...props,
-  remoteId: props.id
-});
+const cultureTypeMapper = props =>
+  omit(
+    {
+      ...props,
+      remoteId: props.id
+    },
+    ['id']
+  );
 
 export const syncCultureTypes = () => async (dispatch, getState) => {
   const { user } = getState();
