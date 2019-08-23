@@ -86,12 +86,15 @@ class LabRecordsImport extends Component<Props, State> {
             onClick={this.handleNext}
             disabled={
               currentStep === 0 &&
-              !(
+              (!(
                 labRecordImport.file &&
                 labRecordImport.headerRow &&
                 labRecordImport.dataRowsTo &&
                 labRecordImport.dataRowsFrom
-              )
+              ) ||
+                labRecordImport.headerRow < 0 ||
+                labRecordImport.dataRowsFrom <= labRecordImport.headerRow ||
+                labRecordImport.dataRowsTo <= labRecordImport.dataRowsFrom)
             }
           >
             {currentStep === STEPS.length - 1 ? (
