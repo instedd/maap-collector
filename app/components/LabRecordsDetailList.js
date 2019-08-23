@@ -107,7 +107,7 @@ class LabRecordsDetailList extends Component<Props, State> {
                 return (item, row) => this.patientField(row);
               return i;
             })
-            .filter(e => isFunction(e) || e)}
+            .filter(e => isFunction(e) || e !== false)}
         />
       </div>
     );
