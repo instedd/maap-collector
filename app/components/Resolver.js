@@ -25,8 +25,5 @@ export default class Resolver extends React.Component {
 }
 
 Resolver.propTypes = {
-  promise: PropTypes.objectOf({
-    then: PropTypes.func,
-    catch: PropTypes.func
-  }).isRequired
+  promise: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
 };
