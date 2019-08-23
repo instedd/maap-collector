@@ -86,9 +86,25 @@ class AntibioticsForm extends Component<Props, State> {
                 this.setState({ strengthUnit: item.getAttribute('data-value') })
               }
             >
-              <Option value="mg">Mg</Option>
-              <Option value="g">g</Option>
-              <Option value="other">other</Option>
+              <Option value="G">G</Option>
+              <Option value="G/G">G/G</Option>
+              <Option value="G/ML">G/ML</Option>
+              <Option value="G/VIAL">G/VIAL</Option>
+              <Option value="IU">IU</Option>
+              <Option value="IU/G">IU/G</Option>
+              <Option value="IU/ML">IU/ML</Option>
+              <Option value="M/M">M/M</Option>
+              <Option value="MG">MG</Option>
+              <Option value="MG/G">MG/G</Option>
+              <Option value="MG/ML">MG/ML</Option>
+              <Option value="MIU">MIU</Option>
+              <Option value="ML">ML</Option>
+              <Option value="MU">MU</Option>
+              <Option value="U">U</Option>
+              <Option value="W/V">W/V</Option>
+              <Option value="W/W">W/W</Option>
+              <Option value="W/WMG">W/WMG</Option>
+              <Option value="WW">WW</Option>
             </Select>
           </Cell>
           <Cell columns={12}>
