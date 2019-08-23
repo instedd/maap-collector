@@ -21,7 +21,7 @@ const mapStateToProps = ({ patient, site }) => ({ patient, site });
 
 const defaultValues = {
   patientId: '',
-  gender: '',
+  gender: 'not specified',
   yearOfBirth: new Date().getFullYear(),
   levelOfEducation: ''
 };
@@ -94,11 +94,9 @@ class PatientForm extends Component<Props, State> {
               className="full-width"
               value={gender}
               label="Gender"
-              enhanced
-              onEnhancedChange={(index, item) =>
-                this.setState({ gender: item.getAttribute('data-value') })
-              }
+              onChange={e => this.setState({ gender: e.target.value })}
             >
+              <Option value="not specified">Not specified</Option>
               <Option value="female">Female</Option>
               <Option value="male">Male</Option>
               <Option value="other">other</Option>
