@@ -1,5 +1,6 @@
 // @flow
 import snakecaseKeys from 'snakecase-keys';
+import { omit } from 'lodash';
 import { remoteSync, remoteUpload } from './sync';
 import { fetchEntity } from './fetch';
 import type { Dispatch, State } from '../reducers/types';
@@ -12,13 +13,17 @@ const UPLOAD_ANTIBIOTICS = 'UPLOAD_ANTIBIOTICS';
 const SYNC_ANTIBIOTICS = 'SYNC_ANTIBIOTICS';
 
 // TODO: Abstract this to a helper function
-const antibioticMapper = props => ({
-  ...props,
-  remoteId: props.id,
-  packSize: props.pack_size,
-  strengthValue: props.strength_value,
-  strengthUnit: props.strength_unit
-});
+const antibioticMapper = props =>
+  omit(
+    {
+      ...props,
+      remoteId: props.id,
+      packSize: props.pack_size,
+      strengthValue: props.strength_value,
+      strengthUnit: props.strength_unit
+    },
+    ['id']
+  );
 
 const uploadMapper = async props => ({
   ...snakecaseKeys(props.dataValues),

@@ -1,4 +1,5 @@
 import snakeCaseKeys from 'snakecase-keys';
+import { omit } from 'lodash';
 import { remoteSync, remoteUpload, remoteUploadUpdate } from './sync';
 import { fetchEntity } from './fetch';
 
@@ -12,16 +13,20 @@ const FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED =
   'FETCH_ANTIBIOTIC_CONSUMPTION_STATS_FAILED';
 
 // TODO: Abstract this to a helper function
-const mapper = attrs => ({
-  ...attrs,
-  remoteId: attrs.id,
-  remoteAntibioticId: attrs.antibiotic_id,
-  recipientFacility: attrs.recipient_facility,
-  recipientUnit: attrs.recipient_unit,
-  antibioticId: null,
-  remoteSiteId: attrs.site_id,
-  siteId: null
-});
+const mapper = attrs =>
+  omit(
+    {
+      ...attrs,
+      remoteId: attrs.id,
+      remoteAntibioticId: attrs.antibiotic_id,
+      recipientFacility: attrs.recipient_facility,
+      recipientUnit: attrs.recipient_unit,
+      antibioticId: null,
+      remoteSiteId: attrs.site_id,
+      siteId: null
+    },
+    ['id']
+  );
 
 const uploadMapper = async props => ({
   ...snakeCaseKeys(props.dataValues),
