@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import db from '../db';
 import { remoteSync } from './sync';
 
@@ -8,10 +9,14 @@ const SYNC_SPECIMEN_SOURCES = 'SYNC_SPECIMEN_SOURCES';
 const SYNC_SPECIMEN_SOURCES_FAILED = 'SYNC_SPECIMEN_SOURCES_FAILED';
 
 // TODO: Abstract this to a helper function
-const specimenSourcesMapper = props => ({
-  ...props,
-  remoteId: props.id
-});
+const specimenSourcesMapper = props =>
+  omit(
+    {
+      ...props,
+      remoteId: props.id
+    },
+    ['id']
+  );
 
 export const syncSpecimenSources = () => async (dispatch, getState) => {
   const { user } = getState();
