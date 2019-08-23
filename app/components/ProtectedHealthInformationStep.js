@@ -20,9 +20,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        patientOrLabRecordId: values({
-          ...patientOrLabRecordId,
-          [column]: e.target.value
+        patientOrLabRecordId: patientOrLabRecordId.map((value, index) => {
+          if (value === e.target.value) return null;
+          if (index === column) return e.target.value;
+          return value;
         })
       })
     );
