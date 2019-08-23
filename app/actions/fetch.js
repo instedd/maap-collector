@@ -5,10 +5,10 @@ import db from '../db';
 
 const PER_PAGE = 10;
 
-const fetchEntity = entityName => (where = {}) => async (
-  dispatch,
-  getState
-) => {
+const fetchEntity = entityName => (
+  where = {},
+  order = [['id', 'desc']]
+) => async (dispatch, getState) => {
   const pluralizedEntityName = constantCase(pluralize(entityName));
   dispatch({ type: `FETCH_${pluralizedEntityName}`, where });
   const { user, router } = getState();
@@ -21,7 +21,7 @@ const fetchEntity = entityName => (where = {}) => async (
   const prevPage = currentPage > 1 ? currentPage - 1 : null;
   const nextPage = currentPage < totalPages ? currentPage + 1 : null;
   entity
-    .findAll({ where, offset, limit: PER_PAGE, order: [['id', 'desc']] })
+    .findAll({ where, offset, limit: PER_PAGE, order })
     .then(items =>
       dispatch({
         type: `FETCHED_${pluralizedEntityName}`,

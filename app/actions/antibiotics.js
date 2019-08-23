@@ -16,6 +16,8 @@ const antibioticMapper = props => ({
   ...props,
   remoteId: props.id,
   packSize: props.pack_size,
+  form: props.form,
+  brand: props.brand,
   strengthValue: props.strength_value,
   strengthUnit: props.strength_unit
 });
@@ -48,6 +50,9 @@ export const uploadAntibiotics = () => async (
   );
 };
 
-export const fetchAntibiotics = fetchEntity('Antibiotic');
+export const fetchAntibiotics = (
+  where: {} = {},
+  order: Array<Array<string>> = [['name', 'asc']]
+) => fetchEntity('Antibiotic')(where, order);
 
 export { FETCH_ANTIBIOTICS, FETCHED_ANTIBIOTICS, FETCH_ANTIBIOTICS_FAILED };
