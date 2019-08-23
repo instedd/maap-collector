@@ -50,7 +50,6 @@ class antibioticConsumptionStatsForm extends Component<Props, State> {
   }
 
   componentWillReceiveProps(props) {
-    console.log(props);
     this.setState({
       issued: false,
       quantity: '',

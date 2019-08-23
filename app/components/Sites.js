@@ -5,12 +5,12 @@ import Sequelize from 'sequelize';
 import { connect } from 'react-redux';
 import Checkbox from '@material/react-checkbox';
 
-import type { Dispatch } from '../reducers/types';
+import type { Dispatch, State as ReduxState } from '../reducers/types';
 import { fetchSites } from '../actions/sites';
 import { enterSite } from '../actions/site';
 import Table from './Table';
 
-type Props = {
+type StoreProps = {
   dispatch: Dispatch,
   sites: {
     items: [],
@@ -32,6 +32,8 @@ const mapStateToProps = state => {
   const { dispatch, sites } = state;
   return { dispatch, sites };
 };
+
+type Props = ReduxState & StoreProps;
 
 class Sites extends Component<Props, State> {
   state: State = {

@@ -138,7 +138,7 @@ class LabRecordsDetailList extends Component<Props, State> {
                   );
               return i;
             })
-            .filter(e => isFunction(e) || e)}
+            .filter(e => isFunction(e) || e !== false)}
           search={value => {
             this.setState({ searchText: value });
           }}
