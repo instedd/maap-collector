@@ -143,6 +143,7 @@ class PatientEntriesForm extends Component<Props, State> {
                   this.setState({ patientLocationId: selectedId })
                 }
                 value={patientLocationId}
+                defaultValue={1}
               />
             </Cell>
             <Cell columns={8}>

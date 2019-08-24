@@ -35,6 +35,14 @@ class PatientList extends Component<Props, State> {
   render() {
     const { dispatch, patientId, patientEntriesList } = this.props;
     const { patientDisplayId, patientEntries } = patientEntriesList;
+
+    const locationRenderer = current => (
+      <Resolver
+        key={current.patientLocationId}
+        promise={current.patientLocationName}
+      />
+    );
+
     return (
       <div>
         <Table
@@ -64,7 +72,7 @@ class PatientList extends Component<Props, State> {
             ''
           ]}
           fields={[
-            current => <Resolver promise={current.patientLocationName} />,
+            locationRenderer,
             'department',
             'stayTimespanToText',
             'admissionDate',

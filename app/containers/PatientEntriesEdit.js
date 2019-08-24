@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import PatientEntriesForm from '../components/PatientEntriesForm';
-import { fetchPatientEntry } from '../actions/patientEntry';
+import { fetchPatientEntry, cleanPatientEntry } from '../actions/patientEntry';
 import { State } from '../reducers/types';
 
 type Props = State &
@@ -27,6 +27,11 @@ class PatientsEntriesEdit extends Component<Props> {
   componentDidMount() {
     const { dispatch, match } = this.props;
     dispatch(fetchPatientEntry({ id: match.params.patientEntryId }));
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(cleanPatientEntry());
   }
 
   render() {

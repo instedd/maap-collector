@@ -12,7 +12,8 @@ type Props = {
   onSelectionChange: (string | null) => void,
   entityName: string,
   enumState: EnumState,
-  dispatch: *
+  dispatch: *,
+  defaultValue: string
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -33,6 +34,7 @@ class EnumSelector extends Component<Props> {
     const {
       label,
       value,
+      defaultValue,
       onSelectionChange,
       enumState,
       className
@@ -46,13 +48,9 @@ class EnumSelector extends Component<Props> {
       <Select
         label={label}
         className={className}
-        value={value || ''}
-        enhanced
-        onEnhancedChange={(index, item) => {
-          let selection = item.getAttribute('data-value');
-          if (selection === '') selection = null;
-
-          onSelectionChange(selection);
+        value={value || defaultValue}
+        onChange={evt => {
+          onSelectionChange(evt.target.value);
         }}
       >
         {enumState.options.map(o => (
