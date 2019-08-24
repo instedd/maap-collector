@@ -12,8 +12,7 @@ type Props = {
   onSelectionChange: (string | null) => void,
   entityName: string,
   enumState: EnumState,
-  dispatch: *,
-  defaultValue: string
+  dispatch: *
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -34,7 +33,6 @@ class EnumSelector extends Component<Props> {
     const {
       label,
       value,
-      defaultValue,
       onSelectionChange,
       enumState,
       className
@@ -48,7 +46,7 @@ class EnumSelector extends Component<Props> {
       <Select
         label={label}
         className={className}
-        value={value || defaultValue}
+        value={value}
         onChange={evt => {
           onSelectionChange(evt.target.value);
         }}

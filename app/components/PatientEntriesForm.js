@@ -51,12 +51,12 @@ class PatientEntriesForm extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      patientLocationId: '',
+      patientLocationId: 1,
       department: '',
       weight: '',
       height: '',
-      pregnancyStatus: '',
-      prematureBirth: '',
+      pregnancyStatus: 'not_mentioned',
+      prematureBirth: 'not_mentioned',
       chiefComplaint: '',
       patientTransferred: false,
       primaryDiagnosis: '',
@@ -143,7 +143,6 @@ class PatientEntriesForm extends Component<Props, State> {
                   this.setState({ patientLocationId: selectedId })
                 }
                 value={patientLocationId}
-                defaultValue={1}
               />
             </Cell>
             <Cell columns={8}>
@@ -231,15 +230,16 @@ class PatientEntriesForm extends Component<Props, State> {
                 label="Pregnancy status"
                 className="full-width"
                 value={pregnancyStatus}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                onChange={evt => {
                   this.setState({
-                    pregnancyStatus: item.getAttribute('data-value')
+                    pregnancyStatus: evt.target.value
                   });
                 }}
               >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
+                <Option value="yes">Yes</Option>
+                <Option value="no">No</Option>
+                <Option value="not_applicable">Not applicable</Option>
+                <Option value="not_mentioned">Not mentioned</Option>
               </Select>
             </Cell>
             <Cell columns={4}>
@@ -247,15 +247,16 @@ class PatientEntriesForm extends Component<Props, State> {
                 label="Premature birth"
                 className="full-width"
                 value={prematureBirth}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                onChange={evt => {
                   this.setState({
-                    prematureBirth: item.getAttribute('data-value')
+                    prematureBirth: evt.target.value
                   });
                 }}
               >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
+                <Option value="yes">Yes</Option>
+                <Option value="no">No</Option>
+                <Option value="not_applicable">Not applicable</Option>
+                <Option value="not_mentioned">Not mentioned</Option>
               </Select>
             </Cell>
           </Row>
