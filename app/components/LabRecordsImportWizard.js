@@ -61,6 +61,9 @@ class LabRecordsImport extends Component<Props, State> {
   render() {
     const { labRecordImport } = this.props;
     const { currentStep } = this.state;
+    const headerRow = parseInt(labRecordImport.headerRow, 10);
+    const dataRowsTo = parseInt(labRecordImport.dataRowsTo, 10);
+    const dataRowsFrom = parseInt(labRecordImport.dataRowsFrom, 10);
     const CurrentStepComponent = STEPS[currentStep];
     return (
       <Card>
@@ -88,13 +91,13 @@ class LabRecordsImport extends Component<Props, State> {
               currentStep === 0 &&
               (!(
                 labRecordImport.file &&
-                labRecordImport.headerRow &&
-                labRecordImport.dataRowsTo &&
-                labRecordImport.dataRowsFrom
+                headerRow &&
+                dataRowsTo &&
+                dataRowsFrom
               ) ||
-                labRecordImport.headerRow < 0 ||
-                labRecordImport.dataRowsFrom <= labRecordImport.headerRow ||
-                labRecordImport.dataRowsTo <= labRecordImport.dataRowsFrom)
+                headerRow < 0 ||
+                dataRowsFrom <= headerRow ||
+                dataRowsTo <= dataRowsFrom)
             }
           >
             {currentStep === STEPS.length - 1 ? (
