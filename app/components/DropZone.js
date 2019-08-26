@@ -80,6 +80,7 @@ class DropZone extends Component<Props, State> {
                 <TextField label="Header row" className="full-width">
                   <Input
                     type="number"
+                    min="0"
                     value={headerRow}
                     onChange={e => onChange({ headerRow: e.target.value })}
                   />
@@ -87,6 +88,7 @@ class DropZone extends Component<Props, State> {
                 <TextField label="Data rows from">
                   <Input
                     type="number"
+                    min={parseInt(headerRow, 10) || 0 + 1}
                     value={dataRowsFrom}
                     onChange={e => onChange({ dataRowsFrom: e.target.value })}
                   />
@@ -94,6 +96,7 @@ class DropZone extends Component<Props, State> {
                 <TextField label="Data rows to">
                   <Input
                     type="number"
+                    min={parseInt(dataRowsFrom, 10) || 0 + 1}
                     value={dataRowsTo}
                     onChange={e => onChange({ dataRowsTo: e.target.value })}
                   />

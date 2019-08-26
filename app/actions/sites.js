@@ -1,16 +1,22 @@
-import db from '../db';
+import camelCaseKeys from 'camelcase-keys';
+import { omit } from 'lodash';
 import { remoteSync } from './sync';
+import { fetchEntity } from './fetch';
 
-const SITES_FETCH = 'SITES_FETCH';
-const SITES_FETCHED = 'SITES_FETCHED';
+const FETCH_SITES = 'FETCH_SITES';
+const FETCHED_SITES = 'FETCHED_SITES';
 const SITES_SYNC = 'SITES_SYNC';
-const SITES_FETCH_FAILED = 'SITES_FETCH_FAILED';
+const FETCH_SITES_FAILED = 'FETCH_SITES_FAILED';
 
 // TODO: Abstract this to a helper function
-const siteMapper = props => ({
-  ...props,
-  remoteId: props.id
-});
+const siteMapper = props =>
+  omit(
+    camelCaseKeys({
+      ...props,
+      remoteId: props.id
+    }),
+    ['id']
+  );
 
 export const syncSites = () => async (dispatch, getState) => {
   const { user } = getState();
@@ -20,14 +26,6 @@ export const syncSites = () => async (dispatch, getState) => {
   );
 };
 
-export const fetchSites = () => async (dispatch, getState) => {
-  const { user } = getState();
-  const { Site } = await db.initializeForUser(user);
-  dispatch({ type: SITES_FETCH });
-  const totalCount = await Site.count();
-  Site.findAll({ limit: 15 })
-    .then(items => dispatch({ type: SITES_FETCHED, items, totalCount }))
-    .catch(error => dispatch({ type: SITES_FETCH_FAILED, error }));
-};
+export const fetchSites = fetchEntity('Site');
 
-export { SITES_FETCH, SITES_FETCHED, SITES_FETCH_FAILED };
+export { FETCH_SITES, FETCHED_SITES, FETCH_SITES_FAILED };

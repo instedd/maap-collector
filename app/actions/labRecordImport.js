@@ -13,7 +13,7 @@ export const setFileData = data => ({ type: SET_FILE_DATA, data });
 export const setPhiData = data => ({ type: SET_PHI_DATA, data });
 export const setPatientIdData = data => ({ type: SET_PATIENT_ID_DATA, data });
 export const createLabRecord = () => async (dispatch, getState) => {
-  const { labRecordImport: labRecordImportState, user } = getState();
+  const { labRecordImport: labRecordImportState, user, site } = getState();
   const { LabRecord } = await db.initializeForUser(user);
   const { file } = labRecordImportState;
   const fileName = basename(file.path);
@@ -30,6 +30,7 @@ export const createLabRecord = () => async (dispatch, getState) => {
       const labRecord = await LabRecord.create({
         filePath: newFilePath,
         fileName,
+        siteId: site.id,
         ...labRecordImportState
       });
 

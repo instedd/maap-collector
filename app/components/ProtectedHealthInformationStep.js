@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Radio, { NativeRadioControl } from '@material/react-radio';
 import Checkbox from '@material/react-checkbox';
 import Select, { Option } from '@material/react-select';
+import { values } from 'lodash';
 import { connect } from 'react-redux';
 import XlsxManager from '../utils/xlsxManager';
 import { setPhiData } from '../actions/labRecordImport';
@@ -19,10 +20,11 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        patientOrLabRecordId: {
-          ...patientOrLabRecordId,
-          [column]: e.target.value
-        }
+        patientOrLabRecordId: patientOrLabRecordId.map((value, index) => {
+          if (value === e.target.value) return null;
+          if (index === column) return e.target.value;
+          return value;
+        })
       })
     );
   };
@@ -37,10 +39,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
     dispatch(
       setPhiData({
-        [type]: {
+        [type]: values({
           ...labRecordImport[type],
           [column]: e.target.checked ? trueValue : falseValue
-        }
+        })
       })
     );
   };
@@ -76,12 +78,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
 
   render() {
     const { labRecordImport } = this.props;
-    const { file, columns, patientOrLabRecordId, phi, date } = labRecordImport;
+    const { columns, patientOrLabRecordId, phi, date } = labRecordImport;
     return (
       <div>
-        <h2>
-          Specify which columns has protected health information {file.name}
-        </h2>
+        <h2>Specify which columns have protected health information</h2>
         <table>
           <thead>
             <tr>
@@ -100,7 +100,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
                 <td className="text-center">
                   <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
                     <NativeRadioControl
-                      name={`patientOrLabRecordID-${index}`}
+                      name="patientId"
                       value="patientId"
                       disabled={date[index]}
                       id={`patientOrLabRecordID-${index}`}
@@ -112,7 +112,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
                 <td className="text-center">
                   <Radio key={`patientOrLabRecordID-${index}-lab-record-id`}>
                     <NativeRadioControl
-                      name={`patientOrLabRecordID-${index}`}
+                      name="labRecordId"
                       value="labRecordId"
                       disabled={date[index]}
                       id={`patientOrLabRecordID-${index}`}

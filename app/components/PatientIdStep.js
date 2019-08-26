@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { at, values } from 'lodash';
 import TextField, { Input } from '@material/react-text-field';
 
 import XlsxManager from '../utils/xlsxManager';
@@ -33,24 +34,42 @@ class PatientIdStep extends Component<Props> {
     } = labRecordImport;
     const sheet = new XlsxManager(file.path);
     const headerRow = sheet.row(labRecordImport.headerRow - 1);
-    const rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
+    let rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
     const columnsToKeep = headerRow.reduce((acc, current, index) => {
       if (patientOrLabRecordId[index] || phi[index] || date[index])
         acc.push(index);
       return acc;
     }, []);
+    if (!values(patientOrLabRecordId).some(i => i === 'patientId')) {
+      headerRow.push({ v: 'Manual Patient Id', w: 'Manual Patient Id' });
+      date.push(null);
+      phi.push(false);
+      rows = rows.map(row => [...row, { v: '', w: '' }]);
+      columnsToKeep.push(headerRow.length - 1);
+      patientOrLabRecordId[headerRow.length - 1] = 'patientId';
+    }
 
     dispatch(
       setPatientIdData({
         columns: columnsToKeep.map(index => headerRow[index]),
-        rows: rows.map(row => columnsToKeep.map(index => row[index]))
+        columnsToKeep,
+        rows,
+        patientOrLabRecordId,
+        phi,
+        date
       })
     );
   }
 
   render() {
     const { labRecordImport } = this.props;
-    const { columns, rows, patientOrLabRecordId } = labRecordImport;
+    const {
+      columns,
+      rows,
+      patientOrLabRecordId,
+      columnsToKeep
+    } = labRecordImport;
+
     return (
       <div>
         <h2>Complete patient ID for record linking</h2>
@@ -68,15 +87,19 @@ class PatientIdStep extends Component<Props> {
           <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={`row-${rowIndex}`}>
-                {row.map((cell, index) => (
+                {at(row, columnsToKeep).map((cell, index) => (
                   // eslint-disable-next-line
                   <td key={`td-${index}`}>
-                    {patientOrLabRecordId[index] === 'patientId' ? (
+                    {patientOrLabRecordId[columnsToKeep[index]] ===
+                    'patientId' ? (
                       <TextField>
                         <Input
                           type="text"
-                          value={cell.v}
-                          onChange={this.handleRowChange(rowIndex, index)}
+                          value={cell.w}
+                          onChange={this.handleRowChange(
+                            rowIndex,
+                            columnsToKeep[index]
+                          )}
                         />
                       </TextField>
                     ) : (

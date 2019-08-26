@@ -63,12 +63,13 @@ h2 {
 }
 
 h4 {
-  font-size: .875em;
+  font-size: 0.875em;
 }
 
 .app {
   padding: 2.25rem 6rem;
 }
+
 .full-width {
   display: block;
   width: 100%;
@@ -88,4 +89,8 @@ h4 {
 
 .margin-top {
   margin-top: 15px;
+}
+
+.black-text {
+  color: var(--black);
 }

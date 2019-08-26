@@ -6,22 +6,21 @@ import { connect } from 'react-redux';
 import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import { fetchPatientEntries } from '../actions/patientEntries';
+import { fetchPatient } from '../actions/patient';
 import Table from './Table';
+import Resolver from './Resolver';
 
-import type { Dispatch, State } from '../reducers/types';
+import type { Dispatch, State, Page } from '../reducers/types';
 
 type StoreProps = {
   dispatch: Dispatch,
-  patientEntries: {
-    items: [],
-    totalCount: number
-  }
+  patientEntries: Page
 };
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, patientEntries } = state;
-  return { dispatch, patientEntries };
+  const { dispatch, patientEntriesList } = state;
+  return { dispatch, patientEntriesList };
 };
 
 class PatientList extends Component<Props, State> {
@@ -30,17 +29,30 @@ class PatientList extends Component<Props, State> {
   componentDidMount() {
     const { dispatch, patientId } = this.props;
     dispatch(fetchPatientEntries({ patientId }));
+    dispatch(fetchPatient(patientId));
   }
 
   render() {
-    const { patientEntries, dispatch, patientId } = this.props;
+    const { dispatch, patientId, patientEntriesList } = this.props;
+    const { patientDisplayId, patientEntries } = patientEntriesList;
+
+    const locationRenderer = current => (
+      <Resolver
+        key={current.patientLocationId}
+        promise={current.patientLocationName}
+      />
+    );
+
     return (
       <div>
         <Table
           title={
-            <Link to="/patients">
-              <MaterialIcon icon="arrow_back" />
-            </Link>
+            <>
+              <Link to="/patients">
+                <MaterialIcon icon="arrow_back" />
+              </Link>
+              {patientDisplayId}
+            </>
           }
           pagination
           items={patientEntries.items}
@@ -55,14 +67,23 @@ class PatientList extends Component<Props, State> {
             'Department',
             'Admission date',
             'Discharge date',
-            'Discharge diagnostic'
+            'Discharge diagnostic',
+            ''
           ]}
           fields={[
-            'location',
+            locationRenderer,
             'department',
             'admissionDate',
             'dischargeDate',
-            'dischargeDiagnostic'
+            'dischargeDiagnostic',
+            current => (
+              <Link
+                to={`/patients/${patientId}/entries/${current.id}/edit`}
+                className="black-text"
+              >
+                <MaterialIcon icon="edit" />
+              </Link>
+            )
           ]}
         />
       </div>

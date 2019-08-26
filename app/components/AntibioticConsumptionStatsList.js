@@ -7,24 +7,25 @@ import TextField, { Input } from '@material/react-text-field';
 import Select, { Option } from '@material/react-select';
 import MaterialIcon from '@material/react-material-icon';
 import type { ContextRouter } from 'react-router';
-import type { Dispatch } from '../reducers/types';
+import type { Dispatch, Page } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
+import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
 import RowForm from './RowForm';
+import { syncStart } from '../actions/sync';
 
 type ComponentProps = {
   dispatch: Dispatch,
-  antibioticConsumptionStats: {
-    items: [],
-    totalCount: number,
-    totalPages: number,
-    offset: number,
-    limit: number,
-    prevPage: number,
-    nextPage: number
+  antibioticConsumptionStatsList: {
+    antibioticName: string,
+    antibioticConsumptionStats: Page
   },
-  antibioticId: string
+  antibioticId: string,
+  site: {
+    id: number
+  },
+  onEditClick: (number, {}) => void
 };
 type State = {
   date?: Date,
@@ -32,42 +33,66 @@ type State = {
   quantity?: number,
   balance?: number,
   recipientFacility?: string,
-  recipientUnit?: string
+  recipientUnit?: string,
+  site: {
+    id: number
+  } | null
 };
 
 type Props = ComponentProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, antibioticConsumptionStats } = state;
-  return { dispatch, antibioticConsumptionStats };
+  const { dispatch, antibioticConsumptionStatsList, site } = state;
+  return { dispatch, antibioticConsumptionStatsList, site };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
-  state: State = {};
+  state: State = { site: null };
 
   handleSubmit = () => {
     const {
       dispatch,
       antibioticId,
       history,
-      antibioticConsumptionStats
+      antibioticConsumptionStatsList,
+      site
     } = this.props;
 
     return dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
     ).then(() => {
-      history.push({ search: `page=${antibioticConsumptionStats.totalPages}` });
-      return dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+      history.push({
+        search: `page=${
+          antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
+        }`
+      });
+      dispatch(syncStart());
+      return dispatch(
+        fetchAntibioticConsumptionStats({
+          antibioticId,
+          siteId: site && site.id
+        })
+      );
     });
   };
 
   componentDidMount() {
-    const { dispatch, antibioticId } = this.props;
-    dispatch(fetchAntibioticConsumptionStats({ antibioticId }));
+    const { dispatch, antibioticId, site } = this.props;
+    dispatch(
+      fetchAntibioticConsumptionStats({ antibioticId, siteId: site && site.id })
+    );
+    dispatch(fetchAntibiotic(antibioticId));
   }
 
   render() {
-    const { antibioticConsumptionStats, dispatch, antibioticId } = this.props;
+    const {
+      dispatch,
+      antibioticId,
+      antibioticConsumptionStatsList,
+      site,
+      onEditClick
+    } = this.props;
+    const { antibioticConsumptionStats } = antibioticConsumptionStatsList;
     const {
       date,
       issued,
@@ -81,9 +106,13 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       <div>
         <Table
           title={
-            <Link to="/antibiotics">
-              <MaterialIcon icon="arrow_back" />
-            </Link>
+            <>
+              <Link to="/antibiotics">
+                <MaterialIcon icon="arrow_back" />
+              </Link>
+              {antibioticConsumptionStatsList &&
+                antibioticConsumptionStatsList.antibioticName}
+            </>
           }
           pagination
           items={antibioticConsumptionStats.items}
@@ -93,7 +122,12 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
           prevPage={antibioticConsumptionStats.prevPage}
           nextPage={antibioticConsumptionStats.nextPage}
           onReload={() =>
-            dispatch(fetchAntibioticConsumptionStats({ antibioticId }))
+            dispatch(
+              fetchAntibioticConsumptionStats({
+                antibioticId,
+                siteId: site && site.id
+              })
+            )
           }
           columns={[
             'Date',
@@ -101,15 +135,23 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
             'Quantity',
             'Balance',
             'Recipient facility',
-            'Recipient unit'
+            'Recipient unit',
+            ''
           ]}
           fields={[
+            'remoteId',
             'date',
             'issuedText',
             'quantity',
             'balance',
             'recipientFacility',
-            'recipientUnit'
+            'recipientUnit',
+            (_, current) => (
+              <MaterialIcon
+                icon="edit"
+                onClick={e => onEditClick(e, current)}
+              />
+            )
           ]}
           rowClassName={item => [item.issued ? 'highlight' : '']}
           lastRow={

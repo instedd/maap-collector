@@ -11,6 +11,7 @@ import Table from './Table';
 
 type Props = {
   dispatch: Dispatch,
+  site: { id: number },
   labRecords: {
     items: [],
     totalCount: number,
@@ -23,24 +24,24 @@ type Props = {
 type State = {};
 
 const mapStateToProps = state => {
-  const { dispatch, labRecords } = state;
-  return { dispatch, labRecords };
+  const { dispatch, labRecords, site } = state;
+  return { dispatch, labRecords, site };
 };
 
 class LabRecordsList extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchLabRecords());
+    const { dispatch, site } = this.props;
+    dispatch(fetchLabRecords({ siteId: site.id }));
   }
 
   render() {
-    const { labRecords, dispatch, history } = this.props;
+    const { labRecords, dispatch, history, site } = this.props;
     return (
       <div>
         <Table
-          entityName="Lab records"
+          entityName="Lab record files"
           items={labRecords.items}
           pagination
           totalCount={labRecords.totalCount}
@@ -48,7 +49,7 @@ class LabRecordsList extends Component<Props, State> {
           limit={labRecords.limit}
           prevPage={labRecords.prevPage}
           nextPage={labRecords.nextPage}
-          onReload={() => dispatch(fetchLabRecords())}
+          onReload={() => dispatch(fetchLabRecords({ siteId: site.id }))}
           onClick={({ id }) => history.push(`/lab_records/${id}`)}
           columns={['File', 'Created at']}
           fields={['id', 'fileName', 'filePath', 'createdAt']}

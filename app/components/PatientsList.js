@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
+import MaterialIcon from '@material/react-material-icon';
 import { fetchPatients } from '../actions/patients';
 import Table from './Table';
 
@@ -19,20 +20,20 @@ type StoreProps = {
 type Props = State & StoreProps & ContextRouter;
 
 const mapStateToProps = state => {
-  const { dispatch, patients } = state;
-  return { dispatch, patients };
+  const { dispatch, patients, site } = state;
+  return { dispatch, patients, site };
 };
 
 class PatientList extends Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchPatients());
+    const { dispatch, site } = this.props;
+    dispatch(fetchPatients({ siteId: site.id }));
   }
 
   render() {
-    const { patients, history, dispatch } = this.props;
+    const { patients, history, dispatch, site, onEditPatient } = this.props;
     return (
       <div>
         <Table
@@ -44,14 +45,30 @@ class PatientList extends Component<Props, State> {
           limit={patients.limit}
           prevPage={patients.prevPage}
           nextPage={patients.nextPage}
-          onReload={() => dispatch(fetchPatients())}
+          onReload={() => dispatch(fetchPatients({ siteId: site.id }))}
           columns={[
             'Patient ID',
             'Gender',
             'Year of birth',
-            'Level of education'
+            'Level of education',
+            ''
           ]}
-          fields={['patientId', 'gender', 'yearOfBirth', 'levelOfEducation']}
+          fields={[
+            'availablePatientId',
+            'gender',
+            'yearOfBirth',
+            'levelOfEducation',
+            (current, id) => (
+              <MaterialIcon
+                icon="edit"
+                onClick={e => {
+                  onEditPatient(current);
+                  e.stopPropagation();
+                }}
+                key={`edit-${id}`}
+              />
+            )
+          ]}
           onClick={({ id }) => history.push(`/patients/${id}/entries`)}
         />
       </div>

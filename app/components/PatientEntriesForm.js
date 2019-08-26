@@ -1,5 +1,3 @@
-// @flow
-
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import Button from '@material/react-button';
@@ -9,8 +7,13 @@ import MaterialIcon from '@material/react-material-icon';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { createPatientEntry } from '../actions/patientEntry';
+import {
+  createPatientEntry,
+  updatePatientEntry
+} from '../actions/patientEntry';
+import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
+import EnumSelector from './EnumSelector';
 
 // Tested in this form:
 // import CombinedSelect from '../components/CombinedSelect';
@@ -20,48 +23,78 @@ import type { Dispatch, State } from '../reducers/types';
 type StoreProps = {
   dispatch: Dispatch
 };
-type Props = State & StoreProps;
+type Props = State &
+  StoreProps & {
+    action: string,
+    defaultValues: {}
+  };
 
 class PatientEntriesForm extends Component<Props, State> {
-  state: State = {
-    location: '',
-    department: '',
-    admissionDate: new Date().toISOString().substr(0, 10),
-    dischargeDate: new Date().toISOString().substr(0, 10),
-    weight: '',
-    height: '',
-    pregnancyStatus: '',
-    prematureBirth: '',
-    chiefComplaint: '',
-    patientTransferred: false,
-    primaryDiagnosis: '',
-    primaryDiagnosisIcdCode: '',
-    acuteMyocardialInfarction: false,
-    chf: false,
-    notMentioned: false,
-    other: false,
-    antibioticsPrescribed: '',
-    antibiotic: '',
-    antibioticConsumption: '',
-    patientWasOnAnIndwellingMedicalDevice: '',
-    medicalDevice: '',
-    infectionAcquisition: '',
-    dischargeDiagnostic: '',
-    dischargeDiagnosticIcdCode: '',
-    patientOutcomeAtDischarge: ''
-  };
-
   handleSubmit = async e => {
     e.preventDefault();
-    const { dispatch, history, patientId } = this.props;
-    await dispatch(
-      createPatientEntry({
-        ...this.state,
-        patientId
-      })
-    );
+    const { dispatch, history, patientId, patientEntryId } = this.props;
+    if (patientEntryId) {
+      await dispatch(
+        updatePatientEntry(patientEntryId, {
+          ...this.state,
+          patientId,
+          patientEntryId
+        })
+      );
+    } else {
+      await dispatch(
+        createPatientEntry({
+          ...this.state,
+          patientId
+        })
+      );
+    }
+    dispatch(syncStart());
     history.push(`/patients/${patientId}/entries`);
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      patientLocationId: 1,
+      department: '',
+      weight: '',
+      height: '',
+      pregnancyStatus: 'not_mentioned',
+      prematureBirth: 'not_mentioned',
+      chiefComplaint: '',
+      patientTransferred: false,
+      primaryDiagnosis: '',
+      primaryDiagnosisIcdCode: '',
+      acuteMyocardialInfarction: false,
+      chf: false,
+      notMentioned: false,
+      other: false,
+      antibioticsPrescribed: '',
+      antibiotic: '',
+      antibioticConsumption: '',
+      patientWasOnAnIndwellingMedicalDevice: '',
+      medicalDevice: '',
+      infectionAcquisition: '',
+      dischargeDiagnostic: '',
+      dischargeDiagnosticIcdCode: '',
+      patientOutcomeAtDischarge: '',
+      ...Object.keys(props.defaultValues).reduce((acc, cur) => {
+        if (props.defaultValues[cur] === null) {
+          acc[cur] = '';
+        } else {
+          acc[cur] = props.defaultValues[cur];
+        }
+        return acc;
+      }, {}),
+      admissionDate: (props.defaultValues.admissionDate || new Date())
+        .toISOString()
+        .substr(0, 10),
+      dischargeDate: (props.defaultValues.dischargeDate || new Date())
+        .toISOString()
+        .substr(0, 10)
+    };
+  }
 
   componentDidMount() {
     // This is a patch for the checkbox, otherwise they show a ripple of the screensize on mouseover
@@ -70,7 +103,7 @@ class PatientEntriesForm extends Component<Props, State> {
 
   render() {
     const {
-      location,
+      patientLocationId,
       department,
       patientOutcomeAtDischarge,
       admissionDate,
@@ -96,29 +129,26 @@ class PatientEntriesForm extends Component<Props, State> {
       dischargeDiagnostic,
       dischargeDiagnosticIcdCode
     } = this.state;
-    const { history, patientId } = this.props;
+    const { history, patientId, action } = this.props;
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid>
           <Row>
             <Cell>
-              <h2>New entry</h2>
+              <h2>{action} entry</h2>
             </Cell>
           </Row>
           <Row align="center">
             <Cell columns={8}>
-              <Select
+              <EnumSelector
                 label="Location"
                 className="full-width"
-                value={location}
-                enhanced
-                onEnhancedChange={(index, item) => {
-                  this.setState({ location: item.getAttribute('data-value') });
-                }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+                entityName="PatientLocation"
+                onSelectionChange={selectedId =>
+                  this.setState({ patientLocationId: selectedId })
+                }
+                value={patientLocationId}
+              />
             </Cell>
             <Cell columns={8}>
               <Select
@@ -205,15 +235,16 @@ class PatientEntriesForm extends Component<Props, State> {
                 label="Pregnancy status"
                 className="full-width"
                 value={pregnancyStatus}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                onChange={evt => {
                   this.setState({
-                    pregnancyStatus: item.getAttribute('data-value')
+                    pregnancyStatus: evt.target.value
                   });
                 }}
               >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
+                <Option value="yes">Yes</Option>
+                <Option value="no">No</Option>
+                <Option value="not_applicable">Not applicable</Option>
+                <Option value="not_mentioned">Not mentioned</Option>
               </Select>
             </Cell>
             <Cell columns={4}>
@@ -221,15 +252,16 @@ class PatientEntriesForm extends Component<Props, State> {
                 label="Premature birth"
                 className="full-width"
                 value={prematureBirth}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                onChange={evt => {
                   this.setState({
-                    prematureBirth: item.getAttribute('data-value')
+                    prematureBirth: evt.target.value
                   });
                 }}
               >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
+                <Option value="yes">Yes</Option>
+                <Option value="no">No</Option>
+                <Option value="not_applicable">Not applicable</Option>
+                <Option value="not_mentioned">Not mentioned</Option>
               </Select>
             </Cell>
           </Row>
@@ -509,6 +541,11 @@ class PatientEntriesForm extends Component<Props, State> {
     );
   }
 }
+
+PatientEntriesForm.defaultProps = {
+  action: 'New',
+  defaultValues: {}
+};
 
 export default withRouter(
   connect(

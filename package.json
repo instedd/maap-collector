@@ -1,7 +1,7 @@
 {
   "name": "maap-collector",
   "productName": "Maap Collector",
-  "version": "0.17.2",
+  "version": "0.17.4",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -24,7 +24,7 @@
     "postinstall": "yarn flow-typed && yarn build-dll && electron-builder install-app-deps package.json && opencollective-postinstall",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn flow",
     "prestart": "yarn build",
     "start": "cross-env NODE_ENV=production electron ./app/",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r @babel/register ./app/main.dev.js",
@@ -275,6 +275,7 @@
     "@material/react-tab-indicator": "^0.14.1",
     "@material/react-text-field": "^0.14.1",
     "@material/react-top-app-bar": "^0.14.1",
+    "camelcase-keys": "^6.0.1",
     "change-case": "^3.1.0",
     "devtron": "^1.4.0",
     "dotenv": "^8.0.0",

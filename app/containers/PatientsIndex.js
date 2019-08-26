@@ -4,14 +4,8 @@ import { connect } from 'react-redux';
 import style from '@material/react-fab/dist/fab.css';
 import { Fab } from '@material/react-fab';
 import MaterialIcon from '@material/react-material-icon';
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogFooter,
-  DialogButton
-} from '@material/react-dialog';
 import PatientsList from '../components/PatientsList';
-import PatientsForm from '../components/PatientsForm';
+import PatientsDialogForm from '../components/PatientsDialogForm';
 
 type Props = {
   sync: {
@@ -21,7 +15,14 @@ type Props = {
 };
 
 type State = {
-  modalIsOpen: boolean
+  modalIsOpen: boolean,
+  type: string,
+  formPatient: {
+    patientId: string,
+    gender: ?string,
+    yearOfBirth: ?Date,
+    levelOfEducation: ?string
+  } | null
 };
 
 const mapStateToProps = ({ sync }) => ({ sync });
@@ -33,40 +34,58 @@ class PatientsIndex extends Component<Props, State> {
     handleSubmit: () => {}
   };
 
-  state: State = { modalIsOpen: false };
+  state: State = { modalIsOpen: false, type: '', formPatient: null };
 
   handleModalClosing = e => {
-    this.setState({ modalIsOpen: false });
-    if (e === 'accept') return this.child.handleSubmit();
+    if (e !== 'confirm') {
+      this.setState({ modalIsOpen: false });
+      return;
+    }
+    this.child
+      .handleSubmit()
+      // $FlowFixMe
+      .then(() => this.setState({ modalIsOpen: false, type: '' }))
+      // Currently we can't keep the modal open, so we need to close it and open it again
+      // Check https://github.com/material-components/material-components-web-react/issues/772
+      .catch(() =>
+        this.setState({ modalIsOpen: false }, () =>
+          this.setState({ modalIsOpen: true })
+        )
+      );
+  };
+
+  openCreatePatientForm = () => {
+    this.setState({ modalIsOpen: true, type: 'create', formPatient: null });
+  };
+
+  openEditPatientForm = patient => {
+    this.setState({ modalIsOpen: true, type: 'edit', formPatient: patient });
   };
 
   render() {
-    const { modalIsOpen } = this.state;
+    const { modalIsOpen, type, formPatient } = this.state;
     return (
       <div>
-        <PatientsList />
+        <PatientsList
+          onEditPatient={patient => {
+            this.openEditPatientForm(patient);
+          }}
+        />
         <Fab
           className={[style['mdc-fab'], 'app-fab--absolute']}
           icon={<MaterialIcon icon="add" />}
-          onClick={() => this.setState({ modalIsOpen: true })}
+          onClick={() => this.openCreatePatientForm()}
         />
-        <Dialog open={modalIsOpen} onClosing={e => this.handleModalClosing(e)}>
-          <DialogTitle>New patient</DialogTitle>
-          <DialogContent>
-            <PatientsForm
-              ref={c => {
-                // $FlowFixMe
-                this.child = c && c.getWrappedInstance();
-              }}
-            />
-          </DialogContent>
-          <DialogFooter>
-            <DialogButton action="dismiss">Cancel</DialogButton>
-            <DialogButton action="accept" isDefault>
-              add
-            </DialogButton>
-          </DialogFooter>
-        </Dialog>
+        {/* $FlowFixMe */}
+        <PatientsDialogForm
+          open={modalIsOpen}
+          onClosing={e => this.handleModalClosing(e)}
+          ref={c => {
+            this.child = c && c.getWrappedInstance();
+          }}
+          type={type}
+          formPatient={formPatient}
+        />
       </div>
     );
   }

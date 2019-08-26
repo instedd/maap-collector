@@ -1,6 +1,7 @@
 // @flow
 import {
   SYNC_START,
+  SYNC_FINISH,
   UPDATE_PENDING_COUNT,
   UPDATE_PENDING_UPLOAD_COUNT,
   REDUCE_PENDING_COUNT,
@@ -36,6 +37,8 @@ export default function network(state: State = initialState, action: Action) {
       return { ...state, [`${action.entity}UploadCount`]: action.count };
     case SYNC_START:
       return { ...state, synchronizing: true };
+    case SYNC_FINISH:
+      return { ...state, synchronizing: false };
     default:
       return state;
   }

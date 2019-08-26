@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import DropZone from './DropZone';
 import PatientIdStep from './PatientIdStep';
-import type { Dispatch } from '../reducers/types';
+import type { Dispatch, State as ReduxState } from '../reducers/types';
 import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
 import { setFileData, createLabRecord } from '../actions/labRecordImport';
@@ -16,7 +16,8 @@ import style from './LabRecordImportWizard.scss';
 
 type Props = {
   dispatch: Dispatch
-} & ContextRouter;
+} & ReduxState &
+  ContextRouter;
 
 type State = {
   currentStep: number
@@ -52,11 +53,13 @@ class LabRecordsImport extends Component<Props, State> {
 
   handlePrevious = () => {
     const { currentStep } = this.state;
-    if (currentStep === 0) return;
+    const { history } = this.props;
+    if (currentStep === 0) return history.push('/');
     this.setState({ currentStep: currentStep - 1 });
   };
 
   render() {
+    const { labRecordImport } = this.props;
     const { currentStep } = this.state;
     const CurrentStepComponent = STEPS[currentStep];
     return (
@@ -79,7 +82,21 @@ class LabRecordsImport extends Component<Props, State> {
               </>
             )}
           </Button>
-          <Button onClick={this.handleNext}>
+          <Button
+            onClick={this.handleNext}
+            disabled={
+              currentStep === 0 &&
+              (!(
+                labRecordImport.file &&
+                labRecordImport.headerRow &&
+                labRecordImport.dataRowsTo &&
+                labRecordImport.dataRowsFrom
+              ) ||
+                labRecordImport.headerRow < 0 ||
+                labRecordImport.dataRowsFrom <= labRecordImport.headerRow ||
+                labRecordImport.dataRowsTo <= labRecordImport.dataRowsFrom)
+            }
+          >
             {currentStep === STEPS.length - 1 ? (
               'Finish'
             ) : (

@@ -10,3 +10,23 @@ export type Dispatch = ReduxDispatch<Action>;
 
 export type Store = ReduxStore<GetState, Action>;
 export type State = $ObjMap<Reducers, $ExtractFunctionReturn>;
+
+export type Page = {
+  items: Array<Object>,
+  totalCount: number,
+  totalPages: number,
+  offset: number,
+  limit: number,
+  prevPage: number,
+  nextPage: number
+};
+
+export type EnumOption = {
+  id: string,
+  name: string
+};
+
+export type EnumState = {
+  state: 'notLoaded' | 'loaded' | 'failed',
+  options: EnumOption[]
+};
