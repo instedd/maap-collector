@@ -1,49 +1,41 @@
 // @flow
 import React, { Component } from 'react';
+
+// $FlowFixMe
 import CreatableSelect from 'react-select/creatable';
 
 type Props = {
-  label: string
+  label: string,
+  options: {},
+  onChange: (Array<string>) => void,
+  isMulti: boolean,
+  value: { label: string, value: string }
 };
 
-type State = {
-  value: *
-};
-
-const options = [
-  { value: 'amoxicillin', label: 'Amoxicillin' },
-  { value: 'bleomycin-a5', label: 'Bleomycin A5' },
-  { value: 'ceftobiprole medocaril', label: 'Ceftobiprole Medocaril' },
-];
-
-class CombinedSelect extends Component<Props, State> {
+class CombinedSelect extends Component<Props> {
   props: Props;
 
-  state: State = { value: null };
-
-  handleChange = (value: any, actionMeta: any) => {
-    console.group('Value Changed');
-    console.log(value);
-    console.log(`action: ${actionMeta.action}`);
-    console.groupEnd();
-    this.setState({ value });
+  handleChange = (value: any) => {
+    const { isMulti, onChange } = this.props;
+    if (value === null && isMulti) return onChange([]);
+    onChange(value);
   };
 
   render() {
-    const { value } = this.state;
-    const { label } = this.props;
+    const { label, options, isMulti, value } = this.props;
 
     return (
       <CreatableSelect
-        isMulti
+        isMulti={isMulti}
         onChange={this.handleChange}
         options={options}
+        isSearchable
         value={value}
         placeholder={label}
-        className='cs'
-        classNamePrefix='cs'
+        className="cs"
+        classNamePrefix="cs"
       />
-    )
+    );
   }
 }
 
