@@ -31,7 +31,8 @@ const mapper = attrs =>
 const uploadMapper = async props => ({
   ...snakeCaseKeys(props.dataValues),
   id: props.dataValues.remoteId,
-  siteId: await props.getRemoteSiteId()
+  siteId: await props.getRemoteSiteId(),
+  antibioticId: await props.getRemoteAntibioticId()
 });
 
 export const syncAntibioticConsumptionStats = () => async (
