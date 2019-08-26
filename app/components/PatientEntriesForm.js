@@ -11,6 +11,7 @@ import {
   createPatientEntry,
   updatePatientEntry
 } from '../actions/patientEntry';
+import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
 
@@ -45,6 +46,7 @@ class PatientEntriesForm extends Component<Props, State> {
         })
       );
     }
+    dispatch(syncStart());
     history.push(`/patients/${patientId}/entries`);
   };
 
