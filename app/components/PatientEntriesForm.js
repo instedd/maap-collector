@@ -15,6 +15,8 @@ import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
 
+import CombinedSelect from './CombinedSelect';
+
 import type { Dispatch, State } from '../reducers/types';
 
 type StoreProps = {
@@ -148,20 +150,24 @@ class PatientEntriesForm extends Component<Props, State> {
               />
             </Cell>
             <Cell columns={8}>
-              <Select
+              <CombinedSelect
                 label="Department"
                 className="full-width"
-                value={department}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                value={department
+                  .split(', ')
+                  .filter(i => i !== '')
+                  .map(item => ({ value: item, label: item }))}
+                isMulti
+                onChange={val => {
                   this.setState({
-                    department: item.getAttribute('data-value')
+                    department: [...val].map(({ value }) => value).join(', ')
                   });
                 }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+                options={[
+                  { value: 'Pomsky', label: 'Pomsky' },
+                  { value: 'Golden Doodle', label: 'Golden Doodle' }
+                ]}
+              />
             </Cell>
           </Row>
           <Row>
