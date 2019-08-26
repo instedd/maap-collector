@@ -18,9 +18,11 @@ const mapper = attrs =>
       ...attrs,
       remoteId: attrs.id,
       remotePatientId: attrs.patient_id,
-      remotePatientLocationId: attrs.patient_location_id
+      remotePatientLocationId: attrs.patient_location_id,
+      patientId: null,
+      siteId: null
     }),
-    ['patientId', 'siteId', 'id', 'admissionDate', 'dischargeDate']
+    ['id', 'admissionDate', 'dischargeDate']
   );
 const uploadMapper = async attrs => {
   const admissionDate = moment(attrs.admissionDate);
