@@ -56,9 +56,13 @@ class AntibioticList extends Component<Props, State> {
     };
   }
 
-  componentDidMount() {
+  loadAntibiotics() {
     const { dispatch } = this.props;
     dispatch(fetchAntibiotics(this.getSearchConditions()));
+  }
+
+  componentDidMount() {
+    this.loadAntibiotics();
   }
 
   componentDidUpdate(_, prevState) {
@@ -69,7 +73,7 @@ class AntibioticList extends Component<Props, State> {
   }
 
   render() {
-    const { antibiotics, history, dispatch } = this.props;
+    const { antibiotics, history } = this.props;
     return (
       <div>
         <Table
@@ -81,9 +85,9 @@ class AntibioticList extends Component<Props, State> {
           limit={antibiotics.limit}
           prevPage={antibiotics.prevPage}
           nextPage={antibiotics.nextPage}
-          onReload={() => dispatch(fetchAntibiotics())}
-          columns={['Name', 'Strength', 'Form', 'Pack size', 'Brand']}
-          fields={['name', 'strength', 'form', 'packSize', 'brand']}
+          onReload={() => this.loadAntibiotics()}
+          columns={['Name', 'Strength Value', 'Strength Unit', 'Form', 'Brand']}
+          fields={['name', 'strengthValue', 'strengthUnit', 'form', 'brand']}
           onClick={({ id }) => history.push(`/antibiotics/${id}`)}
           search={value => {
             this.setState({ searchText: value });
