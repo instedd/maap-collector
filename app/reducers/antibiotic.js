@@ -12,7 +12,7 @@ export default function(state: State = initialState, action: Action) {
     case CREATED_ANTIBIOTIC:
       return { ...state, errors: [] };
     case CREATING_ANTIBIOTIC:
-      return { ...state, errors: action.errors };
+      return { ...state, errors: action.errors || [] };
     default:
       return state;
   }
