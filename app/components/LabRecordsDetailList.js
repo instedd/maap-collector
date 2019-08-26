@@ -90,6 +90,9 @@ class LabRecordsDetailList extends Component<Props, State> {
       ...{ ...labRecord }.dataValues
     };
     const { searchText } = this.state;
+    if (!labRecords.labRecord) {
+      return <></>;
+    }
 
     // This gets all the columns indexes that are patientOrLabRecordId, phi, or date
     const columnTypes = [patientOrLabRecordId, phi, date]
