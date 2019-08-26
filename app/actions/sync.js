@@ -127,6 +127,7 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
         res.map(async item => {
           const mapped = mapper(item);
           return [
+            item,
             mapped,
             await entity.findOrBuild({ where: { remoteId: mapped.remoteId } })
           ];
@@ -134,22 +135,25 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
         })
       )
         .then(items =>
-          items.map(([mapped, [foundEntity]]) => {
-            const remoteIsBeforeLocal = moment(mapped.updatedAt).isBefore(
-              moment(foundEntity.lastSyncAt).toISOString()
+          items.map(([item, mapped, [foundEntity]]) => {
+            const remoteIsBeforeLocal = moment(item.updated_at).isBefore(
+              moment(foundEntity.updatedAt).toISOString()
             );
-            if (remoteIsBeforeLocal && !foundEntity.isNewRecord)
+            if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
               return foundEntity
                 .update({
-                  lastSyncAt: new Date()
+                  lastSyncAt: moment(item.updated_at).toDate(),
+                  updatedAt: foundEntity.updatedAt
                 })
                 .then(() =>
                   dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
                 );
+            }
+
             return foundEntity
               .update({
                 ...mapped,
-                lastSyncAt: new Date()
+                lastSyncAt: moment(item.updated_at).toDate()
               })
               .then(() =>
                 dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })

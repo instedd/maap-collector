@@ -24,7 +24,7 @@ const antibioticMapper = props =>
       strengthValue: props.strength_value,
       strengthUnit: props.strength_unit
     },
-    ['id']
+    ['id', 'createdAt', 'updatedAt']
   );
 
 const uploadMapper = async props => ({

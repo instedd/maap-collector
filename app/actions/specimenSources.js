@@ -15,7 +15,7 @@ const specimenSourcesMapper = props =>
       ...props,
       remoteId: props.id
     },
-    ['id']
+    ['id', 'createdAt', 'updatedAt']
   );
 
 export const syncSpecimenSources = () => async (dispatch, getState) => {
