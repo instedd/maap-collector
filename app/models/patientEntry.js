@@ -64,6 +64,7 @@ const model = sequelize => {
       dischargeDiagnosticIcdCode: { type: Sequelize.STRING },
       patientOutcomeAtDischarge: { type: Sequelize.STRING },
       patientId: { type: Sequelize.INTEGER },
+      remotePatientId: { type: Sequelize.INTEGER },
       lastSyncAt: { type: Sequelize.DATE },
       remoteId: { type: Sequelize.INTEGER }
     },
