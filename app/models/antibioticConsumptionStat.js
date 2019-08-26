@@ -12,8 +12,21 @@ class AntibioticConsumptionStat extends Model {
     });
   }
 
+  get antibiotic() {
+    // eslint-disable-next-line
+    return this._modelOptions.sequelize.models.Antibiotic.findOne({
+      where: { id: this.siteId }
+    });
+  }
+
   getRemoteSiteId() {
     return this.site.then(site => site && site.remoteId);
+  }
+
+  getRemoteAntibioticId() {
+    return this.antibiotic.then(
+      antibiotic => antibiotic && antibiotic.remoteId
+    );
   }
 }
 
