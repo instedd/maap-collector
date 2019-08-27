@@ -70,6 +70,37 @@ class PatientIdStep extends Component<Props> {
       columnsToKeep
     } = labRecordImport;
 
+    if (!patientOrLabRecordId || !columnsToKeep) {
+      return <></>;
+    }
+
+    const indexMatchesIdColumn = (index, columnName) =>
+      patientOrLabRecordId[columnsToKeep[index]] === columnName;
+    const columnFor = (column, index) => {
+      if (
+        indexMatchesIdColumn(index, 'patientId') &&
+        columns[index].v !== 'Manual Patient Id'
+      ) {
+        return (
+          <>
+            {column.v}
+            <br />
+            (Patient ID)
+          </>
+        );
+      }
+      if (indexMatchesIdColumn(index, 'labRecordId')) {
+        return (
+          <>
+            {column.v}
+            <br />
+            (Lab Record ID)
+          </>
+        );
+      }
+      return column.v;
+    };
+
     return (
       <div>
         <h2>Complete patient ID for record linking</h2>
@@ -80,7 +111,9 @@ class PatientIdStep extends Component<Props> {
           <thead>
             <tr>
               {columns.map((column, index) => (
-                <th key={`column-patient-id-${index}`}>{column.v}</th>
+                <th key={`column-patient-id-${index}`}>
+                  {columnFor(column, index)}
+                </th>
               ))}
             </tr>
           </thead>
@@ -90,8 +123,7 @@ class PatientIdStep extends Component<Props> {
                 {at(row, columnsToKeep).map((cell, index) => (
                   // eslint-disable-next-line
                   <td key={`td-${index}`}>
-                    {patientOrLabRecordId[columnsToKeep[index]] ===
-                    'patientId' ? (
+                    {indexMatchesIdColumn(index, 'patientId') ? (
                       <TextField>
                         <Input
                           type="text"
