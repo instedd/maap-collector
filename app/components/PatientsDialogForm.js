@@ -58,7 +58,7 @@ class PatientsDialogForm extends Component<Props, State> {
           {/* $FlowFixMe */}
           <PatientsForm
             ref={c => {
-              this.child = c && c.getWrappedInstance();
+              if (c) this.child = c.getWrappedInstance();
             }}
             currentPatient={formPatient}
           />
