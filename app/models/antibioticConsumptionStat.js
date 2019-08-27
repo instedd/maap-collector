@@ -15,7 +15,7 @@ class AntibioticConsumptionStat extends Model {
   get antibiotic() {
     // eslint-disable-next-line
     return this._modelOptions.sequelize.models.Antibiotic.findOne({
-      where: { id: this.siteId }
+      where: { id: this.antibioticId }
     });
   }
 
