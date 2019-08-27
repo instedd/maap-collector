@@ -50,10 +50,6 @@ const model = sequelize => {
       patientTransferred: { type: Sequelize.BOOLEAN },
       primaryDiagnosis: { type: Sequelize.STRING },
       primaryDiagnosisIcdCode: { type: Sequelize.STRING },
-      acuteMyocardialInfarction: { type: Sequelize.BOOLEAN },
-      chf: { type: Sequelize.BOOLEAN },
-      notMentioned: { type: Sequelize.BOOLEAN },
-      other: { type: Sequelize.BOOLEAN },
       antibioticsPrescribed: { type: Sequelize.BOOLEAN },
       antibiotic: { type: Sequelize.STRING },
       antibioticConsumption: { type: Sequelize.STRING },
@@ -66,7 +62,8 @@ const model = sequelize => {
       patientId: { type: Sequelize.INTEGER },
       remotePatientId: { type: Sequelize.INTEGER },
       lastSyncAt: { type: Sequelize.DATE },
-      remoteId: { type: Sequelize.INTEGER }
+      remoteId: { type: Sequelize.INTEGER },
+      comorbidities: { type: Sequelize.STRING }
     },
     { sequelize, modelName: model.modelName }
   );

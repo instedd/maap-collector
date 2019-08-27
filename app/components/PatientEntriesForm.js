@@ -11,6 +11,7 @@ import {
   createPatientEntry,
   updatePatientEntry
 } from '../actions/patientEntry';
+import allComorbidities from '../models/comorbidities';
 import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
@@ -71,10 +72,6 @@ class PatientEntriesForm extends Component<Props, State> {
       patientTransferred: false,
       primaryDiagnosis: '',
       primaryDiagnosisIcdCode: '',
-      acuteMyocardialInfarction: false,
-      chf: false,
-      notMentioned: false,
-      other: false,
       antibioticsPrescribed: '',
       antibiotic: '',
       antibioticConsumption: '',
@@ -97,7 +94,8 @@ class PatientEntriesForm extends Component<Props, State> {
         .substr(0, 10),
       dischargeDate: (props.defaultValues.dischargeDate || new Date())
         .toISOString()
-        .substr(0, 10)
+        .substr(0, 10),
+      comorbidities: ''
     };
   }
 
@@ -121,10 +119,6 @@ class PatientEntriesForm extends Component<Props, State> {
       patientTransferred,
       primaryDiagnosis,
       primaryDiagnosisIcdCode,
-      acuteMyocardialInfarction,
-      chf,
-      notMentioned,
-      other,
       antibioticsPrescribed,
       antibiotic,
       antibioticConsumption,
@@ -132,7 +126,8 @@ class PatientEntriesForm extends Component<Props, State> {
       medicalDevice,
       infectionAcquisition,
       dischargeDiagnostic,
-      dischargeDiagnosticIcdCode
+      dischargeDiagnosticIcdCode,
+      comorbidities
     } = this.state;
     const { history, patientId, action } = this.props;
     return (
@@ -355,48 +350,21 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={8}>
-              <Checkbox
-                nativeControlId="acute-myocardial-infarction"
-                checked={acuteMyocardialInfarction}
-                onChange={e =>
+              {patchLabel('Comorbidities')}
+              <CombinedSelect
+                className="full-width"
+                value={comorbidities
+                  .split(', ')
+                  .filter(i => i !== '')
+                  .map(item => ({ value: item, label: item }))}
+                isMulti
+                onChange={val => {
                   this.setState({
-                    acuteMyocardialInfarction: e.target.checked
-                  })
-                }
+                    comorbidities: [...val].map(({ value }) => value).join(', ')
+                  });
+                }}
+                options={allComorbidities}
               />
-              <label htmlFor="acute-myocardial-infarction">
-                Acute myocardial infarction
-              </label>
-              <Checkbox
-                nativeControlId="chf"
-                checked={chf}
-                onChange={e =>
-                  this.setState({
-                    chf: e.target.checked
-                  })
-                }
-              />
-              <label htmlFor="chf">CHF</label>
-              <Checkbox
-                nativeControlId="not-mentioned"
-                checked={notMentioned}
-                onChange={e =>
-                  this.setState({
-                    notMentioned: e.target.checked
-                  })
-                }
-              />
-              <label htmlFor="not-mentioned">Not mentioned</label>
-              <Checkbox
-                nativeControlId="other"
-                checked={other}
-                onChange={e =>
-                  this.setState({
-                    other: e.target.checked
-                  })
-                }
-              />
-              <label htmlFor="other">Other</label>
             </Cell>
           </Row>
           <Row>
