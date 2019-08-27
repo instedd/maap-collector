@@ -45,6 +45,7 @@ class AntibioticsDetail extends Component<Props, State> {
 
   handleEditClick = (e, current) => {
     e.preventDefault();
+    console.log(e);
     this.setState(prevState => ({
       modalIsOpen: !prevState.modalIsOpen,
       currentEditEntity: current
@@ -86,7 +87,7 @@ class AntibioticsDetail extends Component<Props, State> {
           onEditClick={this.handleEditClick}
         />
         <Dialog open={modalIsOpen} onClosing={e => this.handleModalClosing(e)}>
-          <DialogTitle>New patient</DialogTitle>
+          <DialogTitle>Edit Antibiotic</DialogTitle>
           <DialogContent>
             <AntibioticConsumptionStatsForm
               antibioticId={match.params.id}

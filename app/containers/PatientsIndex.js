@@ -30,6 +30,7 @@ const mapStateToProps = ({ sync }) => ({ sync });
 class PatientsIndex extends Component<Props, State> {
   props: Props;
 
+  // $FlowFixMe
   child: {
     handleSubmit: () => {}
   };
@@ -81,7 +82,8 @@ class PatientsIndex extends Component<Props, State> {
           open={modalIsOpen}
           onClosing={e => this.handleModalClosing(e)}
           ref={c => {
-            this.child = c && c.getWrappedInstance();
+            // $FlowFixMe
+            if (c) this.child = c.getWrappedInstance();
           }}
           type={type}
           formPatient={formPatient}
