@@ -60,6 +60,9 @@ class ProtectedHealthInformationStep extends Component<Props> {
     );
   };
 
+  columnName = column =>
+    column.v ? `${column.c} - ${column.v}` : `Column ${column.c}`;
+
   componentDidMount() {
     const { labRecordImport, dispatch } = this.props;
     const { file, headerRow } = labRecordImport;
@@ -96,7 +99,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
           <tbody>
             {columns.map((column, index) => (
               <tr key={`row-${index}`}>
-                <td>{column.v}</td>
+                <td>{this.columnName(column)}</td>
                 <td className="text-center">
                   <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
                     <NativeRadioControl

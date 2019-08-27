@@ -28,6 +28,8 @@ class XlsxManager {
     };
   }
 
+  encodeCol = colNumber => xlsx.utils.encode_col(colNumber);
+
   rows(rowNumberFrom, rowNumberTo) {
     const rowAcc = [];
     for (let index = rowNumberFrom; index < rowNumberTo; index += 1) {
@@ -38,13 +40,12 @@ class XlsxManager {
 
   row(rowNumber) {
     const { end } = this.range;
-
-    return [...new Array(end.col + 1)].map(
-      (col, index) =>
-        this.currentSheet[
-          xlsx.utils.encode_cell({ r: parseInt(rowNumber, 10), c: index })
-        ] || { v: '', w: '', t: '', h: '', r: '' }
-    );
+    return [...new Array(end.col + 1)].map((col, index) => ({
+      ...(this.currentSheet[
+        xlsx.utils.encode_cell({ r: parseInt(rowNumber, 10), c: index })
+      ] || { v: '', w: '', t: '', h: '', r: '' }),
+      c: this.encodeCol(index)
+    }));
   }
 }
 
