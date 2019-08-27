@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import Card from '@material/react-card';
 import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
@@ -10,31 +11,15 @@ import { isFunction } from 'lodash';
 
 import styles from './Table.scss';
 
-const months = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec'
-];
 const parseField = field => {
-  if (field instanceof Date) return formatDate(field);
-  return field;
-};
-
-const formatDate = field =>
-  // eslint-disable-next-line
-  !isNaN(field)
-    ? `${months[field.getMonth()]} ${field.getDate() +
-        1}, ${field.getFullYear()}`
+  if (!(field instanceof Date)) return field;
+  return field
+    .toDateString()
+    .toLowerCase()
+    .lastIndexOf('invalid') === -1
+    ? moment(field).format('MMM D, YYYY')
     : '';
+};
 
 type ComponentProps = {
   totalCount: number,
