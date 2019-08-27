@@ -58,6 +58,7 @@ script:
 
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yarn package-ci; fi
+  - if [[ "$TRAVIS_BRANCH" == "stable" ]]; then yarn package-ci; fi
 
 notifications:
   email: false
