@@ -25,7 +25,7 @@ const mapper = attrs =>
       remoteSiteId: attrs.site_id,
       siteId: null
     },
-    ['id']
+    ['id', 'createdAt', 'updatedAt']
   );
 
 const uploadMapper = async props => ({

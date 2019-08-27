@@ -28,6 +28,12 @@ type Props = State &
     defaultValues: {}
   };
 
+const patchLabel = label => (
+  <div style={{ textAlign: 'start', fontSize: '0.9em', color: 'dimgray' }}>
+    {label}
+  </div>
+);
+
 class PatientEntriesForm extends Component<Props, State> {
   handleSubmit = async e => {
     e.preventDefault();
@@ -139,8 +145,8 @@ class PatientEntriesForm extends Component<Props, State> {
           </Row>
           <Row align="center">
             <Cell columns={8}>
+              {patchLabel('Location')}
               <EnumSelector
-                label="Location"
                 className="full-width"
                 entityName="PatientLocation"
                 onSelectionChange={selectedId =>
@@ -150,8 +156,8 @@ class PatientEntriesForm extends Component<Props, State> {
               />
             </Cell>
             <Cell columns={8}>
+              {patchLabel('Department')}
               <CombinedSelect
-                label="Department"
                 className="full-width"
                 value={department
                   .split(', ')
@@ -164,8 +170,18 @@ class PatientEntriesForm extends Component<Props, State> {
                   });
                 }}
                 options={[
-                  { value: 'Pomsky', label: 'Pomsky' },
-                  { value: 'Golden Doodle', label: 'Golden Doodle' }
+                  { value: 'medicine', label: 'Medicine' },
+                  { value: 'surgery', label: 'Surgery' },
+                  { value: 'obstetric', label: 'Obstetric/maternity' },
+                  { value: 'gynaecology', label: 'Gynaecology' },
+                  { value: 'paediatric', label: 'Paediatric' },
+                  { value: 'neonatal', label: 'Neonatal' },
+                  { value: 'burns', label: 'Burns' },
+                  { value: 'orthopaedics', label: 'Orthopaedics' },
+                  { value: 'geriatric', label: 'Geriatric' },
+                  { value: 'ent', label: 'Ear, Nose Throat (ENT)' },
+                  { value: 'eye', label: 'Eye' },
+                  { value: 'not_mentioned', label: 'Not mentioned' }
                 ]}
               />
             </Cell>
@@ -174,8 +190,8 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={4}>
+              {patchLabel('Admission date')}
               <TextField
-                label="Admission date"
                 className="full-width"
                 trailingIcon={<MaterialIcon role="button" icon="event" />}
               >
@@ -190,8 +206,9 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
 
             <Cell columns={4}>
+              {patchLabel('Discharge date')}
+
               <TextField
-                label="Discharge date"
                 className="full-width"
                 trailingIcon={<MaterialIcon role="button" icon="event" />}
               >
@@ -209,7 +226,9 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={2}>
-              <TextField label="Weight" className="full-width">
+              {patchLabel('Weight')}
+
+              <TextField className="full-width">
                 <Input
                   value={weight}
                   onChange={e =>
@@ -220,7 +239,9 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
 
             <Cell columns={2}>
-              <TextField label="Height" className="full-width">
+              {patchLabel('Height')}
+
+              <TextField className="full-width">
                 <Input
                   value={height}
                   onChange={e =>
@@ -234,8 +255,9 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={4}>
+              {patchLabel('Pregnancy status')}
+
               <Select
-                label="Pregnancy status"
                 className="full-width"
                 value={pregnancyStatus}
                 onChange={evt => {
@@ -251,8 +273,8 @@ class PatientEntriesForm extends Component<Props, State> {
               </Select>
             </Cell>
             <Cell columns={4}>
+              {patchLabel('Premature birth')}
               <Select
-                label="Premature birth"
                 className="full-width"
                 value={prematureBirth}
                 onChange={evt => {
@@ -271,7 +293,9 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row align="center">
             <Cell columns={12} />
             <Cell columns={8}>
-              <TextField label="Chief Complaint" className="full-width">
+              {patchLabel('Chief Complaint')}
+
+              <TextField className="full-width">
                 <Input
                   value={chiefComplaint}
                   onChange={e =>
@@ -284,7 +308,7 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8} align="middle">
+            <Cell columns={8}>
               <Checkbox
                 nativeControlId="patient-transferred"
                 checked={patientTransferred}
@@ -303,7 +327,8 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={6}>
-              <TextField label="Primary diagnosis" className="full-width">
+              {patchLabel('Primary diagnosis')}
+              <TextField className="full-width">
                 <Input
                   value={primaryDiagnosis}
                   onChange={e =>
@@ -313,7 +338,8 @@ class PatientEntriesForm extends Component<Props, State> {
               </TextField>
             </Cell>
             <Cell columns={2}>
-              <TextField label="ICD code" className="full-width">
+              {patchLabel('ICD code')}
+              <TextField className="full-width">
                 <Input
                   value={primaryDiagnosisIcdCode}
                   onChange={e =>
@@ -328,7 +354,7 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8} align="middle">
+            <Cell columns={8}>
               <Checkbox
                 nativeControlId="acute-myocardial-infarction"
                 checked={acuteMyocardialInfarction}
@@ -376,7 +402,7 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8} align="middle">
+            <Cell columns={8}>
               <Checkbox
                 nativeControlId="antibiotics-prior-to-sampling"
                 checked={antibioticsPrescribed}
@@ -394,8 +420,9 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={5} align="middle">
-              <TextField label="Antibiotic" className="full-width">
+            <Cell columns={5}>
+              {patchLabel('Antibiotic')}
+              <TextField className="full-width">
                 <Input
                   value={antibiotic}
                   onChange={e =>
@@ -405,8 +432,8 @@ class PatientEntriesForm extends Component<Props, State> {
               </TextField>
             </Cell>
             <Cell columns={3}>
+              {patchLabel('Consumption')}
               <Select
-                label="Consumption"
                 className="full-width"
                 value={antibioticConsumption}
                 enhanced
@@ -425,7 +452,7 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8} align="middle">
+            <Cell columns={8}>
               <Checkbox
                 nativeControlId="indwelling-device"
                 checked={patientWasOnAnIndwellingMedicalDevice}
@@ -444,9 +471,9 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8} align="middle">
+            <Cell columns={8}>
+              {patchLabel('Medical device')}
               <Select
-                label="Medical device"
                 className="full-width"
                 value={medicalDevice}
                 enhanced
@@ -464,9 +491,9 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8} align="middle">
+            <Cell columns={8}>
+              {patchLabel('Infection acquisition')}
               <Select
-                label="Infection acquisition"
                 className="full-width"
                 value={infectionAcquisition}
                 enhanced
@@ -484,9 +511,9 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={6} align="middle">
+            <Cell columns={6}>
+              {patchLabel('Discharge diagnostic')}
               <Select
-                label="Discharge diagnostic"
                 className="full-width"
                 value={dischargeDiagnostic}
                 enhanced
@@ -501,7 +528,8 @@ class PatientEntriesForm extends Component<Props, State> {
               </Select>
             </Cell>
             <Cell columns={2}>
-              <TextField label="ICD code" className="full-width">
+              {patchLabel('ICD code')}
+              <TextField className="full-width">
                 <Input
                   value={dischargeDiagnosticIcdCode}
                   onChange={e =>
@@ -516,9 +544,9 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row align="center">
             <Cell columns={2} />
             <Cell columns={8}>
+              {patchLabel('Patient outcome at discharge')}
               <TextArea
                 value={patientOutcomeAtDischarge}
-                label="Patient outcome at discharge"
                 onChange={e =>
                   // $FlowFixMe
                   this.setState({ patientOutcomeAtDischarge: e.target.value })

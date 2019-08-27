@@ -15,7 +15,7 @@ const siteMapper = props =>
       ...props,
       remoteId: props.id
     }),
-    ['id']
+    ['id', 'createdAt', 'updatedAt']
   );
 
 export const syncSites = () => async (dispatch, getState) => {

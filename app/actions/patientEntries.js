@@ -22,7 +22,7 @@ const mapper = attrs =>
       patientId: null,
       siteId: null
     }),
-    ['id', 'admissionDate', 'dischargeDate']
+    ['id', 'admissionDate', 'dischargeDate', 'updatedAt', 'createdAt']
   );
 const uploadMapper = async attrs => {
   const admissionDate = moment(attrs.admissionDate);

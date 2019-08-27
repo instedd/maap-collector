@@ -15,7 +15,7 @@ const cultureTypeMapper = props =>
       ...props,
       remoteId: props.id
     },
-    ['id']
+    ['id', 'createdAt', 'updatedAt']
   );
 
 export const syncCultureTypes = () => async (dispatch, getState) => {

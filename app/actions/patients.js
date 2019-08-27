@@ -19,7 +19,7 @@ const mapper = attrs =>
       remoteSiteId: attrs.site_id,
       siteId: null
     }),
-    ['patientId', 'id']
+    ['patientId', 'id', 'createdAt', 'updatedAt']
   );
 const uploadMapper = async attrs =>
   snakeCaseKeys({ ...attrs.dataValues, siteId: await attrs.getRemoteSiteId() });
