@@ -9,7 +9,7 @@ const model = sequelize =>
       address: { type: Sequelize.STRING },
       location: { type: Sequelize.STRING },
       ownership: { type: Sequelize.STRING },
-      hasFarmacy: { type: Sequelize.BOOLEAN },
+      hasPharmacy: { type: Sequelize.BOOLEAN },
       hasLaboratory: { type: Sequelize.BOOLEAN },
       hasHospital: { type: Sequelize.BOOLEAN },
       identifiedPatients: { type: Sequelize.BOOLEAN },
