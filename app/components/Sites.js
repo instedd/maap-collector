@@ -23,7 +23,7 @@ type StoreProps = {
 };
 type State = {
   searchText: string,
-  hasFarmacy: boolean,
+  hasPharmacy: boolean,
   hasLaboratory: boolean,
   hasHospital: boolean
 };
@@ -38,13 +38,13 @@ type Props = ReduxState & StoreProps;
 class Sites extends Component<Props, State> {
   state: State = {
     searchText: '',
-    hasFarmacy: true,
+    hasPharmacy: true,
     hasLaboratory: true,
     hasHospital: true
   };
 
   getSearchConditions() {
-    const { searchText, hasFarmacy, hasLaboratory, hasHospital } = this.state;
+    const { searchText, hasPharmacy, hasLaboratory, hasHospital } = this.state;
     const searchConditions = {};
     if (searchText)
       searchConditions[Sequelize.Op.or] = [
@@ -58,12 +58,12 @@ class Sites extends Component<Props, State> {
       [Sequelize.Op.or]: [
         {
           [Sequelize.Op.and]: [
-            { hasFarmacy: false },
+            { hasPharmacy: false },
             { hasLaboratory: false },
             { hasHospital: false }
           ]
         },
-        hasFarmacy && { hasFarmacy },
+        hasPharmacy && { hasPharmacy },
         hasLaboratory && { hasLaboratory },
         hasHospital && { hasHospital }
       ]
@@ -76,10 +76,10 @@ class Sites extends Component<Props, State> {
   }
 
   componentDidUpdate(_, prevState) {
-    const { searchText, hasFarmacy, hasLaboratory, hasHospital } = this.state;
+    const { searchText, hasPharmacy, hasLaboratory, hasHospital } = this.state;
     if (
       prevState.searchText !== searchText ||
-      prevState.hasFarmacy !== hasFarmacy ||
+      prevState.hasPharmacy !== hasPharmacy ||
       prevState.hasLaboratory !== hasLaboratory ||
       prevState.hasHospital !== hasHospital
     ) {
@@ -90,7 +90,7 @@ class Sites extends Component<Props, State> {
 
   render() {
     const { sites, dispatch } = this.props;
-    const { hasFarmacy, hasHospital, hasLaboratory } = this.state;
+    const { hasPharmacy, hasHospital, hasLaboratory } = this.state;
     return (
       <div>
         <Table
@@ -117,7 +117,7 @@ class Sites extends Component<Props, State> {
             'address',
             'ownership',
             site =>
-              ['hasFarmacy', 'hasLaboratory', 'hasHospital']
+              ['hasPharmacy', 'hasLaboratory', 'hasHospital']
                 .reduce((acc, key) => {
                   if (site[key]) acc.push(key.substr(3));
                   return acc;
@@ -133,8 +133,8 @@ class Sites extends Component<Props, State> {
             <>
               <Checkbox
                 nativeControlId="filter-farmacy"
-                checked={hasFarmacy}
-                onChange={e => this.setState({ hasFarmacy: e.target.checked })}
+                checked={hasPharmacy}
+                onChange={e => this.setState({ hasPharmacy: e.target.checked })}
               />
               <label htmlFor="filter-farmacy">Farmacy</label>
               <Checkbox

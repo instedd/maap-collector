@@ -19,6 +19,7 @@ import {
   all as allAntibioticPrescriptionTimes,
   byValue as antibioticPrescriptionTimeByValue
 } from '../models/antibioticPrescriptionTimes';
+import isDate from '../utils/isDate';
 import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
@@ -97,12 +98,12 @@ class PatientEntriesForm extends Component<Props, State> {
         }
         return acc;
       }, {}),
-      admissionDate: (props.defaultValues.admissionDate || new Date())
-        .toISOString()
-        .substr(0, 10),
-      dischargeDate: (props.defaultValues.dischargeDate || new Date())
-        .toISOString()
-        .substr(0, 10)
+      admissionDate: isDate(props.defaultValues.admissionDate)
+        ? props.defaultValues.admissionDate.toISOString().substr(0, 10)
+        : '',
+      dischargeDate: isDate(props.defaultValues.dischargeDate)
+        ? props.defaultValues.dischargeDate.toISOString().substr(0, 10)
+        : ''
     };
   }
 

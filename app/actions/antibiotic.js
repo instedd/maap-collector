@@ -20,7 +20,7 @@ export const fetchAntibiotic = (antibioticId: string) => async (
   const { Antibiotic } = await db.initializeForUser(user);
 
   const antibiotic = await Antibiotic.findOne({
-    where: { remoteId: antibioticId }
+    where: { id: antibioticId }
   });
   dispatch({ type: FETCHED_ANTIBIOTIC, antibiotic });
 };

@@ -15,9 +15,10 @@ const fetchPaginated = async (
 
   // This gets the first page, so we can iterate over each page
   const res = await f(1);
+  const firstPage = res;
   const { items: firstItems, total_pages: totalPages } = res;
   await callback(firstItems, res);
-  if (totalPages <= 1) return Promise.resolve();
+  if (totalPages <= 1) return Promise.resolve(firstPage);
   // After that, we iterate over the following pages and save the result into an array
   // This generates 1 request per page
   /* eslint-disable */
@@ -28,7 +29,7 @@ const fetchPaginated = async (
   }
   /* eslint-enable */
 
-  return Promise.resolve();
+  return Promise.resolve(firstPage);
 };
 
 const fetchAuthenticated = (

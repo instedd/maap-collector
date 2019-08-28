@@ -139,14 +139,13 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
             ''
           ]}
           fields={[
-            'remoteId',
             'date',
             'issuedText',
             'quantity',
             'balance',
             'recipientFacility',
             'recipientUnit',
-            (_, current) => (
+            current => (
               <MaterialIcon
                 icon="edit"
                 onClick={e => onEditClick(e, current)}

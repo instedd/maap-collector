@@ -30,8 +30,8 @@ export const requestLogin = (username, password) => dispatch => {
 
 export const userLoggedIn = user => dispatch => {
   db.initializeForUser({ data: user });
-  dispatch({ type: 'USER_LOGGED_IN', user });
   setTimeout(() => dispatch(syncStart()), 600);
+  return dispatch({ type: 'USER_LOGGED_IN', user });
 };
 
 export const userLoggedInFailure = error => ({

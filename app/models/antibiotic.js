@@ -4,7 +4,7 @@ class Antibiotic extends Model {
   get strength() {
     if (!this.strengthValue) return;
     if (!this.strengthUnit) return this.strengthValue;
-    return `${this.strengthValue}${this.strengthUnit}`;
+    return `${this.strengthValue} ${this.strengthUnit}`;
   }
 }
 
