@@ -11,6 +11,7 @@ import {
   createPatientEntry,
   updatePatientEntry
 } from '../actions/patientEntry';
+import isDate from '../utils/isDate';
 import allComorbidities from '../models/comorbidities';
 import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
@@ -89,12 +90,12 @@ class PatientEntriesForm extends Component<Props, State> {
         }
         return acc;
       }, {}),
-      admissionDate: (props.defaultValues.admissionDate || new Date())
-        .toISOString()
-        .substr(0, 10),
-      dischargeDate: (props.defaultValues.dischargeDate || new Date())
-        .toISOString()
-        .substr(0, 10),
+      admissionDate: isDate(props.defaultValues.admissionDate)
+        ? props.defaultValues.admissionDate.toISOString().substr(0, 10)
+        : '',
+      dischargeDate: isDate(props.defaultValues.dischargeDate)
+        ? props.defaultValues.dischargeDate.toISOString().substr(0, 10)
+        : '',
       comorbidities: ''
     };
   }
