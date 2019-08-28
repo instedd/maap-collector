@@ -11,8 +11,15 @@ import {
   createPatientEntry,
   updatePatientEntry
 } from '../actions/patientEntry';
+import {
+  all as allComorbidities,
+  comorbiditiesFromValues
+} from '../models/comorbidities';
+import {
+  all as allAntibioticPrescriptionTimes,
+  byValue as antibioticPrescriptionTimeByValue
+} from '../models/antibioticPrescriptionTimes';
 import isDate from '../utils/isDate';
-import allComorbidities from '../models/comorbidities';
 import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
@@ -74,14 +81,15 @@ class PatientEntriesForm extends Component<Props, State> {
       primaryDiagnosis: '',
       primaryDiagnosisIcdCode: '',
       antibioticsPrescribed: '',
-      antibiotic: '',
-      antibioticConsumption: '',
+      prescribedAntibioticsList: '',
       patientWasOnAnIndwellingMedicalDevice: '',
       medicalDevice: '',
       infectionAcquisition: '',
       dischargeDiagnostic: '',
       dischargeDiagnosticIcdCode: '',
       patientOutcomeAtDischarge: '',
+      comorbidities: '',
+      antibioticWhen: '',
       ...Object.keys(props.defaultValues).reduce((acc, cur) => {
         if (props.defaultValues[cur] === null) {
           acc[cur] = '';
@@ -95,8 +103,7 @@ class PatientEntriesForm extends Component<Props, State> {
         : '',
       dischargeDate: isDate(props.defaultValues.dischargeDate)
         ? props.defaultValues.dischargeDate.toISOString().substr(0, 10)
-        : '',
-      comorbidities: ''
+        : ''
     };
   }
 
@@ -121,16 +128,17 @@ class PatientEntriesForm extends Component<Props, State> {
       primaryDiagnosis,
       primaryDiagnosisIcdCode,
       antibioticsPrescribed,
-      antibiotic,
-      antibioticConsumption,
       patientWasOnAnIndwellingMedicalDevice,
       medicalDevice,
       infectionAcquisition,
       dischargeDiagnostic,
       dischargeDiagnosticIcdCode,
-      comorbidities
+      comorbidities,
+      antibioticWhen,
+      prescribedAntibioticsList
     } = this.state;
-    const { history, patientId, action } = this.props;
+    const { history, patientId, action, antibioticOptions } = this.props;
+
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid>
@@ -154,6 +162,7 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={8}>
               {patchLabel('Department')}
               <CombinedSelect
+                creatable
                 className="full-width"
                 value={department
                   .split(', ')
@@ -304,7 +313,7 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8}>
+            <Cell columns={8} align="middle">
               <Checkbox
                 nativeControlId="patient-transferred"
                 checked={patientTransferred}
@@ -353,11 +362,11 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={8}>
               {patchLabel('Comorbidities')}
               <CombinedSelect
+                creatable
                 className="full-width"
-                value={comorbidities
-                  .split(', ')
-                  .filter(i => i !== '')
-                  .map(item => ({ value: item, label: item }))}
+                value={comorbiditiesFromValues(
+                  comorbidities.split(', ').filter(i => i !== '')
+                )}
                 isMulti
                 onChange={val => {
                   this.setState({
@@ -371,7 +380,7 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={8}>
+            <Cell columns={8} align="middle">
               <Checkbox
                 nativeControlId="antibiotics-prior-to-sampling"
                 checked={antibioticsPrescribed}
@@ -389,39 +398,48 @@ class PatientEntriesForm extends Component<Props, State> {
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
-            <Cell columns={5}>
-              {patchLabel('Antibiotic')}
-              <TextField className="full-width">
-                <Input
-                  value={antibiotic}
-                  onChange={e =>
-                    this.setState({ antibiotic: e.currentTarget.value })
-                  }
-                />
-              </TextField>
-            </Cell>
-            <Cell columns={3}>
-              {patchLabel('Consumption')}
-              <Select
+            <Cell columns={8}>
+              {patchLabel('When was the antibiotic prescribed?')}
+              <CombinedSelect
+                creatable
                 className="full-width"
-                value={antibioticConsumption}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                value={antibioticPrescriptionTimeByValue(antibioticWhen)}
+                onChange={val => {
                   this.setState({
-                    antibioticConsumption: item.getAttribute('data-value')
+                    antibioticWhen: val.value
                   });
                 }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+                options={allAntibioticPrescriptionTimes}
+              />
             </Cell>
           </Row>
-
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={8}>
+              {patchLabel('Prescribed antibiotics')}
+              <CombinedSelect
+                className="full-width"
+                value={prescribedAntibioticsList
+                  .split(', ')
+                  .filter(i => i !== '')
+                  .map(val => ({ value: val, label: val }))}
+                isMulti
+                onChange={val => {
+                  this.setState({
+                    prescribedAntibioticsList: [...val]
+                      .map(({ value }) => value)
+                      .join(', ')
+                  });
+                }}
+                options={antibioticOptions}
+              />
+            </Cell>
+          </Row>
+          <Row>
+            <Cell columns={12} />
+            <Cell columns={2} />
+            <Cell columns={8} align="middle">
               <Checkbox
                 nativeControlId="indwelling-device"
                 checked={patientWasOnAnIndwellingMedicalDevice}
@@ -441,60 +459,69 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={8}>
-              {patchLabel('Medical device')}
-              <Select
+              {patchLabel('Indwelling Medical Devices')}
+              <CombinedSelect
+                creatable
                 className="full-width"
-                value={medicalDevice}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                value={medicalDevice
+                  .split(', ')
+                  .filter(i => i !== '')
+                  .map(item => ({ value: item, label: item }))}
+                isMulti
+                onChange={val => {
                   this.setState({
-                    medicalDevice: item.getAttribute('data-value')
+                    medicalDevice: [...val].map(({ value }) => value).join(', ')
                   });
                 }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+                options={[
+                  { value: 'Ventilator', label: 'Ventilator' },
+                  { value: 'Central Line', label: 'Central Line' },
+                  { value: 'Urinary Catheter', label: 'Urinary Catheter' },
+                  { value: 'Not mentioned', label: 'Not mentioned' }
+                ]}
+              />
             </Cell>
           </Row>
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={8}>
-              {patchLabel('Infection acquisition')}
-              <Select
+              {patchLabel('Where was the infection acquired?')}
+              <CombinedSelect
+                creatable
                 className="full-width"
-                value={infectionAcquisition}
-                enhanced
-                onEnhancedChange={(index, item) => {
+                value={{
+                  value: infectionAcquisition,
+                  label: infectionAcquisition
+                }}
+                onChange={val => {
                   this.setState({
-                    infectionAcquisition: item.getAttribute('data-value')
+                    infectionAcquisition: val.value
                   });
                 }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+                options={[
+                  { value: 'Community', label: 'Community' },
+                  { value: 'Hospital', label: 'Hospital' },
+                  { value: 'Not mentioned', label: 'Not mentioned' }
+                ]}
+              />
             </Cell>
           </Row>
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={6}>
-              {patchLabel('Discharge diagnostic')}
-              <Select
-                className="full-width"
-                value={dischargeDiagnostic}
-                enhanced
-                onEnhancedChange={(index, item) => {
-                  this.setState({
-                    dischargeDiagnostic: item.getAttribute('data-value')
-                  });
-                }}
-              >
-                <Option value="pomsky">Pomsky</Option>
-                <Option value="goldenDoodle">Golden Doodle</Option>
-              </Select>
+              {patchLabel('Discharge diagnosis')}
+              <TextField className="full-width">
+                <Input
+                  value={dischargeDiagnostic}
+                  onChange={e =>
+                    this.setState({
+                      dischargeDiagnostic: e.currentTarget.value
+                    })
+                  }
+                />
+              </TextField>
             </Cell>
             <Cell columns={2}>
               {patchLabel('ICD code')}

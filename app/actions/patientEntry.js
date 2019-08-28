@@ -8,6 +8,24 @@ const SAVING_PATIENT_ENTRY = 'SAVING_PATIENT_ENTRY';
 const SAVED_PATIENT_ENTRY = 'SAVED_PATIENT_ENTRY';
 const FETCHED_PATIENT_ENTRY = 'FETCHED_PATIENT_ENTRY';
 const CLEAN_PATIENT_ENTRY = 'CLEAN_PATIENT_ENTRY';
+const PATIENT_ENTRY_FORM_LOAD_ANTIBIOTICS =
+  'PATIENT_ENTRY_FORM_LOAD_ANTIBIOTICS';
+
+export const openPatientEntry = () => async (dispatch, getState) => {
+  dispatch({ type: 'OPEN_PATIENT_ENTRY' });
+
+  const { user } = getState();
+  const { sequelize } = await db.initializeForUser(user);
+
+  const queryResult = await sequelize.query(
+    'SELECT DISTINCT(name) as value, name as label FROM Antibiotics ORDER BY value'
+  );
+
+  dispatch({
+    type: PATIENT_ENTRY_FORM_LOAD_ANTIBIOTICS,
+    antibioticOptions: queryResult && queryResult[0]
+  });
+};
 
 export const cleanPatientEntry = () => async dispatch =>
   dispatch({ type: CLEAN_PATIENT_ENTRY });
@@ -29,5 +47,6 @@ export {
   SAVING_PATIENT_ENTRY,
   SAVED_PATIENT_ENTRY,
   FETCHED_PATIENT_ENTRY,
-  CLEAN_PATIENT_ENTRY
+  CLEAN_PATIENT_ENTRY,
+  PATIENT_ENTRY_FORM_LOAD_ANTIBIOTICS
 };

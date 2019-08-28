@@ -1,4 +1,6 @@
-const all = [
+import changeCase from 'change-case';
+
+export const all = [
   {
     value: 'acute_renal_failure',
     label: 'Acute Renal Failure'
@@ -133,4 +135,18 @@ const all = [
   }
 ];
 
-export default all;
+export const fromValue = val => ({
+  value: val,
+  label: changeCase.sentenceCase(val)
+});
+
+export const comorbiditiesByValue = all.reduce(
+  (accum, current) => ({
+    ...accum,
+    [current.value]: current
+  }),
+  {}
+);
+
+export const comorbiditiesFromValues = comorbidityValues =>
+  comorbidityValues.map(val => comorbiditiesByValue[val] || fromValue(val));
