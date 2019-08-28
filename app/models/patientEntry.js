@@ -51,8 +51,7 @@ const model = sequelize => {
       primaryDiagnosis: { type: Sequelize.STRING },
       primaryDiagnosisIcdCode: { type: Sequelize.STRING },
       antibioticsPrescribed: { type: Sequelize.BOOLEAN },
-      antibiotic: { type: Sequelize.STRING },
-      antibioticConsumption: { type: Sequelize.STRING },
+      prescribedAntibioticsList: { type: Sequelize.STRING },
       patientWasOnAnIndwellingMedicalDevice: { type: Sequelize.BOOLEAN },
       medicalDevice: { type: Sequelize.STRING },
       infectionAcquisition: { type: Sequelize.STRING },
@@ -63,7 +62,8 @@ const model = sequelize => {
       remotePatientId: { type: Sequelize.INTEGER },
       lastSyncAt: { type: Sequelize.DATE },
       remoteId: { type: Sequelize.INTEGER },
-      comorbidities: { type: Sequelize.STRING }
+      comorbidities: { type: Sequelize.STRING },
+      antibioticWhen: { type: Sequelize.STRING }
     },
     { sequelize, modelName: model.modelName }
   );
