@@ -20,7 +20,6 @@ import {
   byValue as antibioticPrescriptionTimeByValue
 } from '../models/antibioticPrescriptionTimes';
 import isDate from '../utils/isDate';
-import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
 
@@ -63,7 +62,6 @@ class PatientEntriesForm extends Component<Props, State> {
         })
       );
     }
-    dispatch(syncStart());
     history.push(`/patients/${patientId}/entries`);
   };
 
