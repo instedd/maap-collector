@@ -141,20 +141,27 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
             );
             if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
               return foundEntity
-                .update({
-                  lastSyncAt: moment(item.updated_at).toDate(),
-                  updatedAt: foundEntity.updatedAt
-                })
+                .update(
+                  {
+                    lastSyncAt: moment(item.updated_at).toDate(),
+                    updatedAt: foundEntity.updatedAt
+                  },
+                  { silent: true }
+                )
                 .then(() =>
                   dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
                 );
             }
 
             return foundEntity
-              .update({
-                ...mapped,
-                lastSyncAt: moment(item.updated_at).toDate()
-              })
+              .update(
+                {
+                  ...mapped,
+                  lastSyncAt: moment(item.updated_at).toDate(),
+                  updatedAt: moment(item.updated_at).toDate()
+                },
+                { silent: true }
+              )
               .then(() =>
                 dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
               );
@@ -162,7 +169,17 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
         )
         .catch(e => console.log(e));
     }
-  );
+  ).then(({ greather_updated_at: greatherUpdatedAt }) => {
+    entity.update(
+      { lastSyncAt: moment(greatherUpdatedAt).toDate() },
+      {
+        where: initializedDb.sequelize.literal(
+          "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) <= strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
+        )
+      }
+    );
+    return Promise.resolve();
+  });
 };
 
 export const remoteUpload = (
@@ -180,7 +197,7 @@ export const remoteUpload = (
 
   const collectionToUpdate = await entity.findAll({
     where: sequelize.literal(
-      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M', updatedAt) > strftime('%Y-%m-%d %H:%M', lastSyncAt)"
+      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
     )
   });
   if (collectionToCreate.length === 0) return;
@@ -227,7 +244,20 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
       method: 'PUT',
       body: snakeCaseKeys({ [entityName]: mapped })
     })
-      .then(() => currentEntity.update({ lastSyncAt: new Date() }))
+      .then(item =>
+        entity.update(
+          {
+            lastSyncAt: moment(item.updated_at).toDate(),
+            updatedAt: moment(item.updated_at).toDate()
+          },
+          {
+            where: {
+              id: currentEntity.id
+            },
+            silent: true
+          }
+        )
+      )
       .then(() =>
         dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
       )
