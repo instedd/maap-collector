@@ -395,47 +395,51 @@ class PatientEntriesForm extends Component<Props, State> {
               </label>
             </Cell>
           </Row>
-          <Row>
-            <Cell columns={12} />
-            <Cell columns={2} />
-            <Cell columns={8}>
-              {patchLabel('When was the antibiotic prescribed?')}
-              <CombinedSelect
-                creatable
-                className="full-width"
-                value={antibioticPrescriptionTimeByValue(antibioticWhen)}
-                onChange={val => {
-                  this.setState({
-                    antibioticWhen: val.value
-                  });
-                }}
-                options={allAntibioticPrescriptionTimes}
-              />
-            </Cell>
-          </Row>
-          <Row>
-            <Cell columns={12} />
-            <Cell columns={2} />
-            <Cell columns={8}>
-              {patchLabel('Prescribed antibiotics')}
-              <CombinedSelect
-                className="full-width"
-                value={prescribedAntibioticsList
-                  .split(', ')
-                  .filter(i => i !== '')
-                  .map(val => ({ value: val, label: val }))}
-                isMulti
-                onChange={val => {
-                  this.setState({
-                    prescribedAntibioticsList: [...val]
-                      .map(({ value }) => value)
-                      .join(', ')
-                  });
-                }}
-                options={antibioticOptions}
-              />
-            </Cell>
-          </Row>
+          {antibioticsPrescribed ? (
+            <React.Fragment>
+              <Row>
+                <Cell columns={12} />
+                <Cell columns={2} />
+                <Cell columns={8}>
+                  {patchLabel('When was the antibiotic prescribed?')}
+                  <CombinedSelect
+                    creatable
+                    className="full-width"
+                    value={antibioticPrescriptionTimeByValue(antibioticWhen)}
+                    onChange={val => {
+                      this.setState({
+                        antibioticWhen: val.value
+                      });
+                    }}
+                    options={allAntibioticPrescriptionTimes}
+                  />
+                </Cell>
+              </Row>
+              <Row>
+                <Cell columns={12} />
+                <Cell columns={2} />
+                <Cell columns={8}>
+                  {patchLabel('Prescribed antibiotics')}
+                  <CombinedSelect
+                    className="full-width"
+                    value={prescribedAntibioticsList
+                      .split(', ')
+                      .filter(i => i !== '')
+                      .map(val => ({ value: val, label: val }))}
+                    isMulti
+                    onChange={val => {
+                      this.setState({
+                        prescribedAntibioticsList: [...val]
+                          .map(({ value }) => value)
+                          .join(', ')
+                      });
+                    }}
+                    options={antibioticOptions}
+                  />
+                </Cell>
+              </Row>
+            </React.Fragment>
+          ) : null}
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
@@ -455,33 +459,39 @@ class PatientEntriesForm extends Component<Props, State> {
               </label>
             </Cell>
           </Row>
-          <Row>
-            <Cell columns={12} />
-            <Cell columns={2} />
-            <Cell columns={8}>
-              {patchLabel('Indwelling Medical Devices')}
-              <CombinedSelect
-                creatable
-                className="full-width"
-                value={medicalDevice
-                  .split(', ')
-                  .filter(i => i !== '')
-                  .map(item => ({ value: item, label: item }))}
-                isMulti
-                onChange={val => {
-                  this.setState({
-                    medicalDevice: [...val].map(({ value }) => value).join(', ')
-                  });
-                }}
-                options={[
-                  { value: 'Ventilator', label: 'Ventilator' },
-                  { value: 'Central Line', label: 'Central Line' },
-                  { value: 'Urinary Catheter', label: 'Urinary Catheter' },
-                  { value: 'Not mentioned', label: 'Not mentioned' }
-                ]}
-              />
-            </Cell>
-          </Row>
+          {patientWasOnAnIndwellingMedicalDevice ? (
+            <React.Fragment>
+              <Row>
+                <Cell columns={12} />
+                <Cell columns={2} />
+                <Cell columns={8}>
+                  {patchLabel('Indwelling Medical Devices')}
+                  <CombinedSelect
+                    creatable
+                    className="full-width"
+                    value={medicalDevice
+                      .split(', ')
+                      .filter(i => i !== '')
+                      .map(item => ({ value: item, label: item }))}
+                    isMulti
+                    onChange={val => {
+                      this.setState({
+                        medicalDevice: [...val]
+                          .map(({ value }) => value)
+                          .join(', ')
+                      });
+                    }}
+                    options={[
+                      { value: 'Ventilator', label: 'Ventilator' },
+                      { value: 'Central Line', label: 'Central Line' },
+                      { value: 'Urinary Catheter', label: 'Urinary Catheter' },
+                      { value: 'Not mentioned', label: 'Not mentioned' }
+                    ]}
+                  />
+                </Cell>
+              </Row>
+            </React.Fragment>
+          ) : null}
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
