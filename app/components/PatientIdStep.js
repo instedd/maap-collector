@@ -5,6 +5,8 @@ import TextField, { Input } from '@material/react-text-field';
 import XlsxManager from '../utils/xlsxManager';
 import { setPatientIdData } from '../actions/labRecordImport';
 
+import style from './PatientIdStep.scss';
+
 type ComponentProps = {};
 
 type Props = ComponentProps;
@@ -20,6 +22,40 @@ class PatientIdStep extends Component<Props> {
         rows: newRows
       })
     );
+  };
+
+  indexMatchesIdColumn = (index, columnName) => {
+    const { labRecordImport } = this.props;
+    const { patientOrLabRecordId, columnsToKeep } = labRecordImport;
+    return patientOrLabRecordId[columnsToKeep[index]] === columnName;
+  };
+
+  columnName = (column, index) => {
+    if (!column.v) {
+      return `Column ${column.c}`;
+    }
+    if (column.v === 'Manual Patient Id') {
+      return column.v;
+    }
+    if (this.indexMatchesIdColumn(index, 'patientId')) {
+      return (
+        <>
+          {column.v}
+          <br />
+          (Patient ID)
+        </>
+      );
+    }
+    if (this.indexMatchesIdColumn(index, 'labRecordId')) {
+      return (
+        <>
+          {column.v}
+          <br />
+          (Lab Record ID)
+        </>
+      );
+    }
+    return `${column.c} - ${column.v}`;
   };
 
   componentDidMount() {
@@ -74,33 +110,6 @@ class PatientIdStep extends Component<Props> {
       return <></>;
     }
 
-    const indexMatchesIdColumn = (index, columnName) =>
-      patientOrLabRecordId[columnsToKeep[index]] === columnName;
-    const columnFor = (column, index) => {
-      if (
-        indexMatchesIdColumn(index, 'patientId') &&
-        columns[index].v !== 'Manual Patient Id'
-      ) {
-        return (
-          <>
-            {column.v}
-            <br />
-            (Patient ID)
-          </>
-        );
-      }
-      if (indexMatchesIdColumn(index, 'labRecordId')) {
-        return (
-          <>
-            {column.v}
-            <br />
-            (Lab Record ID)
-          </>
-        );
-      }
-      return column.v;
-    };
-
     return (
       <div>
         <h2>Complete patient ID for record linking</h2>
@@ -111,8 +120,11 @@ class PatientIdStep extends Component<Props> {
           <thead>
             <tr>
               {columns.map((column, index) => (
-                <th key={`column-patient-id-${index}`}>
-                  {columnFor(column, index)}
+                <th
+                  className={style.centered}
+                  key={`column-patient-id-${index}`}
+                >
+                  {this.columnName(column, index)}
                 </th>
               ))}
             </tr>
@@ -122,8 +134,8 @@ class PatientIdStep extends Component<Props> {
               <tr key={`row-${rowIndex}`}>
                 {at(row, columnsToKeep).map((cell, index) => (
                   // eslint-disable-next-line
-                  <td key={`td-${index}`}>
-                    {indexMatchesIdColumn(index, 'patientId') ? (
+                  <td className={style.centered} key={`td-${index}`}>
+                    {this.indexMatchesIdColumn(index, 'patientId') ? (
                       <TextField>
                         <Input
                           type="text"

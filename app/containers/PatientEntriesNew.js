@@ -3,9 +3,14 @@ import Card from '@material/react-card';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
+import { connect } from 'react-redux';
 import PatientEntriesForm from '../components/PatientEntriesForm';
+import { State } from '../reducers/types';
+import { cleanPatientEntry, openPatientEntry } from '../actions/patientEntry';
 
-type Props = ContextRouter;
+type Props = ContextRouter & State;
+
+const mapStateToProps = ({ patientEntryEdit }) => ({ patientEntryEdit });
 
 class PatientsEntriesNew extends Component<Props> {
   props: Props;
@@ -14,15 +19,28 @@ class PatientsEntriesNew extends Component<Props> {
     handleSubmit: () => {}
   };
 
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(openPatientEntry());
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(cleanPatientEntry());
+  }
+
   render() {
-    const { match } = this.props;
+    const { match, patientEntryEdit } = this.props;
 
     return (
       <Card>
-        <PatientEntriesForm patientId={match.params.id} />
+        <PatientEntriesForm
+          patientId={match.params.id}
+          antibioticOptions={patientEntryEdit.antibioticOptions}
+        />
       </Card>
     );
   }
 }
 
-export default withRouter(PatientsEntriesNew);
+export default connect(mapStateToProps)(withRouter(PatientsEntriesNew));

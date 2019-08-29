@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import PatientEntriesForm from '../components/PatientEntriesForm';
-import { fetchPatientEntry, cleanPatientEntry } from '../actions/patientEntry';
+import {
+  fetchPatientEntry,
+  cleanPatientEntry,
+  openPatientEntry
+} from '../actions/patientEntry';
 import { State } from '../reducers/types';
 
 type Props = State &
@@ -26,6 +30,7 @@ class PatientsEntriesEdit extends Component<Props> {
 
   componentDidMount() {
     const { dispatch, match } = this.props;
+    dispatch(openPatientEntry());
     dispatch(fetchPatientEntry({ id: match.params.patientEntryId }));
   }
 
@@ -36,7 +41,7 @@ class PatientsEntriesEdit extends Component<Props> {
 
   render() {
     const { match, patientEntryEdit } = this.props;
-    const { item } = patientEntryEdit;
+    const { item, antibioticOptions } = patientEntryEdit;
 
     return (
       <Card>
@@ -46,6 +51,7 @@ class PatientsEntriesEdit extends Component<Props> {
             patientEntryId={match.params.patientEntryId}
             defaultValues={item}
             action="Edit"
+            antibioticOptions={antibioticOptions}
           />
         )}
       </Card>
