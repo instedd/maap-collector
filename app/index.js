@@ -25,6 +25,7 @@ store.subscribe(
 
 window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
 window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
+if (!navigator.onLine) store.dispatch(setNetworkOffline());
 if (store.getState().user.data)
   setTimeout(() => store.dispatch(syncStart()), 300);
 
