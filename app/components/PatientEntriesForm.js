@@ -1,12 +1,12 @@
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import Button from '@material/react-button';
-import Select, { Option } from '@material/react-select';
 import Checkbox from '@material/react-checkbox';
 import MaterialIcon from '@material/react-material-icon';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import changeCase from 'change-case';
 import {
   createPatientEntry,
   updatePatientEntry
@@ -262,37 +262,45 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={4}>
               {patchLabel('Pregnancy status')}
 
-              <Select
+              <CombinedSelect
                 className="full-width"
-                value={pregnancyStatus}
-                onChange={evt => {
+                value={{
+                  value: pregnancyStatus,
+                  label: changeCase.sentenceCase(pregnancyStatus)
+                }}
+                onChange={val => {
                   this.setState({
-                    pregnancyStatus: evt.target.value
+                    pregnancyStatus: val.value
                   });
                 }}
-              >
-                <Option value="yes">Yes</Option>
-                <Option value="no">No</Option>
-                <Option value="not_applicable">Not applicable</Option>
-                <Option value="not_mentioned">Not mentioned</Option>
-              </Select>
+                options={[
+                  { value: 'yes', label: 'Yes' },
+                  { value: 'no', label: 'No' },
+                  { value: 'not_applicable', label: 'Not applicable' },
+                  { value: 'not_mentioned', label: 'Not mentioned' }
+                ]}
+              />
             </Cell>
             <Cell columns={4}>
               {patchLabel('Premature birth')}
-              <Select
+              <CombinedSelect
                 className="full-width"
-                value={prematureBirth}
-                onChange={evt => {
+                value={{
+                  value: prematureBirth,
+                  label: changeCase.sentenceCase(prematureBirth)
+                }}
+                onChange={val => {
                   this.setState({
-                    prematureBirth: evt.target.value
+                    prematureBirth: val.value
                   });
                 }}
-              >
-                <Option value="yes">Yes</Option>
-                <Option value="no">No</Option>
-                <Option value="not_applicable">Not applicable</Option>
-                <Option value="not_mentioned">Not mentioned</Option>
-              </Select>
+                options={[
+                  { value: 'yes', label: 'Yes' },
+                  { value: 'no', label: 'No' },
+                  { value: 'not_applicable', label: 'Not applicable' },
+                  { value: 'not_mentioned', label: 'Not mentioned' }
+                ]}
+              />
             </Cell>
           </Row>
           <Row align="center">
