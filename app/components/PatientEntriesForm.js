@@ -396,7 +396,7 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
           </Row>
           {antibioticsPrescribed ? (
-            <React.Fragment>
+            <>
               <Row>
                 <Cell columns={12} />
                 <Cell columns={2} />
@@ -438,7 +438,7 @@ class PatientEntriesForm extends Component<Props, State> {
                   />
                 </Cell>
               </Row>
-            </React.Fragment>
+            </>
           ) : null}
           <Row>
             <Cell columns={12} />
@@ -460,7 +460,7 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
           </Row>
           {patientWasOnAnIndwellingMedicalDevice ? (
-            <React.Fragment>
+            <>
               <Row>
                 <Cell columns={12} />
                 <Cell columns={2} />
@@ -490,7 +490,7 @@ class PatientEntriesForm extends Component<Props, State> {
                   />
                 </Cell>
               </Row>
-            </React.Fragment>
+            </>
           ) : null}
           <Row>
             <Cell columns={12} />
