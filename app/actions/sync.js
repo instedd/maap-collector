@@ -67,8 +67,8 @@ export const entities = [
 ];
 
 export const syncStart = () => async (dispatch, getState) => {
-  const { sync } = getState();
-  if (sync.synchronizing) return;
+  const { sync, network } = getState();
+  if (sync.synchronizing || !network.online) return;
 
   dispatch({ type: SYNC_START });
   setTimeout(

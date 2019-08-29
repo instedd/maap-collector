@@ -3,9 +3,9 @@ import { syncStart, syncStop } from './sync';
 const NETWORK_ONLINE = 'NETWORK_ONLINE';
 const NETWORK_OFFLINE = 'NETWORK_OFFLINE';
 
-export const setNetworkOnline = () => dispatch => {
+export const setNetworkOnline = () => async dispatch => {
+  await dispatch({ type: NETWORK_ONLINE });
   dispatch(syncStart());
-  dispatch({ type: NETWORK_ONLINE });
 };
 export const setNetworkOffline = () => dispatch => {
   // TODO: Implement stop
