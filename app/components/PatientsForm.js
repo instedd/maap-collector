@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import TextField, { Input } from '@material/react-text-field';
-import Select, { Option } from '@material/react-select';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { omit } from 'lodash';
+import CombinedSelect from './CombinedSelect';
 import type { Dispatch, State } from '../reducers/types';
 import ErrorMessage from './ErrorMessage';
 import { createPatient, updatePatient } from '../actions/patient';
@@ -90,17 +90,21 @@ class PatientForm extends Component<Props, State> {
         <Row>
           <Cell columns={12}>{patientIdCell}</Cell>
           <Cell columns={12}>
-            <Select
+            <CombinedSelect
               className="full-width"
-              value={gender}
-              label="Gender"
-              onChange={e => this.setState({ gender: e.target.value })}
-            >
-              <Option value="not specified">Not specified</Option>
-              <Option value="female">Female</Option>
-              <Option value="male">Male</Option>
-              <Option value="other">other</Option>
-            </Select>
+              value={{ value: gender, label: gender }}
+              label=""
+              isMulti={false}
+              creatable={false}
+              options={[
+                { value: 'not specified', label: 'Not specified' },
+                { value: 'female', label: 'Female' },
+                { value: 'male', label: 'Male' },
+                { value: 'other', label: 'Other' }
+              ]}
+              // $FlowFixMe
+              onChange={v => this.setState({ gender: v.value })}
+            />
           </Cell>
           <Cell columns={12}>
             <TextField className="full-width" label="Year of birth">
