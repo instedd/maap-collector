@@ -229,10 +229,11 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={2}>
-              {patchLabel('Weight')}
+              {patchLabel('Weight (kg)')}
 
               <TextField className="full-width">
                 <Input
+                  type="number"
                   value={weight}
                   onChange={e =>
                     this.setState({ weight: e.currentTarget.value })
@@ -242,10 +243,11 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
 
             <Cell columns={2}>
-              {patchLabel('Height')}
+              {patchLabel('Height (m)')}
 
               <TextField className="full-width">
                 <Input
+                  type="number"
                   value={height}
                   onChange={e =>
                     this.setState({ height: e.currentTarget.value })
