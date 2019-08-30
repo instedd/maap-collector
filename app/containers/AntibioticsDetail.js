@@ -45,7 +45,6 @@ class AntibioticsDetail extends Component<Props, State> {
 
   handleEditClick = (e, current) => {
     e.preventDefault();
-    console.log(e);
     this.setState(prevState => ({
       modalIsOpen: !prevState.modalIsOpen,
       currentEditEntity: current

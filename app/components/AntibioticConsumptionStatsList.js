@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import TextField, { Input } from '@material/react-text-field';
-import Select, { Option } from '@material/react-select';
 import MaterialIcon from '@material/react-material-icon';
 import type { ContextRouter } from 'react-router';
+import CombinedSelect from './CombinedSelect';
 import type { Dispatch, Page } from '../reducers/types';
 import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
@@ -162,13 +162,19 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
                   onChange={e => this.setState({ date: e.currentTarget.value })}
                 />
               </TextField>
-              <Select
-                value={issued}
-                onChange={evt => this.setState({ issued: evt.target.value })}
-              >
-                <Option value={false}>Out</Option>
-                <Option value>In</Option>
-              </Select>
+              <CombinedSelect
+                className="full-width"
+                value={{ value: issued, label: issued ? 'In' : 'Out' }}
+                label=""
+                isMulti={false}
+                creatable={false}
+                options={[
+                  { value: true, label: 'In' },
+                  { value: false, label: 'Out' }
+                ]}
+                // $FlowFixMe
+                onChange={v => this.setState({ issued: v.value })}
+              />
               <TextField>
                 <Input
                   type="number"
