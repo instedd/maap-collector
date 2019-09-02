@@ -9,7 +9,8 @@ export default function network(state = initialState, action: Action) {
       return {
         ...state,
         data: action.user,
-        auth: {
+        lastUserLoggedIn: action.user.response && action.user.response.id,
+        auth: action.user.response && {
           'access-token': action.user.response['access-token'],
           client: action.user.response.client,
           expiry: action.user.response.expiry,
@@ -17,7 +18,17 @@ export default function network(state = initialState, action: Action) {
         }
       };
     case USER_LOGGED_OUT:
-      return { ...state, data: null, auth: null };
+      return {
+        ...state,
+        data: {
+          response: {
+            ...state.data.response,
+            'access-token': null,
+            client: null
+          }
+        },
+        auth: null
+      };
     default:
       return state;
   }
