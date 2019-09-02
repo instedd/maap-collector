@@ -22,7 +22,7 @@ const fetchEntity = (entityName, actions) => (
   const { user, router } = getState();
   const entity = (await db.initializeForUser(user))[entityName];
   const totalCount = await entity.count({ where });
-  const totalPages = Math.ceil(totalCount / perPage);
+  const totalPages = Math.max(Math.ceil(totalCount / perPage), 1);
   const currentPage =
     parseInt(qs.parse(router.location.search.slice(1)).page, 10) ||
     (startInLastPage ? totalPages : 1);
