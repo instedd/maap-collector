@@ -16,7 +16,6 @@ import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptio
 import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
 import RowForm from './RowForm';
-import { syncStart } from '../actions/sync';
 
 type ComponentProps = {
   dispatch: Dispatch,
@@ -59,7 +58,6 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
     );
     dispatch(addCreatedAntibioticConsumptionStat(record));
-    dispatch(syncStart());
   };
 
   componentDidMount() {
