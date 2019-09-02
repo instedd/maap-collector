@@ -8,7 +8,7 @@ import Dialog, {
   DialogFooter,
   DialogButton
 } from '@material/react-dialog';
-import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
+import { fetchAntibioticConsumptionStatsList } from '../actions/antibioticConsumptionStats';
 import AntibioticConsumptionStatsList from '../components/AntibioticConsumptionStatsList';
 import AntibioticConsumptionStatsForm from '../components/AntibioticConsumptionStatsForm';
 import { syncStart } from '../actions/sync';
@@ -60,7 +60,7 @@ class AntibioticsDetail extends Component<Props, State> {
         const { site, match, dispatch } = this.props;
         return this.setState({ modalIsOpen: false }, () =>
           dispatch(
-            fetchAntibioticConsumptionStats({
+            fetchAntibioticConsumptionStatsList({
               antibioticId: match.params.id,
               siteId: site && site.id
             })

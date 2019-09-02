@@ -8,7 +8,10 @@ import MaterialIcon from '@material/react-material-icon';
 import type { ContextRouter } from 'react-router';
 import CombinedSelect from './CombinedSelect';
 import type { Dispatch, Page } from '../reducers/types';
-import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
+import {
+  fetchAntibioticConsumptionStatsList,
+  addCreatedAntibioticConsumptionStat
+} from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
 import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
@@ -49,37 +52,23 @@ const mapStateToProps = state => {
 class AntibioticConsumptionStatsList extends Component<Props, State> {
   state: State = { site: null };
 
-  handleSubmit = () => {
-    const {
-      dispatch,
-      antibioticId,
-      history,
-      antibioticConsumptionStatsList,
-      site
-    } = this.props;
+  handleSubmit = async () => {
+    const { dispatch, antibioticId } = this.props;
 
-    return dispatch(
+    const record = await dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
-    ).then(() => {
-      history.push({
-        search: `page=${
-          antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
-        }`
-      });
-      dispatch(syncStart());
-      return dispatch(
-        fetchAntibioticConsumptionStats({
-          antibioticId,
-          siteId: site && site.id
-        })
-      );
-    });
+    );
+    dispatch(addCreatedAntibioticConsumptionStat(record));
+    dispatch(syncStart());
   };
 
   componentDidMount() {
     const { dispatch, antibioticId, site } = this.props;
     dispatch(
-      fetchAntibioticConsumptionStats({ antibioticId, siteId: site && site.id })
+      fetchAntibioticConsumptionStatsList({
+        antibioticId,
+        siteId: site && site.id
+      })
     );
     dispatch(fetchAntibiotic(antibioticId));
   }
@@ -123,7 +112,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
           nextPage={antibioticConsumptionStats.nextPage}
           onReload={() =>
             dispatch(
-              fetchAntibioticConsumptionStats({
+              fetchAntibioticConsumptionStatsList({
                 antibioticId,
                 siteId: site && site.id
               })
