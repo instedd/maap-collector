@@ -35,8 +35,8 @@ class Login extends Component<Props, State> {
   props: Props;
 
   state: State = {
-    username: 'example@maap.tld',
-    password: 'password',
+    username: '',
+    password: '',
     error: ''
   };
 
