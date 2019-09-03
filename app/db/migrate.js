@@ -66,7 +66,7 @@ const logStatus = async umzug => {
 export default async user => {
   console.log('Running migrations...');
 
-  const { sequelize } = await db.initializeForUser(user);
+  const { sequelize } = await db.initializeForUser(user, false);
 
   const umzug = buildUmzug(sequelize);
   setUmzugLogHandlers(umzug);

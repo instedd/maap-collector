@@ -9,24 +9,38 @@ import { runMigrations } from '../actions/migrations';
 type Props = {
   history: *,
   migrations: { ran: boolean },
+  user: *,
   dispatch: Dispatch
 };
 
-const mapStateToProps = ({ migrations }) => ({ migrations });
+const mapStateToProps = ({ migrations, user }) => ({ migrations, user });
 
 class AppEntryPoint extends React.Component<Props> {
-  componentDidMount() {
-    const { migrations, dispatch } = this.props;
+  shouldRunMigrations() {
+    const { migrations, user } = this.props;
+    return user.data && !migrations.ran;
+  }
 
-    if (!migrations.ran) {
+  checkMigrations() {
+    const { dispatch } = this.props;
+
+    if (this.shouldRunMigrations()) {
       dispatch(runMigrations());
     }
   }
 
-  render() {
-    const { migrations, history } = this.props;
+  componentDidMount() {
+    this.checkMigrations();
+  }
 
-    if (!migrations.ran) {
+  componentDidUpdate() {
+    this.checkMigrations();
+  }
+
+  render() {
+    const { history } = this.props;
+
+    if (this.shouldRunMigrations()) {
       return <>Checking migrations...</>;
     }
 
