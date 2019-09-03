@@ -20,7 +20,8 @@ export const createAntibioticConsumptionStat = attributes => async (
     siteId: site.id
   });
 
-  return dispatch({ type: SAVED_ANTIBIOTIC_CONSUMPTION_STAT, record });
+  dispatch({ type: SAVED_ANTIBIOTIC_CONSUMPTION_STAT, record });
+  return record;
 };
 
 export {
