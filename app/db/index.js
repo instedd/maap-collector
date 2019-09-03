@@ -26,7 +26,6 @@ const initialize = async (dbName, password) => {
   return objects;
 };
 
-const initializeForUser = async ({ data }) =>
-  initialize(data.response.id, data.password);
+const initializeForUser = async ({ data }) => initialize('1', data.password);
 
 export default { initialize, initializeForUser };

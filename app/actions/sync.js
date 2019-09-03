@@ -13,6 +13,7 @@ import { syncLabRecords } from './labRecords';
 import { syncPatients } from './patients';
 import { syncPatientEntries } from './patientEntries';
 import { syncEntities } from './enums';
+import { requestLogin } from './user';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -67,10 +68,11 @@ export const entities = [
 ];
 
 export const syncStart = () => async (dispatch, getState) => {
-  const { sync, network } = getState();
-  if (sync.synchronizing || !network.online) return;
+  const { sync, network, user } = getState();
+  if (sync.synchronizing || !network.online || !user.auth) return;
 
   dispatch({ type: SYNC_START });
+  await dispatch(auth());
   setTimeout(
     async () =>
       // This way we ensure that the sync actions are runned in sequence instead of parallel
@@ -87,6 +89,14 @@ export const syncStart = () => async (dispatch, getState) => {
 
 export const syncStop = () => dispatch => {
   dispatch({ type: SYNC_STOP });
+};
+
+export const auth = () => async (dispatch, getState) => {
+  const { user, network } = getState();
+
+  if (!network.online || user.auth['access-token']) return;
+
+  return dispatch(requestLogin(user.data.userEmail, user.data.password));
 };
 
 export const remoteSync = (url, user, entityName, mapper) => async dispatch => {

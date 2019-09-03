@@ -12,7 +12,7 @@ import NavBar from '../components/NavBar';
 
 type Props = {
   children: React.Node,
-  user: { data: {} },
+  user: { auth: {} },
   dispatch: Dispatch,
   location: {
     pathname: string
@@ -33,7 +33,7 @@ class App extends React.Component<Props> {
     const { children, user } = this.props;
     return (
       <div>
-        {user.data && <NavBar />}
+        {user.auth && <NavBar />}
         <Grid align="middle" className="app">
           <Row>
             <Cell columns={12}>{children}</Cell>

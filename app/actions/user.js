@@ -10,7 +10,6 @@ const USER_LOGGED_IN_FAILURE = 'USER_LOGGED_IN_FAILURE';
 export const requestLogin = (username, password) => dispatch => {
   // TODO: Support for offline login
   dispatch({ type: 'REQUEST_LOGIN' });
-  // return dispatch(userLoggedIn({ username, password, response: {id: 1} }));
   return fetch(`${API_URL}/api/v1/auth/sign_in`, {
     method: 'POST',
     headers: {
@@ -30,9 +29,17 @@ export const requestLogin = (username, password) => dispatch => {
 };
 
 export const offlineLogin = user => dispatch => {
-  const fullUser = {...user, response: user};
-  return db.initializeForUser({ data: fullUser })
-    .then(() => dispatch({ type: 'USER_LOGGED_IN', fullUser }))
+  const fullUser = {
+    ...user,
+    response: {
+      id: user.userId,
+      uid: user.userEmail,
+      password: user.password
+    }
+  };
+  return db
+    .initializeForUser({ data: fullUser })
+    .then(() => dispatch({ type: 'USER_LOGGED_IN', user: fullUser }))
     .catch(e => dispatch(userLoggedInFailure(e)));
 };
 

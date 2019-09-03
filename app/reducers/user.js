@@ -10,6 +10,7 @@ export default function network(state = initialState, action: Action) {
         ...state,
         data: action.user,
         lastUserLoggedIn: action.user.response && action.user.response.id,
+        lastUserEmailLoggedIn: action.user.response.uid,
         auth: action.user.response && {
           'access-token': action.user.response['access-token'],
           client: action.user.response.client,

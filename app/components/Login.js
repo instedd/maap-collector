@@ -7,7 +7,11 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import { connect } from 'react-redux';
 import type { Dispatch, State as ReduxState } from '../reducers/types';
-import { requestLogin, offlineLogin, USER_LOGGED_IN_FAILURE } from '../actions/user';
+import {
+  requestLogin,
+  offlineLogin,
+  USER_LOGGED_IN_FAILURE
+} from '../actions/user';
 import ErrorMessage from './ErrorMessage';
 
 import styles from './Login.scss';
@@ -31,8 +35,8 @@ class Login extends Component<Props, State> {
   props: Props;
 
   state: State = {
-    username: '',
-    password: '',
+    username: 'example@maap.tld',
+    password: 'password',
     error: ''
   };
 
@@ -41,13 +45,15 @@ class Login extends Component<Props, State> {
     const { username, password } = this.state;
     event.preventDefault();
 
-    let type;
-    if (network.online) {
-      type = (await dispatch(requestLogin(username, password))).type;
-    }
-    else {
-      type = (await dispatch(offlineLogin({userId: user.lastUserLoggedIn, password}))).type;
-    }
+    const type = network.online
+      ? (await dispatch(requestLogin(username, password))).type
+      : (await dispatch(
+          offlineLogin({
+            userId: user.lastUserLoggedIn,
+            password,
+            userEmail: user.lastUserEmailLoggedIn
+          })
+        )).type;
     if (type === USER_LOGGED_IN_FAILURE)
       this.setState({
         error: 'The email and password combination does not match'
@@ -72,17 +78,18 @@ class Login extends Component<Props, State> {
               </Cell>
               <Cell columns={12}>
                 <form onSubmit={e => this.handleSubmit(e)}>
-                  { network.online ?
-                  (<TextField label="Username" className="full-width">
-                    <Input
-                      value={username}
-                      onChange={e =>
-                        this.setState({ username: e.currentTarget.value })
-                      }
-                    />
-                  </TextField>) :
-                  `You're offline. You can only access the account for the most recently logged in user.`
-                }
+                  {network.online ? (
+                    <TextField label="Username" className="full-width">
+                      <Input
+                        value={username}
+                        onChange={e =>
+                          this.setState({ username: e.currentTarget.value })
+                        }
+                      />
+                    </TextField>
+                  ) : (
+                    `You're offline. You can only access the account for the most recently logged in user.`
+                  )}
                   <TextField label="Password" className="full-width margin-top">
                     <Input
                       value={password}
