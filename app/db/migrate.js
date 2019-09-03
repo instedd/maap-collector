@@ -1,5 +1,5 @@
-import Umzug from 'umzug';
 import path from 'path';
+import Umzug from 'umzug';
 import db from './index';
 
 const buildUmzug = sequelize =>
@@ -59,6 +59,8 @@ const logStatus = async umzug => {
   };
 
   console.log(JSON.stringify(status, null, 2));
+
+  return status;
 };
 
 export default async user => {
@@ -69,8 +71,16 @@ export default async user => {
   const umzug = buildUmzug(sequelize);
   setUmzugLogHandlers(umzug);
 
-  await logStatus(umzug);
+  const status = await logStatus(umzug);
 
-  await umzug.up();
+  if (status.pending.length > 0) {
+    console.log(
+      'There are pending migrations. Creating a backup of the database before applying migrations.'
+    );
+
+    await db.backup(user);
+    await umzug.up();
+  }
+
   console.log('Migration complete!');
 };
