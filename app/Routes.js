@@ -25,7 +25,7 @@ const NonPrivateRoute = connect(mapStateToProps)(
       exact
       path={path}
       render={props =>
-        user.data ? <Redirect to={routes.HOME} /> : <Component {...props} />
+        user.auth ? <Redirect to={routes.HOME} /> : <Component {...props} />
       }
     />
   )
@@ -37,7 +37,7 @@ const PrivateRoute = connect(mapStateToProps)(
       exact
       path={path}
       render={props =>
-        user.data ? <Component {...props} /> : <Redirect to={routes.SIGN_IN} />
+        user.auth ? <Component {...props} /> : <Redirect to={routes.SIGN_IN} />
       }
     />
   )
