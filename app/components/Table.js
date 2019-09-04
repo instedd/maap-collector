@@ -17,7 +17,9 @@ const parseField = field => {
     .toDateString()
     .toLowerCase()
     .lastIndexOf('invalid') === -1
-    ? moment(field).format('MMM D, YYYY')
+    ? moment(field)
+        .utc()
+        .format('MMM D, YYYY')
     : '';
 };
 
