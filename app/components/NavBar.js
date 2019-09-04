@@ -113,7 +113,7 @@ class NavBar extends Component<Props, State> {
                   ].join(' ')}
                 >
                   <li>
-                    <a href="#" onClick={this.handleSignOut}>
+                    <a href="/" onClick={this.handleSignOut}>
                       Sign out
                     </a>
                   </li>
