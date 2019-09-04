@@ -68,8 +68,9 @@ export const entities = [
 ];
 
 export const syncStart = () => async (dispatch, getState) => {
-  const { sync, network, user } = getState();
-  if (sync.synchronizing || !network.online || !user.auth) return;
+  const { sync, network, migrations, user } = getState();
+  if (sync.synchronizing || !network.online || !migrations.ran || !user.auth)
+    return;
 
   dispatch({ type: SYNC_START });
   await dispatch(auth());
