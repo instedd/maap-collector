@@ -61,6 +61,6 @@ const fetchAuthenticated = (
       ),
       ...auth
     }
-  }).then(res => res.json());
+  }).then(res => (res.ok ? res.json() : throw res));
 
 export { fetchPaginated, fetchAuthenticated };

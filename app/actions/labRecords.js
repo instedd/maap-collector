@@ -73,9 +73,19 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
       .then(res =>
         labRecord.update({ remoteId: res.id, lastSyncAt: new Date() })
       )
-      .then(() =>
-        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
-      )
+      .then(() => {
+        fs.unlink(
+          labRecord.filePath,
+          e =>
+            e
+              ? console.log(e)
+              : console.log(`${labRecord.filePath} file deleted successfully`)
+        );
+        return dispatch({
+          type: REDUCE_PENDING_UPLOAD_COUNT,
+          entity: 'LabRecord'
+        });
+      })
       .catch(e => console.log(e));
   });
   return Promise.resolve();
