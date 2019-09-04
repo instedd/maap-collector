@@ -28,6 +28,21 @@ export const requestLogin = (username, password) => dispatch => {
     .catch(e => dispatch(userLoggedInFailure(e)));
 };
 
+export const offlineLogin = user => dispatch => {
+  const fullUser = {
+    ...user,
+    response: {
+      id: user.userId,
+      uid: user.userEmail,
+      password: user.password
+    }
+  };
+  return db
+    .initializeForUser({ data: fullUser })
+    .then(() => dispatch({ type: 'USER_LOGGED_IN', user: fullUser }))
+    .catch(e => dispatch(userLoggedInFailure(e)));
+};
+
 export const userLoggedIn = user => dispatch => {
   db.initializeForUser({ data: user });
   setTimeout(() => dispatch(syncStart()), 600);
