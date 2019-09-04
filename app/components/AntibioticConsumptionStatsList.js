@@ -30,12 +30,12 @@ type ComponentProps = {
   onEditClick: (number, {}) => void
 };
 type State = {
-  date?: Date,
-  issued?: boolean,
-  quantity?: number,
-  balance?: number,
-  recipientFacility?: string,
-  recipientUnit?: string,
+  date: ?Date,
+  issued: ?boolean,
+  quantity: ?number,
+  balance: ?number,
+  recipientFacility: ?string,
+  recipientUnit: ?string,
   site: {
     id: number
   } | null
@@ -43,13 +43,23 @@ type State = {
 
 type Props = ComponentProps & ContextRouter;
 
+const initialState = {
+  issued: null,
+  date: null,
+  quantity: null,
+  balance: null,
+  recipientFacility: null,
+  recipientUnit: null,
+  site: null
+};
+
 const mapStateToProps = state => {
   const { dispatch, antibioticConsumptionStatsList, site } = state;
   return { dispatch, antibioticConsumptionStatsList, site };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
-  state: State = { site: null };
+  state: State = initialState;
 
   handleSubmit = async () => {
     const { dispatch, antibioticId } = this.props;
@@ -57,6 +67,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
     const record = await dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
     );
+    this.setState(initialState);
     dispatch(addCreatedAntibioticConsumptionStat(record));
   };
 
@@ -145,13 +156,13 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="date"
-                  value={date}
+                  value={date || ''}
                   onChange={e => this.setState({ date: e.currentTarget.value })}
                 />
               </TextField>
               <CombinedSelect
                 className="full-width"
-                value={{ value: issued, label: issued ? 'In' : 'Out' }}
+                value={{ value: issued || false, label: issued ? 'In' : 'Out' }}
                 label=""
                 isMulti={false}
                 creatable={false}
@@ -165,7 +176,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="number"
-                  value={quantity}
+                  value={quantity || ''}
                   onChange={e =>
                     this.setState({ quantity: e.currentTarget.value })
                   }
@@ -174,7 +185,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="number"
-                  value={balance}
+                  value={balance || ''}
                   onChange={e =>
                     this.setState({ balance: e.currentTarget.value })
                   }
@@ -183,7 +194,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="text"
-                  value={recipientFacility}
+                  value={recipientFacility || ''}
                   onChange={e =>
                     this.setState({ recipientFacility: e.currentTarget.value })
                   }
@@ -192,7 +203,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="text"
-                  value={recipientUnit}
+                  value={recipientUnit || ''}
                   onChange={e =>
                     this.setState({ recipientUnit: e.currentTarget.value })
                   }
