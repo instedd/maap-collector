@@ -28,22 +28,24 @@
   position: absolute;
   top: 40px;
   left: 0;
-  width: 300px;
   z-index: 999999999999;
   background: var(--white);
   color: var(--black);
-  padding: 20px;
   display: none;
   box-shadow: 0 11px 15px -7px var(--transparent-dark-gray),
     0 24px 38px 3px var(--transparent-gray);
 
   li {
     list-style: none;
+    width: 300px;
   }
 
   a {
     color: black;
     text-decoration: none;
+    width: 300px;
+    padding: 20px;
+    display: block;
   }
 
   &.open {
