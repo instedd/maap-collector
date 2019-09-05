@@ -134,7 +134,7 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
           entity: entityName,
           count: totalCount
         });
-      Promise.all(
+      return Promise.all(
         res.map(async item => {
           const mapped = mapper(item);
           return [
@@ -146,47 +146,49 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
         })
       )
         .then(items =>
-          items.map(([item, mapped, [foundEntity]]) => {
-            const remoteIsBeforeLocal = moment(item.updated_at)
-              .local()
-              .isBefore(
-                moment(foundEntity.updatedAt)
-                  .local()
-                  .toISOString()
-              );
-            if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
+          Promise.all(
+            items.map(([item, mapped, [foundEntity]]) => {
+              const remoteIsBeforeLocal = moment(item.updated_at)
+                .local()
+                .isBefore(
+                  moment(foundEntity.updatedAt)
+                    .local()
+                    .toISOString()
+                );
+              if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
+                return foundEntity
+                  .update(
+                    {
+                      lastSyncAt: moment(item.updated_at)
+                        .local()
+                        .toDate(),
+                      updatedAt: foundEntity.updatedAt
+                    },
+                    { silent: true }
+                  )
+                  .then(() =>
+                    dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
+                  );
+              }
+
               return foundEntity
                 .update(
                   {
+                    ...mapped,
                     lastSyncAt: moment(item.updated_at)
                       .local()
                       .toDate(),
-                    updatedAt: foundEntity.updatedAt
+                    updatedAt: moment(item.updated_at)
+                      .local()
+                      .toDate()
                   },
                   { silent: true }
                 )
                 .then(() =>
                   dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
                 );
-            }
-
-            return foundEntity
-              .update(
-                {
-                  ...mapped,
-                  lastSyncAt: moment(item.updated_at)
-                    .local()
-                    .toDate(),
-                  updatedAt: moment(item.updated_at)
-                    .local()
-                    .toDate()
-                },
-                { silent: true }
-              )
-              .then(() =>
-                dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
-              );
-          })
+            })
+          )
         )
         .catch(e => console.log(e));
     }
