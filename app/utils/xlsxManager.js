@@ -38,12 +38,21 @@ class XlsxManager {
     return rowAcc;
   }
 
+  getCell(encodedCel) {
+    const cell = {
+      ...this.currentSheet[encodedCel]
+    };
+    if (cell.w) return cell;
+    cell.w = this.currentSheet[encodedCel] && this.currentSheet[encodedCel].v;
+    return cell;
+  }
+
   row(rowNumber) {
     const { end } = this.range;
     return [...new Array(end.col + 1)].map((col, index) => ({
-      ...(this.currentSheet[
+      ...(this.getCell(
         xlsx.utils.encode_cell({ r: parseInt(rowNumber, 10), c: index })
-      ] || { v: '', w: '', t: '', h: '', r: '' }),
+      ) || { v: '', w: '', t: '', h: '', r: '' }),
       c: this.encodeCol(index)
     }));
   }
