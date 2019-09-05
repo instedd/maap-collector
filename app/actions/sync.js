@@ -147,14 +147,20 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
       )
         .then(items =>
           items.map(([item, mapped, [foundEntity]]) => {
-            const remoteIsBeforeLocal = moment(item.updated_at).isBefore(
-              moment(foundEntity.updatedAt).toISOString()
-            );
+            const remoteIsBeforeLocal = moment(item.updated_at)
+              .local()
+              .isBefore(
+                moment(foundEntity.updatedAt)
+                  .local()
+                  .toISOString()
+              );
             if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
               return foundEntity
                 .update(
                   {
-                    lastSyncAt: moment(item.updated_at).toDate(),
+                    lastSyncAt: moment(item.updated_at)
+                      .local()
+                      .toDate(),
                     updatedAt: foundEntity.updatedAt
                   },
                   { silent: true }
@@ -168,8 +174,12 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
               .update(
                 {
                   ...mapped,
-                  lastSyncAt: moment(item.updated_at).toDate(),
-                  updatedAt: moment(item.updated_at).toDate()
+                  lastSyncAt: moment(item.updated_at)
+                    .local()
+                    .toDate(),
+                  updatedAt: moment(item.updated_at)
+                    .local()
+                    .toDate()
                 },
                 { silent: true }
               )
@@ -181,12 +191,21 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
         .catch(e => console.log(e));
     }
   ).then(({ greather_updated_at: greatherUpdatedAt }) => {
+    if (!greatherUpdatedAt) return;
     entity.update(
-      { lastSyncAt: moment(greatherUpdatedAt).toDate() },
+      {
+        lastSyncAt: moment(greatherUpdatedAt)
+          .local()
+          .toDate(),
+        updatedAt: moment(greatherUpdatedAt)
+          .local()
+          .toDate()
+      },
       {
         where: initializedDb.sequelize.literal(
           "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) <= strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
-        )
+        ),
+        silent: true
       }
     );
     return Promise.resolve();
@@ -248,7 +267,6 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
       "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
     )
   });
-
   collectionToUpdate.forEach(async currentEntity => {
     const mapped = await Promise.resolve(mapper(currentEntity));
     fetchAuthenticated(url(currentEntity.remoteId), user.auth, {
@@ -258,8 +276,12 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
       .then(item =>
         entity.update(
           {
-            lastSyncAt: moment(item.updated_at).toDate(),
-            updatedAt: moment(item.updated_at).toDate()
+            lastSyncAt: moment(item.updated_at)
+              .local()
+              .toDate(),
+            updatedAt: moment(item.updated_at)
+              .local()
+              .toDate()
           },
           {
             where: {
@@ -270,7 +292,7 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
         )
       )
       .then(() =>
-        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
+        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: entityName })
       )
       .catch(e => console.log(e));
   });

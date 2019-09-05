@@ -1,7 +1,7 @@
 // @flow
 import snakecaseKeys from 'snakecase-keys';
 import { omit } from 'lodash';
-import { remoteSync, remoteUpload } from './sync';
+import { remoteSync, remoteUpload, remoteUploadUpdate } from './sync';
 import { fetchEntity } from './fetch';
 import type { Dispatch, State } from '../reducers/types';
 
@@ -52,6 +52,13 @@ export const uploadAntibiotics = () => async (
   dispatch({ type: UPLOAD_ANTIBIOTICS });
   await dispatch(
     remoteUpload('/api/v1/antibiotics', user, 'Antibiotic', uploadMapper)
+  );
+  await dispatch(
+    remoteUploadUpdate(
+      id => `/api/v1/antibiotics/${id}`,
+      'Antibiotic',
+      uploadMapper
+    )
   );
 };
 
