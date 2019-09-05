@@ -92,7 +92,6 @@ class NavBar extends Component<Props, State> {
               )}
               <div className={styles.navBarSync}>
                 <SyncStatus />
-                <MaterialIcon icon="arrow_upward" />
               </div>
             </TopAppBarSection>
 
