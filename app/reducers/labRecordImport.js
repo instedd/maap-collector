@@ -1,7 +1,8 @@
 import {
   SET_FILE_DATA,
   SET_PHI_DATA,
-  SET_PATIENT_ID_DATA
+  SET_PATIENT_ID_DATA,
+  CLEAN_LAB_RECORD_IMPORT
 } from '../actions/labRecordImport';
 import type { Action } from './types';
 
@@ -25,6 +26,8 @@ export default function counter(state = initialState, action: Action) {
       return { ...state, ...action.data };
     case SET_PATIENT_ID_DATA:
       return { ...state, ...action.data };
+    case CLEAN_LAB_RECORD_IMPORT:
+      return initialState;
     default:
       return state;
   }
