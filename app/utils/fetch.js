@@ -31,7 +31,6 @@ const fetchPaginated = async (
     const currentCallback = callback(items, res);
     callbacks.push(currentCallback);
     await currentCallback;
-    console.log(i);
   }
   /* eslint-enable */
 
