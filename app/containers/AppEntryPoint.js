@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import Routes from '../Routes';
 import { Dispatch } from '../reducers/types';
 import { runMigrations } from '../actions/migrations';
+import { syncStart } from '../actions/sync';
 
 type Props = {
   history: *,
@@ -25,7 +26,7 @@ class AppEntryPoint extends React.Component<Props> {
     const { dispatch } = this.props;
 
     if (this.shouldRunMigrations()) {
-      dispatch(runMigrations());
+      return dispatch(runMigrations()).then(() => dispatch(syncStart()));
     }
   }
 
