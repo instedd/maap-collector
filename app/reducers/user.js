@@ -3,7 +3,9 @@ import type { Action } from './types';
 
 const initialState = {};
 
-export default function network(state = initialState, action: Action) {
+export const isLoggedIn = user => !!user.auth;
+
+export default function(state = initialState, action: Action) {
   switch (action.type) {
     case USER_LOGGED_IN:
       return {
