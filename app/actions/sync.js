@@ -14,6 +14,7 @@ import { syncPatients } from './patients';
 import { syncPatientEntries } from './patientEntries';
 import { syncEntities } from './enums';
 import { requestLogin } from './user';
+import { isLoggedIn } from '../reducers/user';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -65,7 +66,12 @@ export const entities = [
 
 export const syncStart = () => async (dispatch, getState) => {
   const { sync, network, migrations, user } = getState();
-  if (sync.synchronizing || !network.online || !migrations.ran || !user.auth)
+  if (
+    sync.synchronizing ||
+    !network.online ||
+    !migrations.ran ||
+    !isLoggedIn(user)
+  )
     return;
 
   dispatch({ type: SYNC_START });

@@ -6,6 +6,7 @@ import Routes from '../Routes';
 import { Dispatch } from '../reducers/types';
 import { runMigrations } from '../actions/migrations';
 import { syncStart } from '../actions/sync';
+import { isLoggedIn } from '../reducers/user';
 
 type Props = {
   history: *,
@@ -19,7 +20,7 @@ const mapStateToProps = ({ migrations, user }) => ({ migrations, user });
 class AppEntryPoint extends React.Component<Props> {
   shouldRunMigrations() {
     const { migrations, user } = this.props;
-    return user.data && !migrations.ran;
+    return isLoggedIn(user) && !migrations.ran;
   }
 
   checkMigrations() {
