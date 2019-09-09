@@ -2,12 +2,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import style from '@material/react-fab/dist/fab.css';
 import Dialog, {
   DialogTitle,
   DialogContent,
   DialogFooter,
   DialogButton
 } from '@material/react-dialog';
+import { Fab } from '@material/react-fab';
+import MaterialIcon from '@material/react-material-icon';
+import type { ContextRouter } from 'react-router';
 import {
   fetchAntibioticConsumptionStatsList,
   cleanAntibioticConsumptionStatsList
@@ -28,7 +32,7 @@ type Props = {
   },
   site: { id: number },
   dispatch: Dispatch
-};
+} & ContextRouter;
 
 type State = {
   modalIsOpen: boolean,
@@ -85,13 +89,22 @@ class AntibioticsDetail extends Component<Props, State> {
   }
 
   render() {
-    const { match } = this.props;
+    const { match, history } = this.props;
     const { modalIsOpen, currentEditEntity } = this.state;
     return (
       <div>
         <AntibioticConsumptionStatsList
           antibioticId={match.params.id}
           onEditClick={this.handleEditClick}
+        />
+        <Fab
+          className={[style['mdc-fab'], 'app-fab--absolute']}
+          icon={<MaterialIcon icon="add" />}
+          onClick={() =>
+            history.push(
+              `/electronic_pharmacy_stock_records/import/${match.params.id}`
+            )
+          }
         />
         <Dialog open={modalIsOpen} onClosing={e => this.handleModalClosing(e)}>
           <DialogTitle>Edit Antibiotic</DialogTitle>

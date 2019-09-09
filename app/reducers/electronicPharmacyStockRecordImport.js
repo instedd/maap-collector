@@ -1,7 +1,7 @@
 import {
   SET_IMPORT_DATA,
   CLEAN_LAB_RECORD_IMPORT
-} from '../actions/labRecordImport';
+} from '../actions/electronicPharmacyStockRecordImport';
 import type { Action } from './types';
 
 const initialState = {

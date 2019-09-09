@@ -13,9 +13,9 @@ import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
 import {
   setImportData,
-  createLabRecord,
-  cleanLabRecordImport
-} from '../actions/labRecordImport';
+  cleanWizard,
+  createElectronicPharmacyStockRecord
+} from '../actions/electronicPharmacyStockRecordImport';
 import style from './LabRecordImportWizard.scss';
 
 type Props = {
@@ -28,25 +28,30 @@ type State = {
 };
 
 const STEPS = [
-  ({ dispatch, labRecordImport }) => (
+  ({ dispatch, electronicPharmacyStockRecordImport }) => (
     <DropZone
-      {...labRecordImport}
-      title="UPLOAD A FILE WITH ALL THE NEW ENTRIES"
+      {...electronicPharmacyStockRecordImport}
+      title="Upload a file with the Electronic Pharmacy Stock Records"
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  ({ dispatch, labRecordImport }: Props) => (
+  ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
     <ProtectedHealthInformationStep
-      importData={labRecordImport}
+      importData={electronicPharmacyStockRecordImport}
       onChange={state => dispatch(setImportData(state))}
     />
   ),
   PatientIdStep
 ];
 
-const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });
+const mapStateToProps = ({ electronicPharmacyStockRecordImport }) => ({
+  electronicPharmacyStockRecordImport
+});
 
-class LabRecordsImportWizard extends Component<Props, State> {
+class ElectronicPharmacyStockREcordImportWizard extends Component<
+  Props,
+  State
+> {
   props: Props;
 
   state: State = { currentStep: 0 };
@@ -55,7 +60,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
     const { dispatch, history } = this.props;
     const { currentStep } = this.state;
     if (currentStep === STEPS.length - 1)
-      return dispatch(createLabRecord()).then(labRecord =>
+      return dispatch(createElectronicPharmacyStockRecord()).then(labRecord =>
         history.push(`/lab_records/${labRecord.id}`)
       );
     this.setState({ currentStep: currentStep + 1 });
@@ -70,21 +75,30 @@ class LabRecordsImportWizard extends Component<Props, State> {
 
   componentWillUnmount() {
     const { dispatch } = this.props;
-    dispatch(cleanLabRecordImport());
+    dispatch(cleanWizard());
   }
 
   render() {
-    const { labRecordImport } = this.props;
+    const { electronicPharmacyStockRecordImport } = this.props;
     const { currentStep } = this.state;
-    const headerRow = parseInt(labRecordImport.headerRow, 10);
-    const dataRowsTo = parseInt(labRecordImport.dataRowsTo, 10);
-    const dataRowsFrom = parseInt(labRecordImport.dataRowsFrom, 10);
+    const headerRow = parseInt(
+      electronicPharmacyStockRecordImport.headerRow,
+      10
+    );
+    const dataRowsTo = parseInt(
+      electronicPharmacyStockRecordImport.dataRowsTo,
+      10
+    );
+    const dataRowsFrom = parseInt(
+      electronicPharmacyStockRecordImport.dataRowsFrom,
+      10
+    );
     const CurrentStepComponent = STEPS[currentStep];
     return (
       <Card>
         <WizardHeader
           currentStep={currentStep}
-          steps={['File upload', 'PHI', 'Patient ID']}
+          steps={['File upload', 'PHI', 'Review and finish']}
         />
         <div className={style.wizardBody}>
           {/* $FlowFixMe */}
@@ -105,7 +119,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
             disabled={
               currentStep === 0 &&
               (!(
-                labRecordImport.file &&
+                electronicPharmacyStockRecordImport.file &&
                 headerRow &&
                 dataRowsTo &&
                 dataRowsFrom
@@ -129,4 +143,6 @@ class LabRecordsImportWizard extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(LabRecordsImportWizard));
+export default connect(mapStateToProps)(
+  withRouter(ElectronicPharmacyStockREcordImportWizard)
+);

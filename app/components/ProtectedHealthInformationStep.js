@@ -5,28 +5,23 @@ import Select, { Option } from '@material/react-select';
 import { values } from 'lodash';
 import { connect } from 'react-redux';
 import XlsxManager from '../utils/xlsxManager';
-import { setPhiData } from '../actions/labRecordImport';
 
 type ComponentProps = {};
 
 type Props = ComponentProps;
 
-const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });
-
 class ProtectedHealthInformationStep extends Component<Props> {
   handlePatientOrLabRecordIdChange = column => e => {
-    const { dispatch, labRecordImport } = this.props;
-    const { patientOrLabRecordId } = labRecordImport;
+    const { importData, onChange } = this.props;
+    const { patientOrLabRecordId } = importData;
 
-    dispatch(
-      setPhiData({
-        patientOrLabRecordId: patientOrLabRecordId.map((value, index) => {
-          if (value === e.target.value) return null;
-          if (index === column) return e.target.value;
-          return value;
-        })
+    onChange({
+      patientOrLabRecordId: patientOrLabRecordId.map((value, index) => {
+        if (value === e.target.value) return null;
+        if (index === column) return e.target.value;
+        return value;
       })
-    );
+    });
   };
 
   handleCheckboxChange = (
@@ -35,53 +30,47 @@ class ProtectedHealthInformationStep extends Component<Props> {
     trueValue = true,
     falseValue = false
   ) => e => {
-    const { dispatch, labRecordImport } = this.props;
+    const { importData, onChange } = this.props;
 
-    dispatch(
-      setPhiData({
-        [type]: values({
-          ...labRecordImport[type],
-          [column]: e.target.checked ? trueValue : falseValue
-        })
+    onChange({
+      [type]: values({
+        ...importData[type],
+        [column]: e.target.checked ? trueValue : falseValue
       })
-    );
+    });
   };
 
   handleSelectChange = (type, column) => e => {
-    const { dispatch, labRecordImport } = this.props;
+    const { importData, onChange } = this.props;
 
-    dispatch(
-      setPhiData({
-        [type]: {
-          ...labRecordImport[type],
-          [column]: e.target.value
-        }
-      })
-    );
+    onChange({
+      [type]: {
+        ...importData[type],
+        [column]: e.target.value
+      }
+    });
   };
 
   columnName = column =>
     column.v ? `${column.c} - ${column.v}` : `Column ${column.c}`;
 
   componentDidMount() {
-    const { labRecordImport, dispatch } = this.props;
-    const { file, headerRow } = labRecordImport;
+    const { importData, onChange } = this.props;
+    const { file, headerRow } = importData;
     const sheet = new XlsxManager(file.path);
     const row = sheet.row(headerRow - 1);
 
-    dispatch(
-      setPhiData({
-        columns: row,
-        patientOrLabRecordId: row.map(() => null),
-        phi: row.map(() => false),
-        date: row.map(() => null)
-      })
-    );
+    onChange({
+      columns: row,
+      patientOrLabRecordId: row.map(() => null),
+      phi: row.map(() => false),
+      date: row.map(() => null)
+    });
   }
 
   render() {
-    const { labRecordImport } = this.props;
-    const { columns, patientOrLabRecordId, phi, date } = labRecordImport;
+    const { importData } = this.props;
+    const { columns, patientOrLabRecordId, phi, date } = importData;
     return (
       <div>
         <h2>Specify which columns have protected health information</h2>
@@ -167,4 +156,4 @@ class ProtectedHealthInformationStep extends Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(ProtectedHealthInformationStep);
+export default connect()(ProtectedHealthInformationStep);
