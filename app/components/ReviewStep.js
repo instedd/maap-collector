@@ -45,6 +45,16 @@ class ReviewStep extends Component<Props> {
     return `${column.c} - ${column.v}`;
   };
 
+  handleRowChange = (rowIndex, cellIndex) => e => {
+    const { importData, onChange } = this.props;
+    const { rows } = importData;
+    const newRows = [...rows];
+    newRows[rowIndex][cellIndex] = { w: e.target.value };
+    onChange({
+      rows: newRows
+    });
+  };
+
   static defaultProps: Props = {
     onChange: () => {},
     withPatientOrLabRecordId: true
