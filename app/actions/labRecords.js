@@ -5,10 +5,6 @@ import db from '../db';
 
 import { fetchAuthenticated } from '../utils/fetch';
 import { fetchEntity } from './fetch';
-import {
-  UPDATE_PENDING_UPLOAD_COUNT,
-  REDUCE_PENDING_UPLOAD_COUNT
-} from './sync';
 
 const FETCH_LAB_RECORDS = 'FETCH_LAB_RECORDS';
 const FETCHED_LAB_RECORDS = 'FETCHED_LAB_RECORDS';
@@ -39,17 +35,7 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
   const collectionToCreate = await LabRecord.findAll({
     where: sequelize.literal('remoteId is NULL')
   });
-  const collectionToUpdate = await LabRecord.findAll({
-    where: sequelize.literal(
-      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M', updatedAt) > strftime('%Y-%m-%d %H:%M', lastSyncAt)"
-    )
-  });
   if (collectionToCreate.length === 0) return;
-  dispatch({
-    type: UPDATE_PENDING_UPLOAD_COUNT,
-    entity: 'LabRecord',
-    count: collectionToCreate.length + collectionToUpdate.length
-  });
 
   collectionToCreate.forEach(async labRecord => {
     const body = new FormData();
@@ -73,9 +59,16 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
       .then(res =>
         labRecord.update({ remoteId: res.id, lastSyncAt: new Date() })
       )
-      .then(() =>
-        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
-      )
+      .then(() => {
+        fs.unlink(
+          labRecord.filePath,
+          e =>
+            e
+              ? console.log(e)
+              : console.log(`${labRecord.filePath} file deleted successfully`)
+        );
+        return Promise.resolve();
+      })
       .catch(e => console.log(e));
   });
   return Promise.resolve();
@@ -103,9 +96,6 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
         const updatedAt = new Date();
         return labRecord.update({ lastSyncAt: updatedAt, updatedAt });
       })
-      .then(() =>
-        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
-      )
       .catch(e => console.log(e));
   });
   return Promise.resolve();

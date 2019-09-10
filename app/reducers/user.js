@@ -3,13 +3,17 @@ import type { Action } from './types';
 
 const initialState = {};
 
-export default function network(state = initialState, action: Action) {
+export const isLoggedIn = user => !!user.auth;
+
+export default function(state = initialState, action: Action) {
   switch (action.type) {
     case USER_LOGGED_IN:
       return {
         ...state,
         data: action.user,
-        auth: {
+        lastUserLoggedIn: action.user.response && action.user.response.id,
+        lastUserEmailLoggedIn: action.user.response.uid,
+        auth: action.user.response && {
           'access-token': action.user.response['access-token'],
           client: action.user.response.client,
           expiry: action.user.response.expiry,
@@ -17,7 +21,17 @@ export default function network(state = initialState, action: Action) {
         }
       };
     case USER_LOGGED_OUT:
-      return { ...state, data: null, auth: null };
+      return {
+        ...state,
+        data: {
+          response: {
+            ...state.data.response,
+            'access-token': null,
+            client: null
+          }
+        },
+        auth: null
+      };
     default:
       return state;
   }

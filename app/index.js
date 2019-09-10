@@ -17,7 +17,7 @@ const store = configureStore({ preloadedState: persistedState });
 store.subscribe(
   throttle(() => {
     saveState({
-      user: store.getState().user,
+      user: { ...store.getState().user, auth: null, response: null },
       site: store.getState().site
     });
   }, 1000)
@@ -25,6 +25,7 @@ store.subscribe(
 
 window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
 window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
+if (!navigator.onLine) store.dispatch(setNetworkOffline());
 if (store.getState().user.data)
   setTimeout(() => store.dispatch(syncStart()), 300);
 

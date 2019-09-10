@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import TextField, { Input } from '@material/react-text-field';
-import Select, { Option } from '@material/react-select';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import CombinedSelect from './CombinedSelect';
 import { updateAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
 import type { Dispatch, State } from '../reducers/types';
 import ErrorMessage from './ErrorMessage';
@@ -105,14 +105,19 @@ class antibioticConsumptionStatsForm extends Component<Props, State> {
             </TextField>
           </Cell>
           <Cell columns={12}>
-            <Select
+            <CombinedSelect
               className="full-width"
-              value={issued}
-              onChange={evt => this.setState({ issued: evt.target.value })}
-            >
-              <Option value={false}>Out</Option>
-              <Option value>In</Option>
-            </Select>
+              value={{ value: issued, label: issued ? 'In' : 'Out' }}
+              label=""
+              isMulti={false}
+              creatable={false}
+              options={[
+                { value: true, label: 'In' },
+                { value: false, label: 'Out' }
+              ]}
+              // $FlowFixMe
+              onChange={v => this.setState({ issued: v.value })}
+            />
           </Cell>
           <Cell columns={12}>
             <TextField label="Quantity" className="full-width">

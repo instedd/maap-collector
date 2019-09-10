@@ -8,6 +8,7 @@ const fetchPaginated = async (
   args = { body: {}, qs: {}, method: 'get' },
   callback
 ) => {
+  const callbacks = [];
   const f = page =>
     fetch(`${API_URL}${url}?${stringify({ ...args.qs, page })}`, {
       headers: auth
@@ -17,7 +18,9 @@ const fetchPaginated = async (
   const res = await f(1);
   const firstPage = res;
   const { items: firstItems, total_pages: totalPages } = res;
-  await callback(firstItems, res);
+  const firstCallback = callback(firstItems, res);
+  callbacks.push(firstCallback);
+  await firstCallback;
   if (totalPages <= 1) return Promise.resolve(firstPage);
   // After that, we iterate over the following pages and save the result into an array
   // This generates 1 request per page
@@ -25,11 +28,13 @@ const fetchPaginated = async (
   for (const i of [...new Array(totalPages - 1)].map((_, i) => i)) {
     const res = await f(i + 2);
     const { items } = res;
-    await callback(items, res);
+    const currentCallback = callback(items, res);
+    callbacks.push(currentCallback);
+    await currentCallback;
   }
   /* eslint-enable */
 
-  return Promise.resolve(firstPage);
+  return Promise.all(callbacks).then(() => Promise.resolve(firstPage));
 };
 
 const fetchAuthenticated = (
@@ -61,6 +66,6 @@ const fetchAuthenticated = (
       ),
       ...auth
     }
-  }).then(res => res.json());
+  }).then(res => (res.ok ? res.json() : throw res));
 
 export { fetchPaginated, fetchAuthenticated };

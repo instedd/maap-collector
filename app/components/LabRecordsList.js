@@ -57,7 +57,7 @@ class LabRecordsList extends Component<Props, State> {
           onReload={() => dispatch(fetchLabRecords({ siteId: site.id }))}
           onClick={({ id }) => history.push(`/lab_records/${id}`)}
           columns={['File', 'Created at']}
-          fields={['id', 'fileName', 'filePath', 'createdAt']}
+          fields={['fileName', 'createdAt']}
         />
         <Fab
           className="mdc-fab app-fab--absolute"

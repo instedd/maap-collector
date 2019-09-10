@@ -10,6 +10,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { fetchLabRecord } from '../actions/labRecords';
 import { setPhiData } from '../actions/labRecordImport';
 import { updateLabRecord } from '../actions/labRecord';
+import style from './LabRecordsDetailList.scss';
 import Table from './Table';
 
 import { Dispatch, State as ReduxState } from '../reducers/types';
@@ -52,6 +53,7 @@ class LabRecordsDetailList extends Component<Props, State> {
         <Input
           type="text"
           value={row[patientIdIndex]}
+          className={style.emphasis}
           onChange={e => {
             const newRows = [...labRecord.rows];
             newRows[row[row.length - 1]][patientIdIndex] = {
@@ -139,6 +141,9 @@ class LabRecordsDetailList extends Component<Props, State> {
                     `${item[item.length - 1]}-${i}-patientIdField`,
                     item
                   );
+
+              if (patientOrLabRecordId[i] === 'labRecordId')
+                return item => <strong>{item[i]}</strong>;
               return i;
             })
             .filter(e => isFunction(e) || e !== false)}

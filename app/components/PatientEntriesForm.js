@@ -1,12 +1,12 @@
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import Button from '@material/react-button';
-import Select, { Option } from '@material/react-select';
 import Checkbox from '@material/react-checkbox';
 import MaterialIcon from '@material/react-material-icon';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import changeCase from 'change-case';
 import {
   createPatientEntry,
   updatePatientEntry
@@ -20,7 +20,6 @@ import {
   byValue as antibioticPrescriptionTimeByValue
 } from '../models/antibioticPrescriptionTimes';
 import isDate from '../utils/isDate';
-import { syncStart } from '../actions/sync';
 import TextArea from './TextArea';
 import EnumSelector from './EnumSelector';
 
@@ -63,7 +62,6 @@ class PatientEntriesForm extends Component<Props, State> {
         })
       );
     }
-    dispatch(syncStart());
     history.push(`/patients/${patientId}/entries`);
   };
 
@@ -231,10 +229,11 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={12} />
             <Cell columns={2} />
             <Cell columns={2}>
-              {patchLabel('Weight')}
+              {patchLabel('Weight (kg)')}
 
               <TextField className="full-width">
                 <Input
+                  type="number"
                   value={weight}
                   onChange={e =>
                     this.setState({ weight: e.currentTarget.value })
@@ -244,10 +243,11 @@ class PatientEntriesForm extends Component<Props, State> {
             </Cell>
 
             <Cell columns={2}>
-              {patchLabel('Height')}
+              {patchLabel('Height (m)')}
 
               <TextField className="full-width">
                 <Input
+                  type="number"
                   value={height}
                   onChange={e =>
                     this.setState({ height: e.currentTarget.value })
@@ -262,37 +262,45 @@ class PatientEntriesForm extends Component<Props, State> {
             <Cell columns={4}>
               {patchLabel('Pregnancy status')}
 
-              <Select
+              <CombinedSelect
                 className="full-width"
-                value={pregnancyStatus}
-                onChange={evt => {
+                value={{
+                  value: pregnancyStatus,
+                  label: changeCase.sentenceCase(pregnancyStatus)
+                }}
+                onChange={val => {
                   this.setState({
-                    pregnancyStatus: evt.target.value
+                    pregnancyStatus: val.value
                   });
                 }}
-              >
-                <Option value="yes">Yes</Option>
-                <Option value="no">No</Option>
-                <Option value="not_applicable">Not applicable</Option>
-                <Option value="not_mentioned">Not mentioned</Option>
-              </Select>
+                options={[
+                  { value: 'yes', label: 'Yes' },
+                  { value: 'no', label: 'No' },
+                  { value: 'not_applicable', label: 'Not applicable' },
+                  { value: 'not_mentioned', label: 'Not mentioned' }
+                ]}
+              />
             </Cell>
             <Cell columns={4}>
               {patchLabel('Premature birth')}
-              <Select
+              <CombinedSelect
                 className="full-width"
-                value={prematureBirth}
-                onChange={evt => {
+                value={{
+                  value: prematureBirth,
+                  label: changeCase.sentenceCase(prematureBirth)
+                }}
+                onChange={val => {
                   this.setState({
-                    prematureBirth: evt.target.value
+                    prematureBirth: val.value
                   });
                 }}
-              >
-                <Option value="yes">Yes</Option>
-                <Option value="no">No</Option>
-                <Option value="not_applicable">Not applicable</Option>
-                <Option value="not_mentioned">Not mentioned</Option>
-              </Select>
+                options={[
+                  { value: 'yes', label: 'Yes' },
+                  { value: 'no', label: 'No' },
+                  { value: 'not_applicable', label: 'Not applicable' },
+                  { value: 'not_mentioned', label: 'Not mentioned' }
+                ]}
+              />
             </Cell>
           </Row>
           <Row align="center">
@@ -395,47 +403,51 @@ class PatientEntriesForm extends Component<Props, State> {
               </label>
             </Cell>
           </Row>
-          <Row>
-            <Cell columns={12} />
-            <Cell columns={2} />
-            <Cell columns={8}>
-              {patchLabel('When was the antibiotic prescribed?')}
-              <CombinedSelect
-                creatable
-                className="full-width"
-                value={antibioticPrescriptionTimeByValue(antibioticWhen)}
-                onChange={val => {
-                  this.setState({
-                    antibioticWhen: val.value
-                  });
-                }}
-                options={allAntibioticPrescriptionTimes}
-              />
-            </Cell>
-          </Row>
-          <Row>
-            <Cell columns={12} />
-            <Cell columns={2} />
-            <Cell columns={8}>
-              {patchLabel('Prescribed antibiotics')}
-              <CombinedSelect
-                className="full-width"
-                value={prescribedAntibioticsList
-                  .split(', ')
-                  .filter(i => i !== '')
-                  .map(val => ({ value: val, label: val }))}
-                isMulti
-                onChange={val => {
-                  this.setState({
-                    prescribedAntibioticsList: [...val]
-                      .map(({ value }) => value)
-                      .join(', ')
-                  });
-                }}
-                options={antibioticOptions}
-              />
-            </Cell>
-          </Row>
+          {antibioticsPrescribed ? (
+            <>
+              <Row>
+                <Cell columns={12} />
+                <Cell columns={2} />
+                <Cell columns={8}>
+                  {patchLabel('When was the antibiotic prescribed?')}
+                  <CombinedSelect
+                    creatable
+                    className="full-width"
+                    value={antibioticPrescriptionTimeByValue(antibioticWhen)}
+                    onChange={val => {
+                      this.setState({
+                        antibioticWhen: val.value
+                      });
+                    }}
+                    options={allAntibioticPrescriptionTimes}
+                  />
+                </Cell>
+              </Row>
+              <Row>
+                <Cell columns={12} />
+                <Cell columns={2} />
+                <Cell columns={8}>
+                  {patchLabel('Prescribed antibiotics')}
+                  <CombinedSelect
+                    className="full-width"
+                    value={prescribedAntibioticsList
+                      .split(', ')
+                      .filter(i => i !== '')
+                      .map(val => ({ value: val, label: val }))}
+                    isMulti
+                    onChange={val => {
+                      this.setState({
+                        prescribedAntibioticsList: [...val]
+                          .map(({ value }) => value)
+                          .join(', ')
+                      });
+                    }}
+                    options={antibioticOptions}
+                  />
+                </Cell>
+              </Row>
+            </>
+          ) : null}
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
@@ -455,33 +467,39 @@ class PatientEntriesForm extends Component<Props, State> {
               </label>
             </Cell>
           </Row>
-          <Row>
-            <Cell columns={12} />
-            <Cell columns={2} />
-            <Cell columns={8}>
-              {patchLabel('Indwelling Medical Devices')}
-              <CombinedSelect
-                creatable
-                className="full-width"
-                value={medicalDevice
-                  .split(', ')
-                  .filter(i => i !== '')
-                  .map(item => ({ value: item, label: item }))}
-                isMulti
-                onChange={val => {
-                  this.setState({
-                    medicalDevice: [...val].map(({ value }) => value).join(', ')
-                  });
-                }}
-                options={[
-                  { value: 'Ventilator', label: 'Ventilator' },
-                  { value: 'Central Line', label: 'Central Line' },
-                  { value: 'Urinary Catheter', label: 'Urinary Catheter' },
-                  { value: 'Not mentioned', label: 'Not mentioned' }
-                ]}
-              />
-            </Cell>
-          </Row>
+          {patientWasOnAnIndwellingMedicalDevice ? (
+            <>
+              <Row>
+                <Cell columns={12} />
+                <Cell columns={2} />
+                <Cell columns={8}>
+                  {patchLabel('Indwelling Medical Devices')}
+                  <CombinedSelect
+                    creatable
+                    className="full-width"
+                    value={medicalDevice
+                      .split(', ')
+                      .filter(i => i !== '')
+                      .map(item => ({ value: item, label: item }))}
+                    isMulti
+                    onChange={val => {
+                      this.setState({
+                        medicalDevice: [...val]
+                          .map(({ value }) => value)
+                          .join(', ')
+                      });
+                    }}
+                    options={[
+                      { value: 'Ventilator', label: 'Ventilator' },
+                      { value: 'Central Line', label: 'Central Line' },
+                      { value: 'Urinary Catheter', label: 'Urinary Catheter' },
+                      { value: 'Not mentioned', label: 'Not mentioned' }
+                    ]}
+                  />
+                </Cell>
+              </Row>
+            </>
+          ) : null}
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />

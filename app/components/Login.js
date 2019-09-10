@@ -6,15 +6,20 @@ import Card, { CardActions, CardActionButtons } from '@material/react-card';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import { connect } from 'react-redux';
-import type { Dispatch } from '../reducers/types';
-import { requestLogin, USER_LOGGED_IN_FAILURE } from '../actions/user';
+import type { Dispatch, State as ReduxState } from '../reducers/types';
+import {
+  requestLogin,
+  offlineLogin,
+  USER_LOGGED_IN_FAILURE
+} from '../actions/user';
 import ErrorMessage from './ErrorMessage';
 
 import styles from './Login.scss';
 
 type Props = {
   dispatch: Dispatch
-};
+} & ReduxState;
+
 type State = {
   username: string,
   password: string,
@@ -22,8 +27,8 @@ type State = {
 };
 
 const mapStateToProps = state => {
-  const { dispatch } = state;
-  return { dispatch };
+  const { dispatch, network, user } = state;
+  return { dispatch, network, user };
 };
 
 class Login extends Component<Props, State> {
@@ -36,11 +41,19 @@ class Login extends Component<Props, State> {
   };
 
   handleSubmit = async (event: SyntheticEvent<HTMLButtonElement>) => {
-    const { dispatch } = this.props;
+    const { dispatch, network, user } = this.props;
     const { username, password } = this.state;
     event.preventDefault();
 
-    const { type } = await dispatch(requestLogin(username, password));
+    const type = network.online
+      ? (await dispatch(requestLogin(username, password))).type
+      : (await dispatch(
+          offlineLogin({
+            userId: user.lastUserLoggedIn,
+            password,
+            userEmail: user.lastUserEmailLoggedIn
+          })
+        )).type;
     if (type === USER_LOGGED_IN_FAILURE)
       this.setState({
         error: 'The email and password combination does not match'
@@ -49,6 +62,7 @@ class Login extends Component<Props, State> {
 
   render() {
     const { username, password, error } = this.state;
+    const { network } = this.props;
     return (
       <div className={styles.loginContainer}>
         <Card className={styles.loginCard}>
@@ -64,14 +78,18 @@ class Login extends Component<Props, State> {
               </Cell>
               <Cell columns={12}>
                 <form onSubmit={e => this.handleSubmit(e)}>
-                  <TextField label="Username" className="full-width">
-                    <Input
-                      value={username}
-                      onChange={e =>
-                        this.setState({ username: e.currentTarget.value })
-                      }
-                    />
-                  </TextField>
+                  {network.online ? (
+                    <TextField label="Username" className="full-width">
+                      <Input
+                        value={username}
+                        onChange={e =>
+                          this.setState({ username: e.currentTarget.value })
+                        }
+                      />
+                    </TextField>
+                  ) : (
+                    `You're offline. You can only access the account for the most recently logged in user.`
+                  )}
                   <TextField label="Password" className="full-width margin-top">
                     <Input
                       value={password}

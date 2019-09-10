@@ -13,14 +13,12 @@ import { syncLabRecords } from './labRecords';
 import { syncPatients } from './patients';
 import { syncPatientEntries } from './patientEntries';
 import { syncEntities } from './enums';
+import { requestLogin } from './user';
+import { isLoggedIn } from '../reducers/user';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
 const SYNC_FINISH = 'SYNC_FINISH';
-const UPDATE_PENDING_COUNT = 'UPDATE_PENDING_COUNT';
-const UPDATE_PENDING_UPLOAD_COUNT = 'UPDATE_PENDING_UPLOAD_COUNT';
-const REDUCE_PENDING_COUNT = 'REDUCE_PENDING_COUNT';
-const REDUCE_PENDING_UPLOAD_COUNT = 'REDUCE_PENDING_UPLOAD_COUNT';
 
 // TODO: We should honor this order, currently the async process randomizes everything
 export const entities = [
@@ -67,10 +65,17 @@ export const entities = [
 ];
 
 export const syncStart = () => async (dispatch, getState) => {
-  const { sync } = getState();
-  if (sync.synchronizing) return;
+  const { sync, network, migrations, user } = getState();
+  if (
+    sync.synchronizing ||
+    !network.online ||
+    !migrations.ran ||
+    !isLoggedIn(user)
+  )
+    return;
 
   dispatch({ type: SYNC_START });
+  await dispatch(auth());
   setTimeout(
     async () =>
       // This way we ensure that the sync actions are runned in sequence instead of parallel
@@ -89,7 +94,15 @@ export const syncStop = () => dispatch => {
   dispatch({ type: SYNC_STOP });
 };
 
-export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
+export const auth = () => async (dispatch, getState) => {
+  const { user, network } = getState();
+
+  if (!network.online || user.auth['access-token']) return;
+
+  return dispatch(requestLogin(user.data.userEmail, user.data.password));
+};
+
+export const remoteSync = (url, user, entityName, mapper) => async () => {
   const initializedDb = await db.initializeForUser(user);
   const entity = initializedDb[entityName];
   const oldestEntity = await entity.findOne({
@@ -115,15 +128,9 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
         id_gth: newestRemoteId
       }
     },
-    (res, { total_count: totalCount, current_page: currentPage }) => {
+    (res, { total_count: totalCount }) => {
       if (totalCount === 0) return;
-      if (currentPage === '1')
-        dispatch({
-          type: UPDATE_PENDING_COUNT,
-          entity: entityName,
-          count: totalCount
-        });
-      Promise.all(
+      return Promise.all(
         res.map(async item => {
           const mapped = mapper(item);
           return [
@@ -131,63 +138,70 @@ export const remoteSync = (url, user, entityName, mapper) => async dispatch => {
             mapped,
             await entity.findOrBuild({ where: { remoteId: mapped.remoteId } })
           ];
-          // TODO: Do queries only if changed
         })
       )
         .then(items =>
-          items.map(([item, mapped, [foundEntity]]) => {
-            const remoteIsBeforeLocal = moment(item.updated_at).isBefore(
-              moment(foundEntity.updatedAt).toISOString()
-            );
-            if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
-              return foundEntity
-                .update(
+          Promise.all(
+            items.map(([item, mapped, [foundEntity]]) => {
+              const remoteIsBeforeLocal = moment(item.updated_at)
+                .local()
+                .isBefore(
+                  moment(foundEntity.updatedAt)
+                    .local()
+                    .toISOString()
+                );
+              if (remoteIsBeforeLocal && !foundEntity.isNewRecord) {
+                return foundEntity.update(
                   {
-                    lastSyncAt: moment(item.updated_at).toDate(),
+                    lastSyncAt: moment(item.updated_at)
+                      .local()
+                      .toDate(),
                     updatedAt: foundEntity.updatedAt
                   },
                   { silent: true }
-                )
-                .then(() =>
-                  dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
                 );
-            }
+              }
 
-            return foundEntity
-              .update(
+              return foundEntity.update(
                 {
                   ...mapped,
-                  lastSyncAt: moment(item.updated_at).toDate(),
-                  updatedAt: moment(item.updated_at).toDate()
+                  lastSyncAt: moment(item.updated_at)
+                    .local()
+                    .toDate(),
+                  updatedAt: moment(item.updated_at)
+                    .local()
+                    .toDate()
                 },
                 { silent: true }
-              )
-              .then(() =>
-                dispatch({ type: REDUCE_PENDING_COUNT, entity: entityName })
               );
-          })
+            })
+          )
         )
         .catch(e => console.log(e));
     }
   ).then(({ greather_updated_at: greatherUpdatedAt }) => {
+    if (!greatherUpdatedAt) return;
     entity.update(
-      { lastSyncAt: moment(greatherUpdatedAt).toDate() },
+      {
+        lastSyncAt: moment(greatherUpdatedAt)
+          .local()
+          .toDate(),
+        updatedAt: moment(greatherUpdatedAt)
+          .local()
+          .toDate()
+      },
       {
         where: initializedDb.sequelize.literal(
           "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) <= strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
-        )
+        ),
+        silent: true
       }
     );
     return Promise.resolve();
   });
 };
 
-export const remoteUpload = (
-  url,
-  user,
-  entityName,
-  mapper
-) => async dispatch => {
+export const remoteUpload = (url, user, entityName, mapper) => async () => {
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
@@ -195,17 +209,7 @@ export const remoteUpload = (
     where: sequelize.literal("remoteId is NULL OR remoteId = ''")
   });
 
-  const collectionToUpdate = await entity.findAll({
-    where: sequelize.literal(
-      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
-    )
-  });
   if (collectionToCreate.length === 0) return;
-  dispatch({
-    type: UPDATE_PENDING_UPLOAD_COUNT,
-    entity: entityName,
-    count: collectionToCreate.length + collectionToUpdate.length
-  });
 
   collectionToCreate.forEach(async currentEntity => {
     const mapped = await Promise.resolve(mapper(currentEntity));
@@ -215,9 +219,6 @@ export const remoteUpload = (
     })
       .then(res =>
         currentEntity.update({ remoteId: res.id, lastSyncAt: new Date() })
-      )
-      .then(() =>
-        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: entityName })
       )
       .catch(e => console.log(e));
   });
@@ -237,7 +238,6 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
       "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
     )
   });
-
   collectionToUpdate.forEach(async currentEntity => {
     const mapped = await Promise.resolve(mapper(currentEntity));
     fetchAuthenticated(url(currentEntity.remoteId), user.auth, {
@@ -247,8 +247,12 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
       .then(item =>
         entity.update(
           {
-            lastSyncAt: moment(item.updated_at).toDate(),
-            updatedAt: moment(item.updated_at).toDate()
+            lastSyncAt: moment(item.updated_at)
+              .local()
+              .toDate(),
+            updatedAt: moment(item.updated_at)
+              .local()
+              .toDate()
           },
           {
             where: {
@@ -258,20 +262,9 @@ export const remoteUploadUpdate = (url, entityName, mapper) => async (
           }
         )
       )
-      .then(() =>
-        dispatch({ type: REDUCE_PENDING_UPLOAD_COUNT, entity: 'LabRecord' })
-      )
       .catch(e => console.log(e));
   });
   return Promise.resolve();
 };
 
-export {
-  SYNC_START,
-  SYNC_STOP,
-  SYNC_FINISH,
-  UPDATE_PENDING_COUNT,
-  UPDATE_PENDING_UPLOAD_COUNT,
-  REDUCE_PENDING_COUNT,
-  REDUCE_PENDING_UPLOAD_COUNT
-};
+export { SYNC_START, SYNC_STOP, SYNC_FINISH };

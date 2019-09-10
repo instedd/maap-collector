@@ -45,16 +45,7 @@ class Sites extends Component<Props, State> {
 
   getSearchConditions() {
     const { searchText, hasPharmacy, hasLaboratory, hasHospital } = this.state;
-    const searchConditions = {};
-    if (searchText)
-      searchConditions[Sequelize.Op.or] = [
-        { name: { [Sequelize.Op.like]: `%${searchText}%` } },
-        { address: { [Sequelize.Op.like]: `%${searchText}%` } },
-        { ownership: { [Sequelize.Op.like]: `%${searchText}%` } },
-        { id: { [Sequelize.Op.like]: `%${searchText}%` } }
-      ];
-    return {
-      ...searchConditions,
+    const filtersConditions = {
       [Sequelize.Op.or]: [
         {
           [Sequelize.Op.and]: [
@@ -66,6 +57,20 @@ class Sites extends Component<Props, State> {
         hasPharmacy && { hasPharmacy },
         hasLaboratory && { hasLaboratory },
         hasHospital && { hasHospital }
+      ]
+    };
+    if (!searchText) return filtersConditions;
+    return {
+      [Sequelize.Op.and]: [
+        filtersConditions,
+        {
+          [Sequelize.Op.or]: [
+            { name: { [Sequelize.Op.like]: `%${searchText}%` } },
+            { address: { [Sequelize.Op.like]: `%${searchText}%` } },
+            { ownership: { [Sequelize.Op.like]: `%${searchText}%` } },
+            { id: { [Sequelize.Op.like]: `%${searchText}%` } }
+          ]
+        }
       ]
     };
   }

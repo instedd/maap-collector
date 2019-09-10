@@ -31,6 +31,7 @@ export const createPatient = (attributes: Attributes) => async (
   return Patient.create({ ...attributes, siteId: site.id })
     .then(record => {
       dispatch({ type: SAVED_PATIENT, record });
+      // Trigger sync because creating a patient doesn't navigate to a new location
       dispatch(syncStart());
       return dispatch(fetchPatients({ siteId: site.id }));
     })

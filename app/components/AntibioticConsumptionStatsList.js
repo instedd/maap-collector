@@ -4,16 +4,18 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import TextField, { Input } from '@material/react-text-field';
-import Select, { Option } from '@material/react-select';
 import MaterialIcon from '@material/react-material-icon';
 import type { ContextRouter } from 'react-router';
+import CombinedSelect from './CombinedSelect';
 import type { Dispatch, Page } from '../reducers/types';
-import { fetchAntibioticConsumptionStats } from '../actions/antibioticConsumptionStats';
+import {
+  fetchAntibioticConsumptionStatsList,
+  addCreatedAntibioticConsumptionStat
+} from '../actions/antibioticConsumptionStats';
 import { createAntibioticConsumptionStat } from '../actions/antibioticConsumptionStat';
 import { fetchAntibiotic } from '../actions/antibiotic';
 import Table from './Table';
 import RowForm from './RowForm';
-import { syncStart } from '../actions/sync';
 
 type ComponentProps = {
   dispatch: Dispatch,
@@ -28,12 +30,12 @@ type ComponentProps = {
   onEditClick: (number, {}) => void
 };
 type State = {
-  date?: Date,
-  issued?: boolean,
-  quantity?: number,
-  balance?: number,
-  recipientFacility?: string,
-  recipientUnit?: string,
+  date: ?Date,
+  issued: ?boolean,
+  quantity: ?number,
+  balance: ?number,
+  recipientFacility: ?string,
+  recipientUnit: ?string,
   site: {
     id: number
   } | null
@@ -41,45 +43,41 @@ type State = {
 
 type Props = ComponentProps & ContextRouter;
 
+const initialState = {
+  issued: null,
+  date: null,
+  quantity: null,
+  balance: null,
+  recipientFacility: null,
+  recipientUnit: null,
+  site: null
+};
+
 const mapStateToProps = state => {
   const { dispatch, antibioticConsumptionStatsList, site } = state;
   return { dispatch, antibioticConsumptionStatsList, site };
 };
 
 class AntibioticConsumptionStatsList extends Component<Props, State> {
-  state: State = { site: null };
+  state: State = initialState;
 
-  handleSubmit = () => {
-    const {
-      dispatch,
-      antibioticId,
-      history,
-      antibioticConsumptionStatsList,
-      site
-    } = this.props;
+  handleSubmit = async () => {
+    const { dispatch, antibioticId } = this.props;
 
-    return dispatch(
+    const record = await dispatch(
       createAntibioticConsumptionStat({ ...this.state, antibioticId })
-    ).then(() => {
-      history.push({
-        search: `page=${
-          antibioticConsumptionStatsList.antibioticConsumptionStats.totalPages
-        }`
-      });
-      dispatch(syncStart());
-      return dispatch(
-        fetchAntibioticConsumptionStats({
-          antibioticId,
-          siteId: site && site.id
-        })
-      );
-    });
+    );
+    this.setState(initialState);
+    dispatch(addCreatedAntibioticConsumptionStat(record));
   };
 
   componentDidMount() {
     const { dispatch, antibioticId, site } = this.props;
     dispatch(
-      fetchAntibioticConsumptionStats({ antibioticId, siteId: site && site.id })
+      fetchAntibioticConsumptionStatsList({
+        antibioticId,
+        siteId: site && site.id
+      })
     );
     dispatch(fetchAntibiotic(antibioticId));
   }
@@ -123,7 +121,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
           nextPage={antibioticConsumptionStats.nextPage}
           onReload={() =>
             dispatch(
-              fetchAntibioticConsumptionStats({
+              fetchAntibioticConsumptionStatsList({
                 antibioticId,
                 siteId: site && site.id
               })
@@ -158,21 +156,27 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="date"
-                  value={date}
+                  value={date || ''}
                   onChange={e => this.setState({ date: e.currentTarget.value })}
                 />
               </TextField>
-              <Select
-                value={issued}
-                onChange={evt => this.setState({ issued: evt.target.value })}
-              >
-                <Option value={false}>Out</Option>
-                <Option value>In</Option>
-              </Select>
+              <CombinedSelect
+                className="full-width"
+                value={{ value: issued || false, label: issued ? 'In' : 'Out' }}
+                label=""
+                isMulti={false}
+                creatable={false}
+                options={[
+                  { value: true, label: 'In' },
+                  { value: false, label: 'Out' }
+                ]}
+                // $FlowFixMe
+                onChange={v => this.setState({ issued: v.value })}
+              />
               <TextField>
                 <Input
                   type="number"
-                  value={quantity}
+                  value={quantity || ''}
                   onChange={e =>
                     this.setState({ quantity: e.currentTarget.value })
                   }
@@ -181,7 +185,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="number"
-                  value={balance}
+                  value={balance || ''}
                   onChange={e =>
                     this.setState({ balance: e.currentTarget.value })
                   }
@@ -190,7 +194,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="text"
-                  value={recipientFacility}
+                  value={recipientFacility || ''}
                   onChange={e =>
                     this.setState({ recipientFacility: e.currentTarget.value })
                   }
@@ -199,7 +203,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
               <TextField>
                 <Input
                   type="text"
-                  value={recipientUnit}
+                  value={recipientUnit || ''}
                   onChange={e =>
                     this.setState({ recipientUnit: e.currentTarget.value })
                   }

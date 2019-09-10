@@ -11,7 +11,11 @@ import PatientIdStep from './PatientIdStep';
 import type { Dispatch, State as ReduxState } from '../reducers/types';
 import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
-import { setFileData, createLabRecord } from '../actions/labRecordImport';
+import {
+  setFileData,
+  createLabRecord,
+  cleanLabRecordImport
+} from '../actions/labRecordImport';
 import style from './LabRecordImportWizard.scss';
 
 type Props = {
@@ -36,7 +40,7 @@ const STEPS = [
 
 const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });
 
-class LabRecordsImport extends Component<Props, State> {
+class LabRecordsImportWizard extends Component<Props, State> {
   props: Props;
 
   state: State = { currentStep: 0 };
@@ -57,6 +61,11 @@ class LabRecordsImport extends Component<Props, State> {
     if (currentStep === 0) return history.push('/');
     this.setState({ currentStep: currentStep - 1 });
   };
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(cleanLabRecordImport());
+  }
 
   render() {
     const { labRecordImport } = this.props;
@@ -114,4 +123,4 @@ class LabRecordsImport extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(LabRecordsImport));
+export default connect(mapStateToProps)(withRouter(LabRecordsImportWizard));
