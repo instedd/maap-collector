@@ -12,9 +12,13 @@ export const createElectronicPharmacyStockRecord = () => async (
   dispatch,
   getState
 ) => {
-  const { labRecordImport: labRecordImportState, user, site } = getState();
-  const { LabRecord } = await db.initializeForUser(user);
-  const { file } = labRecordImportState;
+  const {
+    electronicPharmacyStockRecordImport: ElectronicPharmacyStockRecordState,
+    user,
+    site
+  } = getState();
+  const { ElectronicPharmacyStockRecord } = await db.initializeForUser(user);
+  const { file } = ElectronicPharmacyStockRecordState;
   const fileName = basename(file.path);
   const newFilePath = join(
     remote.app.getPath('userData'),
@@ -26,15 +30,20 @@ export const createElectronicPharmacyStockRecord = () => async (
     fs.copyFile(file.path, newFilePath, async err => {
       if (err) reject(err);
 
-      const labRecord = await LabRecord.create({
-        filePath: newFilePath,
-        fileName,
-        siteId: site.id,
-        ...labRecordImportState
-      });
+      const electronicPharmacyStockRecord = await ElectronicPharmacyStockRecord.create(
+        {
+          filePath: newFilePath,
+          fileName,
+          siteId: site.id,
+          ...ElectronicPharmacyStockRecordState
+        }
+      );
 
-      dispatch({ type: 'CREATED_LAB_RECORD', id: labRecord.id });
-      resolve(labRecord);
+      dispatch({
+        type: 'CREATED_ELECTRONIC_PHARMACY_STOCK_RECORD',
+        id: electronicPharmacyStockRecord.id
+      });
+      resolve(electronicPharmacyStockRecord);
     });
   });
 };

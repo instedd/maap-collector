@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import DropZone from './DropZone';
-import PatientIdStep from './PatientIdStep';
+import ReviewStep from './ReviewStep';
 import type { Dispatch, State as ReduxState } from '../reducers/types';
 import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
@@ -38,17 +38,24 @@ const STEPS = [
   ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
     <ProtectedHealthInformationStep
       importData={electronicPharmacyStockRecordImport}
+      withPatientOrLabRecordId={false}
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  PatientIdStep
+  ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
+    <ReviewStep
+      importData={electronicPharmacyStockRecordImport}
+      withPatientOrLabRecordId={false}
+      onChange={state => dispatch(setImportData(state))}
+    />
+  )
 ];
 
 const mapStateToProps = ({ electronicPharmacyStockRecordImport }) => ({
   electronicPharmacyStockRecordImport
 });
 
-class ElectronicPharmacyStockREcordImportWizard extends Component<
+class ElectronicPharmacyStockRecordImportWizard extends Component<
   Props,
   State
 > {
@@ -60,8 +67,8 @@ class ElectronicPharmacyStockREcordImportWizard extends Component<
     const { dispatch, history } = this.props;
     const { currentStep } = this.state;
     if (currentStep === STEPS.length - 1)
-      return dispatch(createElectronicPharmacyStockRecord()).then(labRecord =>
-        history.push(`/lab_records/${labRecord.id}`)
+      return dispatch(createElectronicPharmacyStockRecord()).then(() =>
+        history.push(`/electronic_pharmacy_stock_records`)
       );
     this.setState({ currentStep: currentStep + 1 });
   };
@@ -144,5 +151,5 @@ class ElectronicPharmacyStockREcordImportWizard extends Component<
 }
 
 export default connect(mapStateToProps)(
-  withRouter(ElectronicPharmacyStockREcordImportWizard)
+  withRouter(ElectronicPharmacyStockRecordImportWizard)
 );

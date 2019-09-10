@@ -54,6 +54,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
   columnName = column =>
     column.v ? `${column.c} - ${column.v}` : `Column ${column.c}`;
 
+  static defaultProps: Props = {
+    withPatientOrLabRecordId: true
+  };
+
   componentDidMount() {
     const { importData, onChange } = this.props;
     const { file, headerRow } = importData;
@@ -69,7 +73,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
   }
 
   render() {
-    const { importData } = this.props;
+    const { importData, withPatientOrLabRecordId } = this.props;
     const { columns, patientOrLabRecordId, phi, date } = importData;
     return (
       <div>
@@ -78,8 +82,15 @@ class ProtectedHealthInformationStep extends Component<Props> {
           <thead>
             <tr>
               <th>Columns</th>
-              <th className="text-center">Patient id</th>
-              <th className="text-center">Lab record id</th>
+              {withPatientOrLabRecordId ? (
+                <>
+                  <th className="text-center">Patient id</th>
+                  <th className="text-center">Lab record id</th>
+                </>
+              ) : (
+                <></>
+              )}
+
               <th className="text-center">PHI</th>
               <th className="text-center">Date</th>
               <th />
@@ -89,30 +100,45 @@ class ProtectedHealthInformationStep extends Component<Props> {
             {columns.map((column, index) => (
               <tr key={`row-${index}`}>
                 <td>{this.columnName(column)}</td>
-                <td className="text-center">
-                  <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
-                    <NativeRadioControl
-                      name="patientId"
-                      value="patientId"
-                      disabled={date[index]}
-                      id={`patientOrLabRecordID-${index}`}
-                      checked={patientOrLabRecordId[index] === 'patientId'}
-                      onChange={this.handlePatientOrLabRecordIdChange(index)}
-                    />
-                  </Radio>
-                </td>
-                <td className="text-center">
-                  <Radio key={`patientOrLabRecordID-${index}-lab-record-id`}>
-                    <NativeRadioControl
-                      name="labRecordId"
-                      value="labRecordId"
-                      disabled={date[index]}
-                      id={`patientOrLabRecordID-${index}`}
-                      checked={patientOrLabRecordId[index] === 'labRecordId'}
-                      onChange={this.handlePatientOrLabRecordIdChange(index)}
-                    />
-                  </Radio>
-                </td>
+
+                {withPatientOrLabRecordId ? (
+                  <>
+                    <td className="text-center">
+                      <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
+                        <NativeRadioControl
+                          name="patientId"
+                          value="patientId"
+                          disabled={date[index]}
+                          id={`patientOrLabRecordID-${index}`}
+                          checked={patientOrLabRecordId[index] === 'patientId'}
+                          onChange={this.handlePatientOrLabRecordIdChange(
+                            index
+                          )}
+                        />
+                      </Radio>
+                    </td>
+                    <td className="text-center">
+                      <Radio
+                        key={`patientOrLabRecordID-${index}-lab-record-id`}
+                      >
+                        <NativeRadioControl
+                          name="labRecordId"
+                          value="labRecordId"
+                          disabled={date[index]}
+                          id={`patientOrLabRecordID-${index}`}
+                          checked={
+                            patientOrLabRecordId[index] === 'labRecordId'
+                          }
+                          onChange={this.handlePatientOrLabRecordIdChange(
+                            index
+                          )}
+                        />
+                      </Radio>
+                    </td>
+                  </>
+                ) : (
+                  <></>
+                )}
                 <td className="text-center">
                   <Checkbox
                     nativeControlId="phi-checkbox"

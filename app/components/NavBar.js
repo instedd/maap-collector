@@ -48,6 +48,11 @@ const tabs = [
     name: 'Pharmacy stats',
     icon: <MaterialIcon icon="bar_chart" />,
     path: routes.ANTIBIOTIC_CONSUMPTION_DATA_INDEX
+  },
+  {
+    name: 'Electronic Pharmacy Stock Records',
+    icon: <MaterialIcon icon="bar_chart" />,
+    path: '/electronic_pharmacy_stock_records'
   }
 ];
 class NavBar extends Component<Props, State> {

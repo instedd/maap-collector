@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import DropZone from './DropZone';
-import PatientIdStep from './PatientIdStep';
+import ReviewStep from './ReviewStep';
 import type { Dispatch, State as ReduxState } from '../reducers/types';
 import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
@@ -38,10 +38,16 @@ const STEPS = [
   ({ dispatch, labRecordImport }: Props) => (
     <ProtectedHealthInformationStep
       importData={labRecordImport}
+      withPatientOrLabRecord={false}
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  PatientIdStep
+  ({ dispatch, labRecordImport }: Props) => (
+    <ReviewStep
+      importData={labRecordImport}
+      onChange={state => dispatch(setImportData(state))}
+    />
+  )
 ];
 
 const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });

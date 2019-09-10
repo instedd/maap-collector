@@ -3,30 +3,17 @@ import { at, values } from 'lodash';
 import TextField, { Input } from '@material/react-text-field';
 
 import XlsxManager from '../utils/xlsxManager';
-import { setPatientIdData } from '../actions/labRecordImport';
 
-import style from './PatientIdStep.scss';
+import style from './ReviewStep.scss';
 
 type ComponentProps = {};
 
 type Props = ComponentProps;
 
-class PatientIdStep extends Component<Props> {
-  handleRowChange = (rowIndex, cellIndex) => e => {
-    const { labRecordImport, dispatch } = this.props;
-    const { rows } = labRecordImport;
-    const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { w: e.target.value };
-    dispatch(
-      setPatientIdData({
-        rows: newRows
-      })
-    );
-  };
-
+class ReviewStep extends Component<Props> {
   indexMatchesIdColumn = (index, columnName) => {
-    const { labRecordImport } = this.props;
-    const { patientOrLabRecordId, columnsToKeep } = labRecordImport;
+    const { importData } = this.props;
+    const { patientOrLabRecordId, columnsToKeep } = importData;
     return patientOrLabRecordId[columnsToKeep[index]] === columnName;
   };
 
@@ -58,8 +45,13 @@ class PatientIdStep extends Component<Props> {
     return `${column.c} - ${column.v}`;
   };
 
+  static defaultProps: Props = {
+    onChange: () => {},
+    withPatientOrLabRecordId: true
+  };
+
   componentDidMount() {
-    const { labRecordImport, dispatch } = this.props;
+    const { importData, onChange, withPatientOrLabRecordId } = this.props;
     const {
       file,
       dataRowsFrom,
@@ -67,16 +59,19 @@ class PatientIdStep extends Component<Props> {
       patientOrLabRecordId,
       phi,
       date
-    } = labRecordImport;
+    } = importData;
     const sheet = new XlsxManager(file.path);
-    const headerRow = sheet.row(labRecordImport.headerRow - 1);
+    const headerRow = sheet.row(importData.headerRow - 1);
     let rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
     const columnsToKeep = headerRow.reduce((acc, current, index) => {
       if (patientOrLabRecordId[index] || phi[index] || date[index])
         acc.push(index);
       return acc;
     }, []);
-    if (!values(patientOrLabRecordId).some(i => i === 'patientId')) {
+    if (
+      withPatientOrLabRecordId &&
+      !values(patientOrLabRecordId).some(i => i === 'patientId')
+    ) {
       headerRow.push({ v: 'Manual Patient Id', w: 'Manual Patient Id' });
       date.push(null);
       phi.push(false);
@@ -85,26 +80,19 @@ class PatientIdStep extends Component<Props> {
       patientOrLabRecordId[headerRow.length - 1] = 'patientId';
     }
 
-    dispatch(
-      setPatientIdData({
-        columns: columnsToKeep.map(index => headerRow[index]),
-        columnsToKeep,
-        rows,
-        patientOrLabRecordId,
-        phi,
-        date
-      })
-    );
+    onChange({
+      columns: columnsToKeep.map(index => headerRow[index]),
+      columnsToKeep,
+      rows,
+      patientOrLabRecordId,
+      phi,
+      date
+    });
   }
 
   render() {
-    const { labRecordImport } = this.props;
-    const {
-      columns,
-      rows,
-      patientOrLabRecordId,
-      columnsToKeep
-    } = labRecordImport;
+    const { importData, withPatientOrLabRecordId } = this.props;
+    const { columns, rows, patientOrLabRecordId, columnsToKeep } = importData;
 
     if (!patientOrLabRecordId || !columnsToKeep) {
       return <></>;
@@ -135,7 +123,8 @@ class PatientIdStep extends Component<Props> {
                 {at(row, columnsToKeep).map((cell, index) => (
                   // eslint-disable-next-line
                   <td className={style.centered} key={`td-${index}`}>
-                    {this.indexMatchesIdColumn(index, 'patientId') ? (
+                    {withPatientOrLabRecordId &&
+                    this.indexMatchesIdColumn(index, 'patientId') ? (
                       <TextField>
                         <Input
                           type="text"
@@ -160,4 +149,4 @@ class PatientIdStep extends Component<Props> {
   }
 }
 
-export default PatientIdStep;
+export default ReviewStep;
