@@ -44,6 +44,8 @@ const STEPS = [
   ),
   ({ dispatch, labRecordImport }: Props) => (
     <ReviewStep
+      title="Complete patient ID for record linking"
+      subtitle="You could skip this and complete patient ID later from lab records"
       importData={labRecordImport}
       onChange={state => dispatch(setImportData(state))}
     />

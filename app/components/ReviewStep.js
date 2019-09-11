@@ -101,7 +101,12 @@ class ReviewStep extends Component<Props> {
   }
 
   render() {
-    const { importData, withPatientOrLabRecordId } = this.props;
+    const {
+      importData,
+      withPatientOrLabRecordId,
+      title,
+      subtitle
+    } = this.props;
     const { columns, rows, patientOrLabRecordId, columnsToKeep } = importData;
 
     if (!patientOrLabRecordId || !columnsToKeep) {
@@ -110,10 +115,9 @@ class ReviewStep extends Component<Props> {
 
     return (
       <div>
-        <h2>Complete patient ID for record linking</h2>
-        <h4>
-          You could skip this and complete patient ID later from lab records
-        </h4>
+        {/* TODO Remove this text for pharmacy */}
+        <h2>{title}</h2>
+        <h4>{subtitle}</h4>
         <table>
           <thead>
             <tr>

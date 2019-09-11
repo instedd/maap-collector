@@ -51,7 +51,7 @@ class ElectronicPharmacyStockRecordslist extends Component<Props, State> {
     return (
       <div>
         <Table
-          entityName="Electronic Pharmacy Stock Records"
+          entityName="Imported Electronic Pharmacy Stock Files "
           items={electronicPharmacyStockRecords.items}
           pagination
           totalCount={electronicPharmacyStockRecords.totalCount}

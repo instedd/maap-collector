@@ -31,7 +31,7 @@ const STEPS = [
   ({ dispatch, electronicPharmacyStockRecordImport }) => (
     <DropZone
       {...electronicPharmacyStockRecordImport}
-      title="Upload a file with the Electronic Pharmacy Stock Records"
+      title="Upload a file with Pharmacy Stock Records"
       onChange={state => dispatch(setImportData(state))}
     />
   ),
@@ -46,6 +46,8 @@ const STEPS = [
     <ReviewStep
       importData={electronicPharmacyStockRecordImport}
       withPatientOrLabRecordId={false}
+      title="REVIEW AND FINISH"
+      subtitle="Click Next to import the rows displayed below, or Cancel to abort the process"
       onChange={state => dispatch(setImportData(state))}
     />
   )
