@@ -10,7 +10,7 @@ const userDbPath = userId => `${storagePath}${userId}.sqlite`;
 const userBackupPath = userId =>
   `${storagePath}${userId}-${new Date().getTime()}.sqlite`;
 
-const initialize = async (dbName, password, syncSchema = true) => {
+const initialize = async (dbName, password) => {
   const sequelize = new Sequelize(null, null, password, {
     dialect: 'sqlite',
     dialectModulePath: '@journeyapps/sqlcipher',
@@ -29,7 +29,6 @@ const initialize = async (dbName, password, syncSchema = true) => {
       }
     );
 
-  if (syncSchema) await sequelize.sync();
   return objects;
 };
 
