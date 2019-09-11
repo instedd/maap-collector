@@ -25,9 +25,8 @@ const buildUmzug = sequelize =>
         process.env.NODE_ENV === 'development'
           ? 'app/db/migrations'
           : path.join(
-              remote.app.getPath('module'),
+              remote.app.getAppPath(),
               '../',
-              'resources',
               'app',
               'db',
               'migrations'
