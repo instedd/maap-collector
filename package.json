@@ -66,6 +66,13 @@
       "app/main.prod.js.map",
       "package.json"
     ],
+    "extraResources": {
+      "from": "./app/db/migrations/",
+      "to": "app/db/migrations",
+      "filter": [
+        "**/*.js"
+      ]
+    },
     "dmg": {
       "contents": [
         {
