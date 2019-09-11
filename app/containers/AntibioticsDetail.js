@@ -8,6 +8,7 @@ import Dialog, {
   DialogFooter,
   DialogButton
 } from '@material/react-dialog';
+import type { ContextRouter } from 'react-router';
 import {
   fetchAntibioticConsumptionStatsList,
   cleanAntibioticConsumptionStatsList
@@ -28,7 +29,7 @@ type Props = {
   },
   site: { id: number },
   dispatch: Dispatch
-};
+} & ContextRouter;
 
 type State = {
   modalIsOpen: boolean,

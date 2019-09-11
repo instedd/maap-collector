@@ -54,7 +54,7 @@ const fetchEntitySingular = entityName => (where = {}) => async (
   dispatch({ type: `FETCH_${singularizedEntityName}`, where });
   const { user } = getState();
   const entity = (await db.initializeForUser(user))[entityName];
-  entity
+  return entity
     .findOne({ where, order: [['id', 'desc']] })
     .then(item =>
       dispatch({

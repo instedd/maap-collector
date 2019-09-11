@@ -15,6 +15,7 @@ import { syncPatientEntries } from './patientEntries';
 import { syncEntities } from './enums';
 import { requestLogin } from './user';
 import { isLoggedIn } from '../reducers/user';
+import { syncElectronicPharmacyStockRecords } from './electronicPharmacyStockRecords';
 
 const SYNC_START = 'SYNC_START';
 const SYNC_STOP = 'SYNC_STOP';
@@ -61,6 +62,10 @@ export const entities = [
   {
     name: 'LabRecord',
     syncAction: syncLabRecords
+  },
+  {
+    name: 'ElectronicPharmacyStockRecord',
+    syncAction: syncElectronicPharmacyStockRecords
   }
 ];
 

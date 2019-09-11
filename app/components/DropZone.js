@@ -9,7 +9,8 @@ type Props = {
   file?: File | null,
   headerRow?: string | null,
   dataRowsFrom?: string | null,
-  dataRowsTo?: string | null
+  dataRowsTo?: string | null,
+  title: string
 };
 type State = {};
 
@@ -48,10 +49,17 @@ class DropZone extends Component<Props, State> {
 
   render() {
     const { dragging } = this.state;
-    const { file, headerRow, dataRowsFrom, dataRowsTo, onChange } = this.props;
+    const {
+      file,
+      headerRow,
+      dataRowsFrom,
+      dataRowsTo,
+      onChange,
+      title
+    } = this.props;
     return (
       <>
-        <h2>UPLOAD A FILE WITH ALL THE NEW ENTRIES</h2>
+        <h2>{title}</h2>
         <div
           className={[dragging ? styles.dragging : '', styles.dropzone].join(
             ' '
