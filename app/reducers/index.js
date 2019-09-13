@@ -7,6 +7,8 @@ import site from './site';
 import sites from './sites';
 import labRecords from './labRecords';
 import labRecordImport from './labRecordImport';
+import electronicPharmacyStockRecordImport from './electronicPharmacyStockRecordImport';
+import electronicPharmacyStockRecords from './electronicPharmacyStockRecords';
 import sync from './sync';
 import specimenSources from './specimenSources';
 import antibiotic from './antibiotic';
@@ -36,6 +38,8 @@ export default function createRootReducer(history: {}) {
       antibiotic,
       antibiotics,
       antibioticConsumptionStatsList,
+      electronicPharmacyStockRecordImport,
+      electronicPharmacyStockRecords,
       patient,
       patients,
       patientEntryEdit,

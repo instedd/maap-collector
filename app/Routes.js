@@ -13,6 +13,9 @@ import PatientEntriesNew from './containers/PatientEntriesNew';
 import PatientEntriesEdit from './containers/PatientEntriesEdit';
 import LabRecordsImport from './containers/LabRecordsImport';
 import LabRecordsDetail from './containers/LabRecordsDetail';
+import ElectronicPharmacyStockRecordsIndex from './containers/ElectronicPharmacyStockRecordsIndex';
+import ElectronicPharmacyStockRecordImport from './containers/ElectronicPharmacyStockRecordImport';
+import ElectronicPharmacyStockRecordDetail from './containers/ElectronicPharmacyStockRecordDetail';
 
 const mapStateToProps = state => {
   const { user } = state;
@@ -83,6 +86,21 @@ const Router = () => (
         exact
         path="/lab_records/:id"
         component={LabRecordsDetail}
+      />
+      <PrivateRoute
+        exact
+        path="/electronic_pharmacy_stock_records"
+        component={ElectronicPharmacyStockRecordsIndex}
+      />
+      <PrivateRoute
+        exact
+        path="/electronic_pharmacy_stock_records/import"
+        component={ElectronicPharmacyStockRecordImport}
+      />
+      <PrivateRoute
+        exact
+        path="/electronic_pharmacy_stock_records/:id"
+        component={ElectronicPharmacyStockRecordDetail}
       />
     </Switch>
   </App>

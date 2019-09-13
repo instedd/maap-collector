@@ -8,6 +8,7 @@ import PatientEntry from './patientEntry';
 import LabRecord from './labRecord';
 import ClinicalService from './clinicalService';
 import PatientLocation from './patientLocation';
+import ElectronicPharmacyStockRecord from './electronicPharmacyStockRecord';
 
 export default {
   Site,
@@ -19,5 +20,6 @@ export default {
   Patient,
   PatientEntry,
   ClinicalService,
+  ElectronicPharmacyStockRecord,
   PatientLocation
 };

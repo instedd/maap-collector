@@ -13,9 +13,9 @@ import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
 import {
   setImportData,
-  createLabRecord,
-  cleanLabRecordImport
-} from '../actions/labRecordImport';
+  cleanWizard,
+  createElectronicPharmacyStockRecord
+} from '../actions/electronicPharmacyStockRecordImport';
 import style from './LabRecordImportWizard.scss';
 
 type Props = {
@@ -28,33 +28,39 @@ type State = {
 };
 
 const STEPS = [
-  ({ dispatch, labRecordImport }) => (
+  ({ dispatch, electronicPharmacyStockRecordImport }) => (
     <DropZone
-      {...labRecordImport}
-      title="UPLOAD A FILE WITH ALL THE NEW ENTRIES"
+      {...electronicPharmacyStockRecordImport}
+      title="Upload a file with Pharmacy Stock Records"
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  ({ dispatch, labRecordImport }: Props) => (
+  ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
     <ProtectedHealthInformationStep
-      importData={labRecordImport}
-      withPatientOrLabRecord={false}
+      importData={electronicPharmacyStockRecordImport}
+      withPatientOrLabRecordId={false}
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  ({ dispatch, labRecordImport }: Props) => (
+  ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
     <ReviewStep
-      title="Complete patient ID for record linking"
-      subtitle="You could skip this and complete patient ID later from lab records"
-      importData={labRecordImport}
+      importData={electronicPharmacyStockRecordImport}
+      withPatientOrLabRecordId={false}
+      title="REVIEW AND FINISH"
+      subtitle="Click Next to import the rows displayed below, or Cancel to abort the process"
       onChange={state => dispatch(setImportData(state))}
     />
   )
 ];
 
-const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });
+const mapStateToProps = ({ electronicPharmacyStockRecordImport }) => ({
+  electronicPharmacyStockRecordImport
+});
 
-class LabRecordsImportWizard extends Component<Props, State> {
+class ElectronicPharmacyStockRecordImportWizard extends Component<
+  Props,
+  State
+> {
   props: Props;
 
   state: State = { currentStep: 0 };
@@ -63,8 +69,8 @@ class LabRecordsImportWizard extends Component<Props, State> {
     const { dispatch, history } = this.props;
     const { currentStep } = this.state;
     if (currentStep === STEPS.length - 1)
-      return dispatch(createLabRecord()).then(labRecord =>
-        history.push(`/lab_records/${labRecord.id}`)
+      return dispatch(createElectronicPharmacyStockRecord()).then(() =>
+        history.push(`/electronic_pharmacy_stock_records`)
       );
     this.setState({ currentStep: currentStep + 1 });
   };
@@ -78,21 +84,30 @@ class LabRecordsImportWizard extends Component<Props, State> {
 
   componentWillUnmount() {
     const { dispatch } = this.props;
-    dispatch(cleanLabRecordImport());
+    dispatch(cleanWizard());
   }
 
   render() {
-    const { labRecordImport } = this.props;
+    const { electronicPharmacyStockRecordImport } = this.props;
     const { currentStep } = this.state;
-    const headerRow = parseInt(labRecordImport.headerRow, 10);
-    const dataRowsTo = parseInt(labRecordImport.dataRowsTo, 10);
-    const dataRowsFrom = parseInt(labRecordImport.dataRowsFrom, 10);
+    const headerRow = parseInt(
+      electronicPharmacyStockRecordImport.headerRow,
+      10
+    );
+    const dataRowsTo = parseInt(
+      electronicPharmacyStockRecordImport.dataRowsTo,
+      10
+    );
+    const dataRowsFrom = parseInt(
+      electronicPharmacyStockRecordImport.dataRowsFrom,
+      10
+    );
     const CurrentStepComponent = STEPS[currentStep];
     return (
       <Card>
         <WizardHeader
           currentStep={currentStep}
-          steps={['File upload', 'PHI', 'Patient ID']}
+          steps={['File upload', 'PHI', 'Review and finish']}
         />
         <div className={style.wizardBody}>
           {/* $FlowFixMe */}
@@ -113,7 +128,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
             disabled={
               currentStep === 0 &&
               (!(
-                labRecordImport.file &&
+                electronicPharmacyStockRecordImport.file &&
                 headerRow &&
                 dataRowsTo &&
                 dataRowsFrom
@@ -137,4 +152,6 @@ class LabRecordsImportWizard extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(LabRecordsImportWizard));
+export default connect(mapStateToProps)(
+  withRouter(ElectronicPharmacyStockRecordImportWizard)
+);

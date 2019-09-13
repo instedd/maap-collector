@@ -1,5 +1,6 @@
 import path from 'path';
 import Umzug from 'umzug';
+import { remote } from 'electron';
 import db from './index';
 
 const buildUmzug = sequelize =>
@@ -20,7 +21,16 @@ const buildUmzug = sequelize =>
           );
         }
       ],
-      path: 'app/db/migrations',
+      path:
+        process.env.NODE_ENV === 'development'
+          ? 'app/db/migrations'
+          : path.join(
+              remote.app.getAppPath(),
+              '../',
+              'app',
+              'db',
+              'migrations'
+            ),
       pattern: /\.js$/
     },
     logging: function logging(...args) {
