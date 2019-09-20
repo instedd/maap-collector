@@ -44,6 +44,8 @@ const model = sequelize => {
       dischargeDate: { type: Sequelize.DATE },
       weight: { type: Sequelize.STRING },
       height: { type: Sequelize.STRING },
+      ageValue: { type: Sequelize.INTEGER },
+      ageUnit: { type: Sequelize.STRING },
       pregnancyStatus: { type: Sequelize.STRING },
       prematureBirth: { type: Sequelize.STRING },
       chiefComplaint: { type: Sequelize.STRING },

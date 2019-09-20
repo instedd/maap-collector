@@ -222,9 +222,18 @@ export const remoteUpload = (url, user, entityName, mapper) => async () => {
       method: 'POST',
       body: snakeCaseKeys({ [entityName]: mapped })
     })
-      .then(res =>
-        currentEntity.update({ remoteId: res.id, lastSyncAt: new Date() })
-      )
+      .then(async res => {
+        const existingEntity = await entity.findOne({
+          where: { remoteId: res.id },
+          order: [['id', 'asc']]
+        });
+        if (existingEntity && existingEntity.id !== currentEntity.id)
+          existingEntity.destroy();
+        return currentEntity.update({
+          remoteId: res.id,
+          lastSyncAt: new Date()
+        });
+      })
       .catch(e => console.log(e));
   });
   return Promise.resolve();

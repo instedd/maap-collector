@@ -2,6 +2,8 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import TextField, { Input } from '@material/react-text-field';
 import Button from '@material/react-button';
 import Checkbox from '@material/react-checkbox';
+import pluralize from 'pluralize';
+import { startCase, isEmpty } from 'lodash';
 import MaterialIcon from '@material/react-material-icon';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -26,6 +28,8 @@ import EnumSelector from './EnumSelector';
 import CombinedSelect from './CombinedSelect';
 
 import type { Dispatch, State } from '../reducers/types';
+import ErrorMessage from './ErrorMessage';
+import styles from './PatientEntriesForm.scss';
 
 type StoreProps = {
   dispatch: Dispatch
@@ -65,6 +69,24 @@ class PatientEntriesForm extends Component<Props, State> {
     history.push(`/patients/${patientId}/entries`);
   };
 
+  errors() {
+    const { ageValue, ageUnit } = this.state;
+    const errors = {};
+    if ((ageValue && !ageUnit) || (ageUnit && !ageValue)) {
+      errors.age = 'Please specify both age and age unit';
+      return errors;
+    }
+    if (ageUnit === 'year' && ageValue < 5) {
+      errors.age = "Please set unit to 'Months' if age is lower than 5 years";
+      return errors;
+    }
+    if (ageUnit === 'month' && ageValue === 0) {
+      errors.age = 'Please specify age in days if age is less than a month';
+      return errors;
+    }
+    return errors;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -72,6 +94,8 @@ class PatientEntriesForm extends Component<Props, State> {
       department: '',
       weight: '',
       height: '',
+      ageValue: '',
+      ageUnit: '',
       pregnancyStatus: 'not_mentioned',
       prematureBirth: 'not_mentioned',
       chiefComplaint: '',
@@ -119,6 +143,8 @@ class PatientEntriesForm extends Component<Props, State> {
       dischargeDate,
       weight,
       height,
+      ageValue,
+      ageUnit,
       pregnancyStatus,
       prematureBirth,
       chiefComplaint,
@@ -136,6 +162,18 @@ class PatientEntriesForm extends Component<Props, State> {
       prescribedAntibioticsList
     } = this.state;
     const { history, patientId, action, antibioticOptions } = this.props;
+
+    const errors = this.errors();
+
+    const submitButton = isEmpty(errors) ? (
+      <Cell columns={1}>
+        <Button>Done</Button>
+      </Cell>
+    ) : (
+      <Cell columns={1}>
+        <Button disabled>Check errors</Button>
+      </Cell>
+    );
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -256,6 +294,52 @@ class PatientEntriesForm extends Component<Props, State> {
               </TextField>
             </Cell>
           </Row>
+          <Row>
+            <Cell columns={12} />
+            <Cell columns={2} />
+            <Cell columns={2}>
+              {patchLabel('Age')}
+
+              <TextField className={`${styles.ageValue} full-width`}>
+                <Input
+                  type="number"
+                  value={ageValue}
+                  onChange={e =>
+                    this.setState({ ageValue: e.currentTarget.value })
+                  }
+                />
+              </TextField>
+            </Cell>
+
+            <Cell columns={2}>
+              {patchLabel('Age Unit')}
+
+              <CombinedSelect
+                value={{ value: ageUnit, label: startCase(pluralize(ageUnit)) }}
+                label=""
+                isMulti={false}
+                creatable={false}
+                options={[
+                  { value: 'year', label: 'Years' },
+                  { value: 'month', label: 'Months' },
+                  { value: 'day', label: 'Days' }
+                ]}
+                onChange={v => this.setState({ ageUnit: v.value })}
+              />
+            </Cell>
+          </Row>
+          {errors.age ? (
+            <Row>
+              <Cell columns={12} />
+              <Cell columns={2} />
+
+              <Cell columns={4}>
+                <ErrorMessage key={errors.age}>{errors.age}</ErrorMessage>
+              </Cell>
+            </Row>
+          ) : (
+            <></>
+          )}
           <Row>
             <Cell columns={12} />
             <Cell columns={2} />
@@ -577,9 +661,7 @@ class PatientEntriesForm extends Component<Props, State> {
                 Cancel
               </Button>
             </Cell>
-            <Cell columns={1}>
-              <Button>Done</Button>
-            </Cell>
+            {submitButton}
           </Row>
         </Grid>
       </form>
