@@ -141,7 +141,7 @@ class Sites extends Component<Props, State> {
                 checked={hasPharmacy}
                 onChange={e => this.setState({ hasPharmacy: e.target.checked })}
               />
-              <label htmlFor="filter-farmacy">Farmacy</label>
+              <label htmlFor="filter-farmacy">Pharmacy</label>
               <Checkbox
                 nativeControlId="filter-laboratory"
                 checked={hasLaboratory}
