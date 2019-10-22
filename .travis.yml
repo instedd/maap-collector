@@ -33,7 +33,6 @@ cache:
     - node_modules
     - $(npm config get prefix)/lib/node_modules
     - flow-typed
-    - $HOME/.flow-typed
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
