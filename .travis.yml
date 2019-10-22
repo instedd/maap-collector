@@ -33,6 +33,7 @@ cache:
     - node_modules
     - $(npm config get prefix)/lib/node_modules
     - flow-typed
+    - $HOME/.flow-typed
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
@@ -50,6 +51,7 @@ install:
 
 script:
   - yarn postinstall
+  - ls -a $HOME/.flow-typed
   - yarn lint
   # # HACK: Temporarily ignore `yarn flow` on windows
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
