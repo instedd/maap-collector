@@ -90,7 +90,8 @@ export const syncStart = () => async (dispatch, getState) => {
           (acc, current) => acc.then(() => dispatch(current())),
           Promise.resolve()
         )
-        .then(() => dispatch({ type: SYNC_FINISH })),
+        .then(() => dispatch({ type: SYNC_FINISH }))
+        .catch(() => dispatch({ type: SYNC_FINISH })),
     300
   );
 };
