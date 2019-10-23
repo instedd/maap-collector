@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import { syncStart } from '../actions/sync';
 import { Dispatch } from '../reducers/types';
+import styles from './App.scss';
 
 import NavBar from '../components/NavBar';
 
@@ -33,7 +34,7 @@ class App extends React.Component<Props> {
     return (
       <div>
         {user.auth && <NavBar />}
-        {children}
+        <div className={styles.Content}>{children}</div>
       </div>
     );
   }
