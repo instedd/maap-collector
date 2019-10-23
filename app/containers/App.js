@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 
-import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
@@ -34,11 +33,7 @@ class App extends React.Component<Props> {
     return (
       <div>
         {user.auth && <NavBar />}
-        <Grid align="middle" className="app">
-          <Row>
-            <Cell columns={12}>{children}</Cell>
-          </Row>
-        </Grid>
+        {children}
       </div>
     );
   }
