@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
 import { remote } from 'electron';
+import XlsxManager from '../utils/xlsxManager';
 import styles from './DropZone.scss';
 
 type Props = {
@@ -44,11 +45,32 @@ class DropZone extends Component<Props, State> {
     const { onChange } = this.props;
     e.preventDefault();
     this.setState({ dragging: false });
+
     onChange({ file: e.dataTransfer.files[0] });
+    this.parseSheet({ file: e.dataTransfer.files[0] });
+  };
+
+  parseSheet = ({ file }) => {
+    const sheet = new XlsxManager(file.path);
+
+    this.setState({
+      maxRow: sheet.maxRow
+    });
+  };
+
+  handleChange = (field, e) => {
+    const { onChange } = this.props;
+    const { value, min, max } = e.target;
+    const val =
+      value === ''
+        ? ''
+        : Math.max(Number(min), Math.min(Number(max), Number(value)));
+
+    onChange({ [field]: val });
   };
 
   render() {
-    const { dragging } = this.state;
+    const { dragging, maxRow } = this.state;
     const {
       file,
       headerRow,
@@ -87,26 +109,32 @@ class DropZone extends Component<Props, State> {
               <div className={styles.fileLimits}>
                 <TextField label="Header row" className="full-width">
                   <Input
+                    className={styles.input}
                     type="number"
                     min="0"
+                    max={maxRow}
                     value={headerRow}
-                    onChange={e => onChange({ headerRow: e.target.value })}
+                    onChange={e => this.handleChange('headerRow', e)}
                   />
                 </TextField>
                 <TextField label="Data rows from">
                   <Input
                     type="number"
+                    className={styles.input}
                     min={parseInt(headerRow, 10) || 0 + 1}
+                    max={maxRow}
                     value={dataRowsFrom}
-                    onChange={e => onChange({ dataRowsFrom: e.target.value })}
+                    onChange={e => this.handleChange('dataRowsFrom', e)}
                   />
                 </TextField>
                 <TextField label="Data rows to">
                   <Input
                     type="number"
+                    className={styles.input}
                     min={parseInt(dataRowsFrom, 10) || 0 + 1}
+                    max={maxRow}
                     value={dataRowsTo}
-                    onChange={e => onChange({ dataRowsTo: e.target.value })}
+                    onChange={e => this.handleChange('dataRowsTo', e)}
                   />
                 </TextField>
               </div>
@@ -125,6 +153,7 @@ class DropZone extends Component<Props, State> {
                   if (!files) return;
                   console.log(files);
                   onChange({ file: { name: files[0], path: files[0] } });
+                  this.parseSheet({ file: { name: files[0], path: files[0] } });
                 }}
               >
                 Browse
