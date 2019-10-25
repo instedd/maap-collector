@@ -72,7 +72,7 @@ class ReviewStep extends Component<Props> {
     } = importData;
     const sheet = new XlsxManager(file.path);
     const headerRow = sheet.row(importData.headerRow - 1);
-    let rows = sheet.rows(dataRowsFrom - 1, dataRowsTo - 1);
+    let rows = sheet.rows(dataRowsFrom - 1, dataRowsTo);
     const columnsToKeep = headerRow.reduce((acc, current, index) => {
       if (patientOrLabRecordId[index] || phi[index] || date[index])
         acc.push(index);
