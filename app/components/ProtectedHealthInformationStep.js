@@ -31,7 +31,6 @@ class ProtectedHealthInformationStep extends Component<Props> {
     falseValue = false
   ) => e => {
     const { importData, onChange } = this.props;
-
     onChange({
       [type]: values({
         ...importData[type],
@@ -44,10 +43,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
     const { importData, onChange } = this.props;
 
     onChange({
-      [type]: {
+      [type]: values({
         ...importData[type],
         [column]: e.target.value
-      }
+      })
     });
   };
 
