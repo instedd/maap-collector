@@ -9,6 +9,13 @@ import type { Action, State } from './types';
 
 const initialState = {
   antibioticName: null,
+  antibiotic: {
+    strength: null,
+    form: null,
+    name: null,
+    packSize: null,
+    brand: null
+  },
   antibioticConsumptionStats: {
     items: [],
     totalCount: 0,
@@ -25,7 +32,11 @@ export default function(state: State = initialState, action: Action) {
   let newItems;
   switch (action.type) {
     case FETCHED_ANTIBIOTIC:
-      return { ...state, antibioticName: action.antibiotic.name };
+      return {
+        ...state,
+        antibioticName: action.antibiotic.name,
+        antibiotic: action.antibiotic
+      };
     case FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST_SUCCEEDED:
       return { ...state, antibioticConsumptionStats: action };
     case ADD_CREATED_ANTIBIOTIC_CONSUMPTION_STAT_TO_LIST:
