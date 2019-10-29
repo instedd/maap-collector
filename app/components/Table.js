@@ -31,6 +31,7 @@ type ComponentProps = {
   entityName?: string,
   onClick?: () => void,
   title?: string,
+  subtitle?: string,
   rowClassName?: () => [string],
   lastRow?: typeof Component,
   pagination?: boolean,
@@ -61,7 +62,8 @@ class Table extends Component<Props, State> {
     prevPage: null,
     nextPage: null,
     search: null,
-    filters: null
+    filters: null,
+    subtitle: null
   };
 
   render() {
@@ -83,7 +85,8 @@ class Table extends Component<Props, State> {
       history,
       onReload,
       search,
-      filters
+      filters,
+      subtitle
     } = this.props;
     const { searchText, searchTimeout } = this.state;
     return (
@@ -98,6 +101,15 @@ class Table extends Component<Props, State> {
                 {title || `${totalCount} ${entityName}`}
               </h2>
             </Cell>
+            {subtitle && (
+              <Cell
+                columns={12 - (search ? 3 : 0) - (filters ? 6 : 0)}
+                align="middle"
+              >
+                <h3 className={styles.tableSubtitle}>{subtitle}</h3>
+              </Cell>
+            )}
+
             {filters && (
               <Cell columns={6} align="middle">
                 {filters}

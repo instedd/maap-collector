@@ -31,6 +31,11 @@ tbody tr:hover {
   color: var(--black);
 }
 
+.tableSubtitle,
+.tableSubtitle a {
+  color: var(--medium-gray);
+}
+
 .filters {
   text-align: right;
 }
