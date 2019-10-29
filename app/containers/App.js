@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
 
-import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
 import { syncStart } from '../actions/sync';
 import { Dispatch } from '../reducers/types';
+import styles from './App.scss';
 
 import NavBar from '../components/NavBar';
 
@@ -34,11 +34,7 @@ class App extends React.Component<Props> {
     return (
       <div>
         {user.auth && <NavBar />}
-        <Grid align="middle" className="app">
-          <Row>
-            <Cell columns={12}>{children}</Cell>
-          </Row>
-        </Grid>
+        <div className={styles.Content}>{children}</div>
       </div>
     );
   }

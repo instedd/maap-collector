@@ -28,6 +28,10 @@ class XlsxManager {
     };
   }
 
+  get maxRow() {
+    return this.range.end.row + 1;
+  }
+
   encodeCol = colNumber => xlsx.utils.encode_col(colNumber);
 
   rows(rowNumberFrom, rowNumberTo) {

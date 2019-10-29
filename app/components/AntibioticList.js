@@ -86,8 +86,22 @@ class AntibioticList extends Component<Props, State> {
           prevPage={antibiotics.prevPage}
           nextPage={antibiotics.nextPage}
           onReload={() => this.loadAntibiotics()}
-          columns={['Name', 'Strength Value', 'Strength Unit', 'Form', 'Brand']}
-          fields={['name', 'strengthValue', 'strengthUnit', 'form', 'brand']}
+          columns={[
+            'Name',
+            'Strength Value',
+            'Strength Unit',
+            'Form',
+            'Pack Size',
+            'Brand'
+          ]}
+          fields={[
+            'name',
+            'strengthValue',
+            'strengthUnit',
+            'form',
+            'packSize',
+            'brand'
+          ]}
           onClick={({ id }) => history.push(`/antibiotics/${id}`)}
           search={value => {
             this.setState({ searchText: value });

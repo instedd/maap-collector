@@ -222,7 +222,8 @@ class PatientEntriesForm extends Component<Props, State> {
                   { value: 'geriatric', label: 'Geriatric' },
                   { value: 'ent', label: 'Ear, Nose Throat (ENT)' },
                   { value: 'eye', label: 'Eye' },
-                  { value: 'not_mentioned', label: 'Not mentioned' }
+                  { value: 'not_mentioned', label: 'Not mentioned' },
+                  { value: 'other', label: 'Other' }
                 ]}
               />
             </Cell>

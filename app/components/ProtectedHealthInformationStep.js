@@ -31,7 +31,6 @@ class ProtectedHealthInformationStep extends Component<Props> {
     falseValue = false
   ) => e => {
     const { importData, onChange } = this.props;
-
     onChange({
       [type]: values({
         ...importData[type],
@@ -44,10 +43,10 @@ class ProtectedHealthInformationStep extends Component<Props> {
     const { importData, onChange } = this.props;
 
     onChange({
-      [type]: {
+      [type]: values({
         ...importData[type],
         [column]: e.target.value
-      }
+      })
     });
   };
 
@@ -166,8 +165,16 @@ class ProtectedHealthInformationStep extends Component<Props> {
                       onChange={this.handleSelectChange('date', index)}
                     >
                       <Option value="DDMMMYYYY">DDMMMYYYY</Option>
+                      <Option value="DDMMMYY">DDMMMYY</Option>
                       <Option value="DD/MM/YYYY">DD/MM/YYYY</Option>
+                      <Option value="DD/MM/YY">DD/MM/YY</Option>
                       <Option value="MM/DD/YYYY">MM/DD/YYYY</Option>
+                      <Option value="MM/DD/YY">MM/DD/YY</Option>
+                      <Option value="DD-MM-YYYY">DD-MM-YYYY</Option>
+                      <Option value="DD-MM-YY">DD-MM-YY</Option>
+                      <Option value="MM-DD-YYYY">MM-DD-YYYY</Option>
+                      <Option value="MM-DD-YY">MM-DD-YY</Option>
+                      <Option value="YYYY-MM-DD">YYYY-MM-DD</Option>
                     </Select>
                   ) : (
                     ''
