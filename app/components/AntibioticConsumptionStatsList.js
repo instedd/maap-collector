@@ -21,7 +21,14 @@ type ComponentProps = {
   dispatch: Dispatch,
   antibioticConsumptionStatsList: {
     antibioticName: string,
-    antibioticConsumptionStats: Page
+    antibioticConsumptionStats: Page,
+    antibiotic?: {
+      strength: string,
+      form: string,
+      name: string,
+      packSize: string,
+      brand: string
+    }
   },
   antibioticId: string,
   site: {
@@ -99,6 +106,10 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
       recipientFacility,
       recipientUnit
     } = this.state;
+    const { strength, form, name, packSize, brand } =
+      (antibioticConsumptionStatsList &&
+        antibioticConsumptionStatsList.antibiotic) ||
+      {};
 
     return (
       <div>
@@ -109,8 +120,12 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
                 <MaterialIcon icon="arrow_back" />
               </Link>
               {antibioticConsumptionStatsList &&
-                antibioticConsumptionStatsList.antibioticName}
+                `${name || ''} ${packSize || ''}`}
             </>
+          }
+          subtitle={
+            antibioticConsumptionStatsList &&
+            `${strength || ''} ${form || ''} ${(brand && `(${brand})`) || ''}`
           }
           pagination
           items={antibioticConsumptionStats.items}
