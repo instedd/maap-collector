@@ -41,6 +41,18 @@ const strengthUnitList = [
   'W/W MG'
 ];
 
+const formList = [
+  'Tablets',
+  'Capsules',
+  'Suspension',
+  'Syrup',
+  'Dry powder for reconstitution as syrup',
+  'IM Injections as vial',
+  'IV Bolus Injections as vial',
+  'IV Bolus Injections as ampule',
+  'IV Infusions as a bottle/bag'
+];
+
 class AntibioticsForm extends Component<Props, State> {
   state: State = {
     name: '',
@@ -118,14 +130,21 @@ class AntibioticsForm extends Component<Props, State> {
             </Select>
           </Cell>
           <Cell columns={12}>
-            <TextField className="full-width" label="Form">
-              <Input
-                type="text"
-                value={form}
-                placeholder="Form"
-                onChange={e => this.setState({ form: e.currentTarget.value })}
-              />
-            </TextField>
+            <Select
+              className="full-width"
+              label="Form"
+              value={form}
+              enhanced
+              onEnhancedChange={(index, item) =>
+                this.setState({ form: item.getAttribute('data-value') })
+              }
+            >
+              {formList.map(value => (
+                <Option key={value} value={value}>
+                  {value}
+                </Option>
+              ))}
+            </Select>
           </Cell>
           <Cell columns={12}>
             <TextField className="full-width" label="Pack Size">
