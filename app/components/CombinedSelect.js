@@ -7,8 +7,8 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 type Option = {
-  value: string | boolean | void,
-  label: string
+  value: string | boolean | void | null,
+  label: string | ?null
 };
 
 type Props = {
@@ -17,7 +17,8 @@ type Props = {
   onChange: (Array<string> | Option) => void,
   isMulti: boolean,
   value: Option,
-  creatable: boolean
+  creatable: boolean,
+  isDisabled?: boolean
 };
 
 class CombinedSelect extends Component<Props> {
@@ -29,8 +30,19 @@ class CombinedSelect extends Component<Props> {
     onChange(value);
   };
 
+  static defaultProps = {
+    isDisabled: false
+  };
+
   render() {
-    const { label, options, isMulti, value, creatable } = this.props;
+    const {
+      label,
+      options,
+      isMulti,
+      value,
+      creatable,
+      isDisabled
+    } = this.props;
 
     const SelectComponent = creatable ? CreatableSelect : Select;
 
@@ -44,6 +56,7 @@ class CombinedSelect extends Component<Props> {
         placeholder={label}
         className="cs"
         classNamePrefix="cs"
+        isDisabled={isDisabled}
       />
     );
   }
