@@ -1,7 +1,7 @@
 {
   "name": "maap-collector",
   "productName": "Maap Collector",
-  "version": "0.17.10",
+  "version": "0.17.11",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -255,7 +255,7 @@
     "uglifyjs-webpack-plugin": "1.2.7",
     "url-loader": "^1.0.1",
     "webpack": "^4.20.2",
-    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.3",

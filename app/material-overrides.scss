@@ -29,11 +29,12 @@
 .mdc-list-item,
 .mdc-select__native-control,
 .mdc-select__selected-text {
-  font-size: .875rem;
+  font-size: 0.875rem;
   font-family: var(--ws-regular);
 }
 
-.mdc-select__native-control, .mdc-select__selected-text {
+.mdc-select__native-control,
+.mdc-select__selected-text {
   text-align: left;
   padding-bottom: 1rem;
 }
@@ -70,11 +71,35 @@
   font-family: 'work_sansbold', sans-serif;
 }
 
-@for $columns from 1 through 12 {
-  .mdc-layout-grid__inner[align="center"] .mdc-layout-grid__cell--span-#{$columns} {
-    grid-column: #{((14 - $columns) / 2)} / #{(((14 - $columns) / 2) + $columns)};
+.mdc-dialog__content {
+  overflow: visible;
+}
+
+.cs__option--is-focused {
+  color: black !important;
+}
+
+.cs__control .cs__indicators .cs_indicator {
+  color: #999;
+}
+
+.cs__control--is-disabled {
+  border-bottom-color: transparent !important;
+  color: #ccc;
+
+  .cs__indicators {
+    color: #ccc !important;
   }
 }
+
+@for $columns from 1 through 12 {
+  .mdc-layout-grid__inner[align='center']
+    .mdc-layout-grid__cell--span-#{$columns} {
+    grid-column: #{((14 - $columns) / 2)} /
+      #{(((14 - $columns) / 2) + $columns)};
+  }
+}
+
 @media (min-width: 1024px) {
   .app-fab--absolute {
     bottom: 1.5rem;
