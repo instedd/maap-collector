@@ -79,6 +79,19 @@
   color: black !important;
 }
 
+.cs__control .cs__indicators .cs_indicator {
+  color: #999;
+}
+
+.cs__control--is-disabled {
+  border-bottom-color: transparent !important;
+  color: #ccc;
+
+  .cs__indicators {
+    color: #ccc !important;
+  }
+}
+
 @for $columns from 1 through 12 {
   .mdc-layout-grid__inner[align='center']
     .mdc-layout-grid__cell--span-#{$columns} {
