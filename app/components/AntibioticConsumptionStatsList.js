@@ -147,7 +147,7 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
             'Issued',
             'Quantity',
             'Balance',
-            'Recipient facility',
+            'Sold/dispensed to',
             'Recipient unit',
             ''
           ]}
@@ -185,8 +185,16 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
                   { value: true, label: 'In' },
                   { value: false, label: 'Out' }
                 ]}
-                // $FlowFixMe
-                onChange={v => this.setState({ issued: v.value })}
+                onChange={v => {
+                  // $FlowFixMe
+                  this.setState({ issued: v.value }, () => {
+                    if (!v.value) return;
+                    this.setState({
+                      recipientFacility: null,
+                      recipientUnit: null
+                    });
+                  });
+                }}
               />
               <TextField>
                 <Input
@@ -206,24 +214,58 @@ class AntibioticConsumptionStatsList extends Component<Props, State> {
                   }
                 />
               </TextField>
-              <TextField>
-                <Input
-                  type="text"
-                  value={recipientFacility || ''}
-                  onChange={e =>
-                    this.setState({ recipientFacility: e.currentTarget.value })
+              <CombinedSelect
+                className="full-width"
+                value={{ value: recipientFacility, label: recipientFacility }}
+                label=""
+                isMulti={false}
+                creatable={false}
+                isDisabled={!!issued}
+                options={[
+                  { value: 'For in-patients', label: 'For in-patients' },
+                  { value: 'For out-patients', label: 'For out-patients' },
+                  {
+                    value: 'For outside hospital',
+                    label: 'For outside hospital'
                   }
-                />
-              </TextField>
-              <TextField>
-                <Input
-                  type="text"
-                  value={recipientUnit || ''}
-                  onChange={e =>
-                    this.setState({ recipientUnit: e.currentTarget.value })
-                  }
-                />
-              </TextField>
+                ]}
+                onChange={v => {
+                  // $FlowFixMe
+                  this.setState({ recipientFacility: v.value });
+                  if (recipientFacility !== 'For in-patients') return;
+                  this.setState({ recipientUnit: null });
+                }}
+              />
+
+              <CombinedSelect
+                className="full-width"
+                value={{ value: recipientUnit, label: recipientUnit }}
+                label=""
+                isMulti={false}
+                creatable={false}
+                isDisabled={recipientFacility !== 'For in-patients'}
+                options={[
+                  { value: 'Medicine ward', label: 'Medicine ward' },
+                  { value: 'Surgery ward', label: 'Surgery ward' },
+                  {
+                    value: 'Obstetrics / maternity ward',
+                    label: 'Obstetrics / maternity ward'
+                  },
+                  { value: 'Gynaecology ward', label: 'Gynaecology ward' },
+                  {
+                    value: 'Paediatrics & Neonatology ward',
+                    label: 'Paediatrics & Neonatology ward'
+                  },
+                  { value: 'Pulmonology ward', label: 'Pulmonology ward' },
+                  { value: 'Orthopaedics ward', label: 'Orthopaedics ward' },
+                  { value: 'Geriatrics ward', label: 'Geriatrics ward' },
+                  { value: 'Nephrology ward', label: 'Nephrology ward' },
+                  { value: 'ENT ward', label: 'ENT ward' },
+                  { value: 'Others', label: 'Others' }
+                ]}
+                // $FlowFixMe
+                onChange={v => this.setState({ recipientUnit: v.value })}
+              />
             </RowForm>
           }
         />
