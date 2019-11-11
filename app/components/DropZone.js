@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
 import { remote } from 'electron';
+import fs from 'fs';
 import XlsxManager from '../utils/xlsxManager';
 import styles from './DropZone.scss';
 
@@ -11,7 +12,8 @@ type Props = {
   headerRow?: string | null,
   dataRowsFrom?: string | null,
   dataRowsTo?: string | null,
-  title: string
+  title: string,
+  template?: string
 };
 type State = {};
 
@@ -69,6 +71,21 @@ class DropZone extends Component<Props, State> {
     onChange({ [field]: val });
   };
 
+  handleDownloadTemplate = () => {
+    const { template } = this.props;
+    remote.dialog.showSaveDialog(
+      {
+        title: 'Save example',
+        filters: []
+      },
+      filePathAndName => {
+        fs.createReadStream(template).pipe(
+          fs.createWriteStream(filePathAndName)
+        );
+      }
+    );
+  };
+
   render() {
     const { dragging, maxRow } = this.state;
     const {
@@ -77,11 +94,34 @@ class DropZone extends Component<Props, State> {
       dataRowsFrom,
       dataRowsTo,
       onChange,
-      title
+      title,
+      template
     } = this.props;
     return (
       <>
         <h2>{title}</h2>
+        {template ? (
+          <h3 className={styles.subtitle}>
+            (You can download an example{' '}
+            <a
+              href="#"
+              tabIndex="-1"
+              onKeyPress={e => {
+                e.preventDefault();
+                this.handleDownloadTemplate();
+              }}
+              onClick={e => {
+                e.preventDefault();
+                this.handleDownloadTemplate();
+              }}
+            >
+              here
+            </a>
+            )
+          </h3>
+        ) : (
+          ''
+        )}
         <div
           className={[dragging ? styles.dragging : '', styles.dropzone].join(
             ' '
@@ -171,7 +211,8 @@ DropZone.defaultProps = {
   file: null,
   headerRow: '',
   dataRowsFrom: '',
-  dataRowsTo: ''
+  dataRowsTo: '',
+  template: ''
 };
 
 export default DropZone;

@@ -6,6 +6,8 @@ import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
+import { remote } from 'electron';
+import path from 'path';
 import DropZone from './DropZone';
 import ReviewStep from './ReviewStep';
 import type { Dispatch, State as ReduxState } from '../reducers/types';
@@ -17,6 +19,11 @@ import {
   createElectronicPharmacyStockRecord
 } from '../actions/electronicPharmacyStockRecordImport';
 import style from './LabRecordImportWizard.scss';
+
+const templatePath =
+  process.env.NODE_ENV === 'development'
+    ? 'app/static/'
+    : path.join(remote.app.getAppPath(), '../', 'app', 'static');
 
 type Props = {
   dispatch: Dispatch
@@ -32,6 +39,7 @@ const STEPS = [
     <DropZone
       {...electronicPharmacyStockRecordImport}
       title="Upload a file with Pharmacy Stock Records"
+      template={`${templatePath}/electronicPharmacyRecordsTemplate.csv`}
       onChange={state => dispatch(setImportData(state))}
     />
   ),
