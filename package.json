@@ -66,13 +66,19 @@
       "app/main.prod.js.map",
       "package.json"
     ],
-    "extraResources": {
+    "extraResources": [{
       "from": "./app/db/migrations/",
       "to": "app/db/migrations",
       "filter": [
         "**/*.js"
       ]
-    },
+    }, {
+      "from": "./app/static/",
+      "to": "app/static",
+      "filter": [
+        "**/*.csv"
+      ]
+    }],
     "dmg": {
       "contents": [
         {

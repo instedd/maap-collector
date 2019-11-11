@@ -1,0 +1,17 @@
+﻿Antibiotic with dose and formulation and pack size*,Date of issue,Issued (in or out),Quantity issued,Balance available,Recipient facility,Department
+Amoxicilin 500mg tablets,01-Jan-18,Out,20,200,OPD,Surgery
+Amoxicilin 500mg tablets,02-Jan-18,Out,5,195,MPH,Main pharmacy
+Amoxicilin 500mg tablets,03-Jan-18,Out,15,180,OPD,Medicine
+Amoxicilin 500mg tablets,04-Jan-18,Out,5,175,IPD,Main pharmacy
+Amoxicilin 500mg tablets,05-Jan-18,Out,2,173,IPD,Main pharmacy
+Amoxicilin 500mg tablets,06-Jan-18,Out,5,168,IPD,Main pharmacy
+Amoxicilin 500mg tablets,07-Jan-18,Out,10,158,OPD,Obstetrics & Gynaecology
+Amoxicilin 500mg tablets,08-Jan-18,Out,10,148,OPD,Surgery
+Amoxicilin 500mg tablets,09-Jan-18,Out,5,143,OPD,Surgery
+Amoxicilin 500mg tablets,10-Jan-18,Out,8,135,IPD,Surgery
+Amoxicilin 500mg tablets,11-Jan-18,Out,5,130,IPD,Surgery
+Amoxicilin 500mg tablets,12-Jan-18,In,100,230,CMS,Central Medical Store
+Amoxicilin 500mg tablets,13-Jan-18,Out,5,225,Satellite Clinic,Ngwenya clinic
+Amoxicilin 500mg tablets,14-Jan-18,Out,10,215,Satellite Clinic,Ngwenya clinic
+,,,,,,
+"* pack size is the standard quantity in which a particular antibiotic may be issued out. It can be pck of 10 or 100 or 1000 tablets or single bottles of suspensions or pack of 5, 10 or whatever ampules for injections",,,,,,

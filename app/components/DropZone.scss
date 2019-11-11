@@ -1,3 +1,12 @@
+.subtitle {
+  font-size: 15px;
+  color: var(--medium-gray);
+
+  a {
+    color: var(--dark-gray);
+  }
+}
+
 .dropzone {
   display: flex;
   justify-content: center;
