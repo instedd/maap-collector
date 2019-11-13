@@ -8,6 +8,7 @@ type Props = {
 class RowForm extends Component<Props> {
   handleKeyPress = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const { onSubmit } = this.props;
+    console.log('test');
     if (e.key === 'Enter') return onSubmit();
   };
 
@@ -21,8 +22,9 @@ class RowForm extends Component<Props> {
           <td
             key={`row-form-${index}`}
             colspan={index === children.length - 1 ? 2 : 1}
+            onKeyPress={this.handleKeyPress}
           >
-            {cloneElement(child, { onKeyPress: this.handleKeyPress })}
+            {cloneElement(child, {})}
           </td>
         ))}
       </tr>
