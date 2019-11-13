@@ -8,7 +8,6 @@ type Props = {
 class RowForm extends Component<Props> {
   handleKeyPress = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const { onSubmit } = this.props;
-    console.log('test');
     if (e.key === 'Enter') return onSubmit();
   };
 
