@@ -80,7 +80,7 @@ class DropZone extends Component<Props, State> {
       },
       filePathAndName => {
         fs.createReadStream(template).pipe(
-          fs.createWriteStream(filePathAndName)
+          fs.createWriteStream(`${filePathAndName}.csv`)
         );
       }
     );
