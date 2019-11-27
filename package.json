@@ -57,7 +57,7 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "Maap collector",
+    "productName": "Maap collector ZW",
     "appId": "org.develar.ElectronReact",
     "files": [
       "app/dist/",
