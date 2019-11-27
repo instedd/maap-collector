@@ -1,6 +1,6 @@
 {
   "name": "maap-collector",
-  "productName": "Maap Collector",
+  "productName": "Maap Collector ZW",
   "version": "0.17.12-zw",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "scripts": {
