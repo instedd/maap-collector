@@ -61,6 +61,7 @@ after_success:
   - if [[ "$TRAVIS_BRANCH" == "stable" ]]; then yarn package-ci; fi
   - if [[ "$TRAVIS_BRANCH" == "sz" ]]; then yarn package-ci; fi
   - if [[ "$TRAVIS_BRANCH" == "zw" ]]; then yarn package-ci; fi
+  - if [[ "$TRAVIS_BRANCH" == "bf" ]]; then yarn package-ci; fi
 
 notifications:
   email: false
