@@ -1,7 +1,7 @@
 {
   "name": "maap-collector",
   "productName": "Maap Collector",
-  "version": "0.17.12-dev",
+  "version": "1.0.0",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -66,19 +66,22 @@
       "app/main.prod.js.map",
       "package.json"
     ],
-    "extraResources": [{
-      "from": "./app/db/migrations/",
-      "to": "app/db/migrations",
-      "filter": [
-        "**/*.js"
-      ]
-    }, {
-      "from": "./app/static/",
-      "to": "app/static",
-      "filter": [
-        "**/*.csv"
-      ]
-    }],
+    "extraResources": [
+      {
+        "from": "./app/db/migrations/",
+        "to": "app/db/migrations",
+        "filter": [
+          "**/*.js"
+        ]
+      },
+      {
+        "from": "./app/static/",
+        "to": "app/static",
+        "filter": [
+          "**/*.csv"
+        ]
+      }
+    ],
     "dmg": {
       "contents": [
         {
@@ -198,6 +201,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@octokit/rest": "^16.36.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^23.6.0",
