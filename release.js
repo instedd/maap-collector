@@ -36,9 +36,12 @@ octokit.repos
 
       fs.writeFileSync(
         './app/constants/config.override.json',
-        JSON.stringify(environment.config),
-        () => {}
+        JSON.stringify(environment.config)
       );
+      // eslint-disable-next-line
+      const packageJson = require('./package.json');
+      packageJson.version = versionName;
+      fs.writeFileSync('./package.json', JSON.stringify(packageJson));
     });
     return data;
   })
