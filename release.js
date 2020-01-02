@@ -1,3 +1,4 @@
+const { exec } = require('child_process');
 const Octokit = require('@octokit/rest');
 const fs = require('fs');
 const { version } = require('./package.json');
@@ -42,6 +43,7 @@ octokit.repos
       const packageJson = require('./package.json');
       packageJson.version = versionName;
       fs.writeFileSync('./package.json', JSON.stringify(packageJson));
+      exec('yarn package-ci');
     });
     return data;
   })
