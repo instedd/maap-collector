@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const Octokit = require('@octokit/rest');
 const fs = require('fs');
 const { version } = require('./package.json');
@@ -13,6 +13,13 @@ const octokit = Octokit({
 console.log('Releasing Maap collector');
 console.log(`Version ${version}`);
 
+const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index += 1) {
+    // eslint-disable-next-line
+    await callback(array[index], index, array);
+  }
+};
+
 const versionNameTag = (versionNumber, name) => `${versionNumber}-${name}`;
 octokit.repos
   .listReleases({
@@ -21,7 +28,7 @@ octokit.repos
   })
   .then(data => {
     const { data: releases } = data;
-    environments.forEach(environment => {
+    asyncForEach(environments, async environment => {
       const versionName = versionNameTag(version, environment.name);
       if (!releases.map(({ name }) => name).includes(versionName)) {
         octokit.repos.createRelease({
@@ -43,7 +50,22 @@ octokit.repos
       const packageJson = require('./package.json');
       packageJson.version = versionName;
       fs.writeFileSync('./package.json', JSON.stringify(packageJson));
-      exec('yarn package-ci');
+      await new Promise((resolve, reject) => {
+        const ls = spawn('yarn', ['package-ci']);
+        ls.stdout.on('data', output => {
+          console.log(`stdout: ${output.toString()}`);
+        });
+
+        ls.stderr.on('data', output => {
+          reject(output);
+          console.log(`stderr: ${output.toString()}`);
+        });
+
+        ls.on('exit', output => {
+          resolve(output);
+          console.log(`child process exited with code ${output.toString()}`);
+        });
+      });
     });
     return data;
   })
