@@ -44,6 +44,10 @@ octokit.repos
     // eslint-disable-next-line
     const packageJson = require('./package.json');
     packageJson.version = versionName;
+    packageJson.productName = `Maap Collector ${process.env.INSTANCE}`;
+    packageJson.productName = `Maap Collector ${process.env.INSTANCE}`;
+    packageJson.build.productName = `Maap Collector ${process.env.INSTANCE}`;
+    packageJson.build.appId = `org.develar.MaapCollector${process.env.INSTANCE.toUpperCase()}`;
     fs.writeFileSync('./package.json', JSON.stringify(packageJson));
     await new Promise(resolve => {
       const ls = spawn('yarn', ['package-ci'], {
