@@ -46,7 +46,7 @@ octokit.repos
     packageJson.version = versionName;
     fs.writeFileSync('./package.json', JSON.stringify(packageJson));
     await new Promise(resolve => {
-      const ls = spawn('yarn', ['package-ci']);
+      const ls = spawn('npm', ['run', 'package-ci']);
       ls.stdout.on('data', output => {
         console.log(`stdout: ${output.toString()}`);
       });
