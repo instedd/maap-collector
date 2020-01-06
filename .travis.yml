@@ -6,21 +6,19 @@ env:
 - INSTANCE=sz
 - INSTANCE=bf
 
+os:
+- osx
+- windows
+addons:
+  homebrew:
+    packages:
+    - sqlite
+    - sqlcipher
+
 jobs:
   include:
-    - os: osx
-      env:
-        - ELECTRON_CACHE=$HOME/.cache/electron ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-      addons:
-        homebrew:
-          packages:
-          - sqlite
-          - sqlcipher
-
     - os: windows
       cache: false
-      env:
-        - YARN_GPG=no TEMPDIR=TEMPDIR=$LOCALAPPDATA\\Temp ELECTRON_CACHE=$HOME/.cache/electron ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
