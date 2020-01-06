@@ -16,7 +16,7 @@ jobs:
     - os: windows
       cache: false
       env:
-        - INSTANCE=sz
+        - INSTANCE=sz YARN_GPG=no
 
     - os: osx
       env:
@@ -24,7 +24,7 @@ jobs:
     - os: windows
       cache: false
       env:
-        - INSTANCE=bf
+        - INSTANCE=bf YARN_GPG=no
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
