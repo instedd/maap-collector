@@ -2,13 +2,6 @@ language: node_js
 node_js:
 - 10.15.3
 
-env:
-- INSTANCE=sz
-- INSTANCE=bf
-
-os:
-- osx
-- windows
 addons:
   homebrew:
     packages:
@@ -17,8 +10,21 @@ addons:
 
 jobs:
   include:
+    - os: osx
+      env:
+        - INSTANCE=sz
     - os: windows
       cache: false
+      env:
+        - INSTANCE=sz
+
+    - os: osx
+      env:
+        - INSTANCE=bf
+    - os: windows
+      cache: false
+      env:
+        - INSTANCE=bf
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
