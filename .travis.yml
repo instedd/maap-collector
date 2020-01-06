@@ -8,20 +8,28 @@ addons:
     - sqlite
     - sqlcipher
 
+stages:
+  - Windows
+  - MacOS
+
 jobs:
   include:
     - os: osx
+      stage: MacOS
       env:
         - INSTANCE=sz
     - os: windows
+      stage: Windows
       cache: false
       env:
         - INSTANCE=sz YARN_GPG=no
 
     - os: osx
+      stage: MacOS
       env:
         - INSTANCE=bf
     - os: windows
+      stage: Windows
       cache: false
       env:
         - INSTANCE=bf YARN_GPG=no
