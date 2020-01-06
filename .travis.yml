@@ -17,12 +17,22 @@ jobs:
     - os: osx
       stage: MacOS
       env:
-        - INSTANCE=sz
+        - INSTANCE=staging
     - os: windows
       stage: Windows
       cache: false
       env:
-        - INSTANCE=sz YARN_GPG=no
+        - INSTANCE=staging YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=demo
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=demo YARN_GPG=no
 
     - os: osx
       stage: MacOS
@@ -33,6 +43,26 @@ jobs:
       cache: false
       env:
         - INSTANCE=bf YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=zw
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=zw YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=sz
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=sz YARN_GPG=no
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
@@ -60,14 +90,14 @@ install:
 
 script:
   - yarn postinstall
-  # - yarn lint
-  # # # HACK: Temporarily ignore `yarn flow` on windows
-  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
-  # - yarn build-e2e
-  # - yarn test-e2e
+  - yarn lint
+  # # HACK: Temporarily ignore `yarn flow` on windows
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn flow; fi
+  - yarn build-e2e
+  - yarn test-e2e
 
 after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yarn package-ci; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then node release.js; fi
   - if [[ "$TRAVIS_BRANCH" == "release-improvement" ]]; then node release.js; fi
 
 notifications:
