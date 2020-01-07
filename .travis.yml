@@ -1,28 +1,68 @@
-matrix:
+language: node_js
+node_js:
+- 10.15.3
+
+addons:
+  homebrew:
+    packages:
+    - sqlite
+    - sqlcipher
+
+stages:
+  - Windows
+  - MacOS
+
+jobs:
   include:
     - os: osx
-      language: node_js
-      node_js:
-        - 10.15.3
+      stage: MacOS
       env:
-        - ELECTRON_CACHE=$HOME/.cache/electron
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-      addons:
-        homebrew:
-          packages:
-          - sqlite
-          - sqlcipher
-
+        - INSTANCE=staging
     - os: windows
+      stage: Windows
       cache: false
-      language: node_js
-      node_js:
-        - 10.15.3
       env:
-        - YARN_GPG=no
-        - TEMPDIR=TEMPDIR=$LOCALAPPDATA\\Temp
-        - ELECTRON_CACHE=$HOME/.cache/electron
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - INSTANCE=staging YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=demo
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=demo YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=bf
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=bf YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=zw
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=zw YARN_GPG=no
+
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=sz
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=sz YARN_GPG=no
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
@@ -57,7 +97,8 @@ script:
   - yarn test-e2e
 
 after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yarn package-ci; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then node release.js; fi
+  - if [[ "$TRAVIS_BRANCH" == "release-improvement" ]]; then node release.js; fi
 
 notifications:
   email: false
