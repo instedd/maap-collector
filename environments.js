@@ -28,5 +28,23 @@ module.exports = [
     config: {
       API_URL: 'https://maap-sz.instedd.org'
     }
+  },
+  {
+    name: 'ug',
+    config: {
+      API_URL: 'https://maap-ug.instedd.org'
+    }
+  },
+  {
+    name: 'tz',
+    config: {
+      API_URL: 'https://maap-tz.instedd.org'
+    }
+  },
+  {
+    name: 'ke',
+    config: {
+      API_URL: 'https://maap-ke.instedd.org'
+    }
   }
 ];
