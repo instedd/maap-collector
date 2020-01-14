@@ -41,6 +41,7 @@ const model = sequelize => {
       balance: { type: Sequelize.NUMBER },
       recipientUnit: { type: Sequelize.STRING },
       date: { type: Sequelize.DATE },
+      deletedAt: { type: Sequelize.DATE },
       lastSyncAt: { type: Sequelize.DATE(6) },
       remoteId: { type: Sequelize.INTEGER },
       remoteSiteId: { type: Sequelize.INTEGER },
