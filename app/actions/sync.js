@@ -207,21 +207,12 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
   });
 };
 
-export const remoteUpload = (
-  url,
-  user,
-  entityName,
-  mapper,
-  withSoftDelete = false
-) => async () => {
+export const remoteUpload = (url, user, entityName, mapper) => async () => {
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
-  const query = withSoftDelete
-    ? "(deletedAt is NULL OR deletedAt IS 'Invalid date') AND (remoteId is NULL OR remoteId = '')"
-    : "remoteId is NULL OR remoteId = ''";
   const collectionToCreate = await entity.findAll({
-    where: sequelize.literal(query)
+    where: sequelize.literal("remoteId is NULL OR remoteId = ''")
   });
 
   if (collectionToCreate.length === 0) return;
@@ -249,21 +240,18 @@ export const remoteUpload = (
   return Promise.resolve();
 };
 
-export const remoteUploadUpdate = (
-  url,
-  entityName,
-  mapper,
-  withSoftDelete = false
-) => async (dispatch, getState) => {
+export const remoteUploadUpdate = (url, entityName, mapper) => async (
+  dispatch,
+  getState
+) => {
   const { user } = getState();
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
-  const query = withSoftDelete
-    ? "(deletedAt is NULL OR deletedAt IS 'Invalid date') AND (remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt))"
-    : "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)";
   const collectionToUpdate = await entity.findAll({
-    where: sequelize.literal(query)
+    where: sequelize.literal(
+      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
+    )
   });
   collectionToUpdate.forEach(async currentEntity => {
     const mapped = await Promise.resolve(mapper(currentEntity));
