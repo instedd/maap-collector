@@ -1,6 +1,5 @@
 import snakeCaseKeys from 'snakecase-keys';
 import { omit } from 'lodash';
-import Sequelize from 'sequelize';
 import { remoteSync, remoteUpload, remoteUploadUpdate } from './sync';
 import { fetchEntity } from './fetch';
 
@@ -27,7 +26,6 @@ const mapper = attrs =>
       remoteAntibioticId: attrs.antibiotic_id,
       recipientFacility: attrs.recipient_facility,
       recipientUnit: attrs.recipient_unit,
-      deletedAt: attrs.deleted_at,
       antibioticId: null,
       remoteSiteId: attrs.site_id,
       siteId: null
@@ -69,16 +67,14 @@ export const uploadAntibioticConsumptionStats = () => async (
       '/api/v1/antibiotic_consumption_stats',
       user,
       'AntibioticConsumptionStat',
-      uploadMapper,
-      true
+      uploadMapper
     )
   );
   await dispatch(
     remoteUploadUpdate(
       id => `/api/v1/antibiotic_consumption_stats/${id}`,
       'AntibioticConsumptionStat',
-      uploadMapper,
-      true
+      uploadMapper
     )
   );
 };
@@ -93,15 +89,7 @@ export const fetchAntibioticConsumptionStatsList = (
     fetchAction: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST,
     fetchSucceededAction: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST_SUCCEEDED,
     fetchFailedAction: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST_FAILED
-  })(
-    {
-      ...where,
-      [Sequelize.Op.or]: [{ deletedAt: null }, { deletedAt: 'Invalid date' }]
-    },
-    order,
-    startInLastPage,
-    perPage
-  );
+  })(where, order, startInLastPage, perPage);
 
 export const addCreatedAntibioticConsumptionStat = createdACS => dispatch =>
   dispatch({
