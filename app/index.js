@@ -10,6 +10,7 @@ import './app.global.scss';
 import { setNetworkOnline, setNetworkOffline } from './actions/network';
 import { loadState, saveState } from './utils/localStorage';
 import { syncStart } from './actions/sync';
+import { NAME } from './constants/config';
 
 const persistedState = loadState();
 const store = configureStore({ preloadedState: persistedState });
@@ -25,6 +26,7 @@ store.subscribe(
 
 window.addEventListener('online', () => store.dispatch(setNetworkOnline()));
 window.addEventListener('offline', () => store.dispatch(setNetworkOffline()));
+document.title = `MAAP Data Collector - ${NAME}`;
 if (!navigator.onLine) store.dispatch(setNetworkOffline());
 if (store.getState().user.data)
   setTimeout(() => store.dispatch(syncStart()), 300);

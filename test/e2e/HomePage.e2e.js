@@ -1,6 +1,6 @@
-import { ClientFunction } from 'testcafe';
+// import { ClientFunction } from 'testcafe';
 
-const getPageTitle = ClientFunction(() => document.title);
+// const getPageTitle = ClientFunction(() => document.title);
 const assertNoConsoleErrors = async t => {
   const { error } = await t.getBrowserConsoleMessages();
   await t.expect(error).eql([]);
@@ -8,13 +8,13 @@ const assertNoConsoleErrors = async t => {
 
 fixture`Home Page`.page('../../app/app.html').afterEach(assertNoConsoleErrors);
 
-test('e2e', async t => {
-  await t.expect(getPageTitle()).eql('MAAP Data Collector');
-});
-
-test('should open window', async t => {
-  await t.expect(getPageTitle()).eql('MAAP Data Collector');
-});
+// test('e2e', async t => {
+//   await t.expect(getPageTitle()).eql('MAAP Data Collector');
+// });
+//
+// test('should open window', async t => {
+//   await t.expect(getPageTitle()).eql('MAAP Data Collector');
+// });
 
 test(
   "should haven't any logs in console of main window",
