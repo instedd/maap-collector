@@ -4,10 +4,11 @@ require('dotenv').config();
 
 const {
   API_URL = 'https://maap-stg.instedd.org',
-  ELECTRON_ENV = 'development'
+  ELECTRON_ENV = 'development',
+  NAME = 'development'
 } = {
   ...process.env,
   ...override
 };
 
-export { API_URL, ELECTRON_ENV };
+export { API_URL, ELECTRON_ENV, NAME };
