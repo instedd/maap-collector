@@ -207,12 +207,21 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
   });
 };
 
-export const remoteUpload = (url, user, entityName, mapper) => async () => {
+export const remoteUpload = (
+  url,
+  user,
+  entityName,
+  mapper,
+  withSoftDelete = false
+) => async () => {
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
+  const query = withSoftDelete
+    ? "(deletedAt is NULL OR deletedAt IS 'Invalid date') AND (remoteId is NULL OR remoteId = '')"
+    : "remoteId is NULL OR remoteId = ''";
   const collectionToCreate = await entity.findAll({
-    where: sequelize.literal("remoteId is NULL OR remoteId = ''")
+    where: sequelize.literal(query)
   });
 
   if (collectionToCreate.length === 0) return;
@@ -240,18 +249,21 @@ export const remoteUpload = (url, user, entityName, mapper) => async () => {
   return Promise.resolve();
 };
 
-export const remoteUploadUpdate = (url, entityName, mapper) => async (
-  dispatch,
-  getState
-) => {
+export const remoteUploadUpdate = (
+  url,
+  entityName,
+  mapper,
+  withSoftDelete = false
+) => async (dispatch, getState) => {
   const { user } = getState();
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
+  const query = withSoftDelete
+    ? "(deletedAt is NULL OR deletedAt IS 'Invalid date') AND (remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt))"
+    : "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)";
   const collectionToUpdate = await entity.findAll({
-    where: sequelize.literal(
-      "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
-    )
+    where: sequelize.literal(query)
   });
   collectionToUpdate.forEach(async currentEntity => {
     const mapped = await Promise.resolve(mapper(currentEntity));
