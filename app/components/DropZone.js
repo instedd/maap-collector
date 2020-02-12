@@ -5,6 +5,7 @@ import { remote } from 'electron';
 import fs from 'fs';
 import XlsxManager from '../utils/xlsxManager';
 import styles from './DropZone.scss';
+import ErrorMessage from './ErrorMessage';
 
 type Props = {
   onChange?: () => void,
@@ -62,11 +63,9 @@ class DropZone extends Component<Props, State> {
 
   handleChange = (field, e) => {
     const { onChange } = this.props;
-    const { value, min, max } = e.target;
+    const { value, max } = e.target;
     const val =
-      value === ''
-        ? ''
-        : Math.max(Number(min), Math.min(Number(max), Number(value)));
+      value === '' ? '' : Math.max(1, Math.min(Number(max), Number(value)));
 
     onChange({ [field]: val });
   };
@@ -146,6 +145,13 @@ class DropZone extends Component<Props, State> {
                 Leave last data row field blank if no auxiliary data after lab
                 entries
               </p>
+              {dataRowsTo &&
+                (dataRowsTo <= dataRowsFrom || dataRowsTo <= headerRow) && (
+                  <ErrorMessage>
+                    Last row cannot be lower or equal than the first row or the
+                    header
+                  </ErrorMessage>
+                )}
               <div className={styles.fileLimits}>
                 <TextField label="Header row" className="full-width">
                   <Input
