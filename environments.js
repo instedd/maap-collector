@@ -51,5 +51,11 @@ module.exports = [
     config: {
       API_URL: 'https://maap-ke.instedd.org'
     }
+  },
+  {
+    name: 'ng',
+    config: {
+      API_URL: 'https://maap-ng.instedd.org'
+    }
   }
 ];
