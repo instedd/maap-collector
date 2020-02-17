@@ -93,6 +93,16 @@ jobs:
       env:
         - INSTANCE=ke YARN_GPG=no
 
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=ng
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=ng YARN_GPG=no
+
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
