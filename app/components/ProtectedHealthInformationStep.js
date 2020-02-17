@@ -76,7 +76,7 @@ class ProtectedHealthInformationStep extends Component<Props> {
     const { columns, patientOrLabRecordId, phi, date } = importData;
     return (
       <div>
-        <h2>Specify which columns have protected health information</h2>
+        <h2>Specify which columns have private health information</h2>
         <table>
           <thead>
             <tr>
