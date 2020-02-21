@@ -31,7 +31,8 @@ type Props = {
   ContextRouter;
 
 type State = {
-  currentStep: number
+  currentStep: number,
+  loading: boolean
 };
 
 const STEPS = [
@@ -71,15 +72,25 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
 > {
   props: Props;
 
-  state: State = { currentStep: 0 };
+  state: State = { currentStep: 0, loading: false };
 
   handleNext = () => {
     const { dispatch, history } = this.props;
-    const { currentStep } = this.state;
-    if (currentStep === STEPS.length - 1)
-      return dispatch(createElectronicPharmacyStockRecord()).then(() =>
-        history.push(`/electronic_pharmacy_stock_records`)
+    const { currentStep, loading } = this.state;
+    if (currentStep === STEPS.length - 1) {
+      // It shouldn't reach this step with a loading=true state, but just to be sure
+      if (loading) return;
+
+      this.setState(
+        {
+          loading: true
+        },
+        () =>
+          dispatch(createElectronicPharmacyStockRecord()).then(() =>
+            history.push(`/electronic_pharmacy_stock_records`)
+          )
       );
+    }
     this.setState({ currentStep: currentStep + 1 });
   };
 
@@ -97,7 +108,7 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
 
   render() {
     const { electronicPharmacyStockRecordImport } = this.props;
-    const { currentStep } = this.state;
+    const { currentStep, loading } = this.state;
     const headerRow = parseInt(
       electronicPharmacyStockRecordImport.headerRow,
       10
@@ -134,16 +145,17 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
           <Button
             onClick={this.handleNext}
             disabled={
-              currentStep === 0 &&
-              (!(
-                electronicPharmacyStockRecordImport.file &&
-                headerRow &&
-                dataRowsTo &&
-                dataRowsFrom
-              ) ||
-                headerRow < 0 ||
-                dataRowsFrom <= headerRow ||
-                dataRowsTo <= dataRowsFrom)
+              loading ||
+              (currentStep === 0 &&
+                (!(
+                  electronicPharmacyStockRecordImport.file &&
+                  headerRow &&
+                  dataRowsTo &&
+                  dataRowsFrom
+                ) ||
+                  headerRow < 0 ||
+                  dataRowsFrom <= headerRow ||
+                  dataRowsTo <= dataRowsFrom))
             }
           >
             {currentStep === STEPS.length - 1 ? (
