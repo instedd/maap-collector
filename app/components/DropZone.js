@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
+import { Magic, MAGIC_MIME_TYPE } from 'mmmagic';
 import { remote } from 'electron';
 import fs from 'fs';
 import XlsxManager from '../utils/xlsxManager';
 import styles from './DropZone.scss';
 import ErrorMessage from './ErrorMessage';
+
+const magic = new Magic(MAGIC_MIME_TYPE);
 
 type Props = {
   onChange?: () => void,
@@ -48,14 +51,24 @@ class DropZone extends Component<Props, State> {
     const { onChange } = this.props;
     e.preventDefault();
     this.setState({ dragging: false });
+    const file = e.dataTransfer.files[0];
+    magic.detectFile(file.path, (err, res) => {
+      const permittedTypes = ['application/vnd.ms-excel', 'text/plain'];
+      if (permittedTypes.some(k => k === res)) {
+        onChange({ file });
+        this.setState({ error: null });
 
-    onChange({ file: e.dataTransfer.files[0] });
-    this.parseSheet({ file: e.dataTransfer.files[0] });
+        this.parseSheet({ file });
+      } else {
+        this.setState({
+          error: 'Invalid file format. Valid ones are csv and xls'
+        });
+      }
+    });
   };
 
   parseSheet = ({ file }) => {
     const sheet = new XlsxManager(file.path);
-
     this.setState({
       maxRow: sheet.maxRow
     });
@@ -86,7 +99,7 @@ class DropZone extends Component<Props, State> {
   };
 
   render() {
-    const { dragging, maxRow } = this.state;
+    const { dragging, maxRow, error } = this.state;
     const {
       file,
       headerRow,
@@ -188,6 +201,7 @@ class DropZone extends Component<Props, State> {
           ) : (
             <div className={styles.message}>
               <MaterialIcon icon="insert_drive_file" />
+              {error && <ErrorMessage center>{error}</ErrorMessage>}
               Drop your files here (Excel) or&nbsp;
               <a
                 href="#"
@@ -197,9 +211,24 @@ class DropZone extends Component<Props, State> {
                     properties: ['openFile']
                   });
                   if (!files) return;
-                  console.log(files);
-                  onChange({ file: { name: files[0], path: files[0] } });
-                  this.parseSheet({ file: { name: files[0], path: files[0] } });
+                  magic.detectFile(files[0], (err, res) => {
+                    const permittedTypes = [
+                      'application/vnd.ms-excel',
+                      'text/plain'
+                    ];
+                    if (permittedTypes.some(k => k === res)) {
+                      onChange({ file: { name: files[0], path: files[0] } });
+                      this.setState({ error: null });
+
+                      this.parseSheet({
+                        file: { name: files[0], path: files[0] }
+                      });
+                    } else {
+                      this.setState({
+                        error: 'Invalid file format. Valid ones are csv and xls'
+                      });
+                    }
+                  });
                 }}
               >
                 Browse
