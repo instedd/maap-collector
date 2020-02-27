@@ -44,6 +44,7 @@ octokit.repos
     // eslint-disable-next-line
     const packageJson = require('./package.json');
     packageJson.version = versionName;
+    packageJson.name = `maap-collector-${process.env.INSTANCE}`;
     packageJson.productName = `Maap Collector ${process.env.INSTANCE}`;
     packageJson.productName = `Maap Collector ${process.env.INSTANCE}`;
     packageJson.build.productName = `Maap Collector ${process.env.INSTANCE}`;
