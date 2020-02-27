@@ -60,6 +60,8 @@ class Login extends Component<Props, State> {
         errorText = 'The email and password combination does not match';
       } else if (loginAttempt.error.message === 'Failed to fetch') {
         errorText = 'Cannot reach the server. Check your internet connection';
+      } else {
+        errorText = 'Unknown error';
       }
 
       this.setState({
