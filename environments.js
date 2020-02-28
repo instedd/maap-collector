@@ -37,24 +37,28 @@ module.exports = [
   {
     name: 'ug',
     config: {
+      NAME: 'ug',
       API_URL: 'https://maap-ug.instedd.org'
     }
   },
   {
     name: 'tz',
     config: {
+      NAME: 'tz',
       API_URL: 'https://maap-tz.instedd.org'
     }
   },
   {
     name: 'ke',
     config: {
+      NAME: 'ke',
       API_URL: 'https://maap-ke.instedd.org'
     }
   },
   {
     name: 'ng',
     config: {
+      NAME: 'ng',
       API_URL: 'https://maap-ng.instedd.org'
     }
   }
