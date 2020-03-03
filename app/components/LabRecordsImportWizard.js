@@ -24,7 +24,8 @@ type Props = {
   ContextRouter;
 
 type State = {
-  currentStep: number
+  currentStep: number,
+  loading: boolean
 };
 
 const STEPS = [
@@ -57,15 +58,27 @@ const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });
 class LabRecordsImportWizard extends Component<Props, State> {
   props: Props;
 
-  state: State = { currentStep: 0 };
+  state: State = { currentStep: 0, loading: false };
 
   handleNext = () => {
     const { dispatch, history } = this.props;
-    const { currentStep } = this.state;
-    if (currentStep === STEPS.length - 1)
-      return dispatch(createLabRecord()).then(labRecord =>
-        history.push(`/lab_records/${labRecord.id}`)
+    const { currentStep, loading } = this.state;
+    if (currentStep === STEPS.length - 1) {
+      // It shouldn't reach this step with a loading=true state, but just to be sure
+      if (loading) return;
+
+      this.setState(
+        {
+          loading: true
+        },
+        () =>
+          dispatch(createLabRecord()).then(labRecord =>
+            history.push(`/lab_records/${labRecord.id}`)
+          )
       );
+      return;
+    }
+
     this.setState({ currentStep: currentStep + 1 });
   };
 
@@ -83,7 +96,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
 
   render() {
     const { labRecordImport } = this.props;
-    const { currentStep } = this.state;
+    const { currentStep, loading } = this.state;
     const headerRow = parseInt(labRecordImport.headerRow, 10);
     const dataRowsTo = parseInt(labRecordImport.dataRowsTo, 10);
     const dataRowsFrom = parseInt(labRecordImport.dataRowsFrom, 10);
@@ -111,16 +124,17 @@ class LabRecordsImportWizard extends Component<Props, State> {
           <Button
             onClick={this.handleNext}
             disabled={
-              currentStep === 0 &&
-              (!(
-                labRecordImport.file &&
-                headerRow &&
-                dataRowsTo &&
-                dataRowsFrom
-              ) ||
-                headerRow < 0 ||
-                dataRowsFrom <= headerRow ||
-                dataRowsTo <= dataRowsFrom)
+              loading ||
+              (currentStep === 0 &&
+                (!(
+                  labRecordImport.file &&
+                  headerRow &&
+                  dataRowsTo &&
+                  dataRowsFrom
+                ) ||
+                  headerRow < 0 ||
+                  dataRowsFrom <= headerRow ||
+                  dataRowsTo <= dataRowsFrom))
             }
           >
             {currentStep === STEPS.length - 1 ? (
