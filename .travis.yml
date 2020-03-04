@@ -17,6 +17,15 @@ jobs:
     - os: osx
       stage: MacOS
       env:
+        - INSTANCE=mw
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=mw YARN_GPG=no
+    - os: osx
+      stage: MacOS
+      env:
         - INSTANCE=staging
     - os: windows
       stage: Windows
