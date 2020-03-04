@@ -45,19 +45,29 @@ class Login extends Component<Props, State> {
     const { username, password } = this.state;
     event.preventDefault();
 
-    const type = network.online
-      ? (await dispatch(requestLogin(username, password))).type
-      : (await dispatch(
+    const loginAttempt = network.online
+      ? await dispatch(requestLogin(username, password))
+      : await dispatch(
           offlineLogin({
             userId: user.lastUserLoggedIn,
             password,
             userEmail: user.lastUserEmailLoggedIn
           })
-        )).type;
-    if (type === USER_LOGGED_IN_FAILURE)
+        );
+    if (loginAttempt.type === USER_LOGGED_IN_FAILURE) {
+      let errorText = '';
+      if (loginAttempt.error.message === 'Unauthorized') {
+        errorText = 'The email and password combination does not match';
+      } else if (loginAttempt.error.message === 'Failed to fetch') {
+        errorText = 'Cannot reach the server. Check your internet connection';
+      } else {
+        errorText = 'Unknown error';
+      }
+
       this.setState({
-        error: 'The email and password combination does not match'
+        error: errorText
       });
+    }
   };
 
   render() {
