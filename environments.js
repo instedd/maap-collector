@@ -68,5 +68,12 @@ module.exports = [
       NAME: 'mw',
       API_URL: 'https://maap-mw.instedd.org'
     }
+  },
+  {
+    name: 'sl',
+    config: {
+      NAME: 'sl',
+      API_URL: 'https://maap-sl.instedd.org'
+    }
   }
 ];
