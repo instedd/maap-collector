@@ -75,5 +75,40 @@ module.exports = [
       NAME: 'sl',
       API_URL: 'https://maap-sl.instedd.org'
     }
+  },
+  {
+    name: 'gh',
+    config: {
+      NAME: 'gh',
+      API_URL: 'https://maap-gh.instedd.org'
+    }
+  },
+  {
+    name: 'ga',
+    config: {
+      NAME: 'ga',
+      API_URL: 'https://maap-ga.instedd.org'
+    }
+  },
+  {
+    name: 'cm',
+    config: {
+      NAME: 'cm',
+      API_URL: 'https://maap-cm.instedd.org'
+    }
+  },
+  {
+    name: 'zm',
+    config: {
+      NAME: 'zm',
+      API_URL: 'https://maap-zm.instedd.org'
+    }
+  },
+  {
+    name: 'sn',
+    config: {
+      NAME: 'sn',
+      API_URL: 'https://maap-sn.instedd.org'
+    }
   }
 ];

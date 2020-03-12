@@ -17,6 +17,51 @@ jobs:
     - os: osx
       stage: MacOS
       env:
+        - INSTANCE=gh
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=gh YARN_GPG=no
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=ga
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=ga YARN_GPG=no
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=cm
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=cm YARN_GPG=no
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=zm
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=zm YARN_GPG=no
+    - os: osx
+      stage: MacOS
+      env:
+        - INSTANCE=sn
+    - os: windows
+      stage: Windows
+      cache: false
+      env:
+        - INSTANCE=sn YARN_GPG=no
+    - os: osx
+      stage: MacOS
+      env:
         - INSTANCE=sl
     - os: windows
       stage: Windows
