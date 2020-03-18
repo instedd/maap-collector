@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
-import { Magic, MAGIC_MIME_TYPE } from 'mmmagic';
+import mime from 'mime-types';
 import { remote } from 'electron';
 import fs from 'fs';
 import XlsxManager from '../utils/xlsxManager';
 import styles from './DropZone.scss';
 import ErrorMessage from './ErrorMessage';
-
-const magic = new Magic(MAGIC_MIME_TYPE);
 
 type Props = {
   onChange?: () => void,
@@ -29,6 +27,8 @@ const initialState = {
   dataRowsTo: ''
 };
 
+const permittedTypes = ['application/vnd.ms-excel', 'text/csv'];
+
 class DropZone extends Component<Props, State> {
   state: State = initialState;
 
@@ -48,23 +48,24 @@ class DropZone extends Component<Props, State> {
   };
 
   handleDrop = e => {
-    const { onChange } = this.props;
     e.preventDefault();
     this.setState({ dragging: false });
     const file = e.dataTransfer.files[0];
-    magic.detectFile(file.path, (err, res) => {
-      const permittedTypes = ['application/vnd.ms-excel', 'text/plain'];
-      if (permittedTypes.some(k => k === res)) {
-        onChange({ file });
-        this.setState({ error: null });
+    this.validateMimeType(file.path, { file });
+  };
 
-        this.parseSheet({ file });
-      } else {
-        this.setState({
-          error: 'Invalid file format. Valid ones are csv and xls'
-        });
-      }
-    });
+  validateMimeType = (filePath, data) => {
+    const { onChange } = this.props;
+    const type = mime.lookup(filePath);
+    if (permittedTypes.some(k => k === type)) {
+      onChange(data);
+      this.setState({ error: null });
+      this.parseSheet(data);
+    } else {
+      this.setState({
+        error: 'Invalid file format. Valid ones are csv and xls'
+      });
+    }
   };
 
   parseSheet = ({ file }) => {
@@ -105,7 +106,6 @@ class DropZone extends Component<Props, State> {
       headerRow,
       dataRowsFrom,
       dataRowsTo,
-      onChange,
       title,
       template
     } = this.props;
@@ -211,23 +211,8 @@ class DropZone extends Component<Props, State> {
                     properties: ['openFile']
                   });
                   if (!files) return;
-                  magic.detectFile(files[0], (err, res) => {
-                    const permittedTypes = [
-                      'application/vnd.ms-excel',
-                      'text/plain'
-                    ];
-                    if (permittedTypes.some(k => k === res)) {
-                      onChange({ file: { name: files[0], path: files[0] } });
-                      this.setState({ error: null });
-
-                      this.parseSheet({
-                        file: { name: files[0], path: files[0] }
-                      });
-                    } else {
-                      this.setState({
-                        error: 'Invalid file format. Valid ones are csv and xls'
-                      });
-                    }
+                  this.validateMimeType(files[0], {
+                    file: { name: files[0], path: files[0] }
                   });
                 }}
               >
