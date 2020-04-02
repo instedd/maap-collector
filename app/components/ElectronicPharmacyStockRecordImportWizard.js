@@ -90,6 +90,7 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
             history.push(`/electronic_pharmacy_stock_records`)
           )
       );
+      return;
     }
     this.setState({ currentStep: currentStep + 1 });
   };
