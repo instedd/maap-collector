@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Radio, { NativeRadioControl } from '@material/react-radio';
-import Checkbox from '@material/react-checkbox';
 import Select, { Option } from '@material/react-select';
 import { values } from 'lodash';
 import { connect } from 'react-redux';
@@ -103,52 +101,44 @@ class ProtectedHealthInformationStep extends Component<Props> {
                 {withPatientOrLabRecordId ? (
                   <>
                     <td className="text-center">
-                      <Radio key={`patientOrLabRecordID-${index}-patient-id`}>
-                        <NativeRadioControl
-                          name="patientId"
-                          value="patientId"
-                          disabled={date[index]}
-                          id={`patientOrLabRecordID-${index}`}
-                          checked={patientOrLabRecordId[index] === 'patientId'}
-                          onChange={this.handlePatientOrLabRecordIdChange(
-                            index
-                          )}
-                        />
-                      </Radio>
+                      <input
+                        type="radio"
+                        name="patientId"
+                        value="patientId"
+                        disabled={date[index]}
+                        id={`patientOrLabRecordID-${index}`}
+                        checked={patientOrLabRecordId[index] === 'patientId'}
+                        onChange={this.handlePatientOrLabRecordIdChange(index)}
+                      />
                     </td>
                     <td className="text-center">
-                      <Radio
-                        key={`patientOrLabRecordID-${index}-lab-record-id`}
-                      >
-                        <NativeRadioControl
-                          name="labRecordId"
-                          value="labRecordId"
-                          disabled={date[index]}
-                          id={`patientOrLabRecordID-${index}`}
-                          checked={
-                            patientOrLabRecordId[index] === 'labRecordId'
-                          }
-                          onChange={this.handlePatientOrLabRecordIdChange(
-                            index
-                          )}
-                        />
-                      </Radio>
+                      <input
+                        type="radio"
+                        name="labRecordId"
+                        value="labRecordId"
+                        disabled={date[index]}
+                        id={`patientOrLabRecordID-${index}`}
+                        checked={patientOrLabRecordId[index] === 'labRecordId'}
+                        onChange={this.handlePatientOrLabRecordIdChange(index)}
+                      />
                     </td>
                   </>
                 ) : (
                   <></>
                 )}
                 <td className="text-center">
-                  <Checkbox
-                    nativeControlId="phi-checkbox"
+                  <input
+                    type="checkbox"
+                    name="phi-checkbox"
                     disabled={date[index]}
                     checked={phi[index]}
                     onChange={this.handleCheckboxChange('phi', index)}
                   />
                 </td>
                 <td className="text-center">
-                  <Checkbox
-                    nativeControlId="date-checkbox"
+                  <input
+                    type="checkbox"
+                    name="date-checkbox"
                     checked={!!date[index]}
                     onChange={this.handleCheckboxChange(
                       'date',

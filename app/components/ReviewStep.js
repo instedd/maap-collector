@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { at, values } from 'lodash';
-import TextField, { Input } from '@material/react-text-field';
 
 import XlsxManager from '../utils/xlsxManager';
 
@@ -139,16 +138,15 @@ class ReviewStep extends Component<Props> {
                   <td className={style.centered} key={`td-${index}`}>
                     {withPatientOrLabRecordId &&
                     this.indexMatchesIdColumn(index, 'patientId') ? (
-                      <TextField>
-                        <Input
-                          type="text"
-                          value={cell.w}
-                          onChange={this.handleRowChange(
-                            rowIndex,
-                            columnsToKeep[index]
-                          )}
-                        />
-                      </TextField>
+                      <input
+                        className={style.input}
+                        type="text"
+                        value={cell.w}
+                        onChange={this.handleRowChange(
+                          rowIndex,
+                          columnsToKeep[index]
+                        )}
+                      />
                     ) : (
                       cell.w
                     )}
