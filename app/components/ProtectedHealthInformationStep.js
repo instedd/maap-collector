@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Select, { Option } from '@material/react-select';
 import { values } from 'lodash';
 import { connect } from 'react-redux';
-import XlsxManager from '../utils/xlsxManager';
 
 type ComponentProps = {};
 
@@ -56,9 +55,8 @@ class ProtectedHealthInformationStep extends Component<Props> {
   };
 
   componentDidMount() {
-    const { importData, onChange } = this.props;
-    const { file, headerRow } = importData;
-    const sheet = new XlsxManager(file.path);
+    const { importData, onChange, sheet } = this.props;
+    const { headerRow } = importData;
     const row = sheet.row(headerRow - 1);
 
     onChange({

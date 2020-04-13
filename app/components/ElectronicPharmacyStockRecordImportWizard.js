@@ -19,6 +19,7 @@ import {
   createElectronicPharmacyStockRecord
 } from '../actions/electronicPharmacyStockRecordImport';
 import style from './LabRecordImportWizard.scss';
+import XlsxManager from '../utils/xlsxManager';
 
 const templatePath =
   process.env.NODE_ENV === 'development'
@@ -32,32 +33,37 @@ type Props = {
 
 type State = {
   currentStep: number,
-  loading: boolean
+  loading: boolean,
+  file: any
 };
 
 const STEPS = [
-  ({ dispatch, electronicPharmacyStockRecordImport }) => (
+  ({ dispatch, electronicPharmacyStockRecordImport, sheet, parseSheet }) => (
     <DropZone
       {...electronicPharmacyStockRecordImport}
       title="Upload a file with Pharmacy Stock Records"
       template={`${templatePath}/electronicPharmacyRecordsTemplate.csv`}
       onChange={state => dispatch(setImportData(state))}
+      parseSheet={parseSheet}
+      sheet={sheet}
     />
   ),
-  ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
+  ({ dispatch, electronicPharmacyStockRecordImport, sheet }: Props) => (
     <ProtectedHealthInformationStep
       importData={electronicPharmacyStockRecordImport}
       withPatientOrLabRecordId={false}
       onChange={state => dispatch(setImportData(state))}
+      sheet={sheet}
     />
   ),
-  ({ dispatch, electronicPharmacyStockRecordImport }: Props) => (
+  ({ dispatch, electronicPharmacyStockRecordImport, sheet }: Props) => (
     <ReviewStep
       importData={electronicPharmacyStockRecordImport}
       withPatientOrLabRecordId={false}
       title="REVIEW AND FINISH"
       subtitle="Click Next to import the rows displayed below, or Cancel to abort the process"
       onChange={state => dispatch(setImportData(state))}
+      sheet={sheet}
     />
   )
 ];
@@ -72,7 +78,14 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
 > {
   props: Props;
 
-  state: State = { currentStep: 0, loading: false };
+  state: State = { currentStep: 0, loading: false, file: null };
+
+  parseSheet = ({ file }) => {
+    const sheet = new XlsxManager(file.path);
+    this.setState({
+      file: sheet
+    });
+  };
 
   handleNext = () => {
     const { dispatch, history } = this.props;
@@ -109,7 +122,7 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
 
   render() {
     const { electronicPharmacyStockRecordImport } = this.props;
-    const { currentStep, loading } = this.state;
+    const { currentStep, loading, file } = this.state;
     const headerRow = parseInt(
       electronicPharmacyStockRecordImport.headerRow,
       10
@@ -130,8 +143,11 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
           steps={['File upload', 'PHI', 'Review and finish']}
         />
         <div className={style.wizardBody}>
-          {/* $FlowFixMe */}
-          <CurrentStepComponent {...this.props} />
+          <CurrentStepComponent
+            {...this.props}
+            parseSheet={this.parseSheet}
+            sheet={file}
+          />
         </div>
         <div className={style.wizardFooter}>
           <Button onClick={this.handlePrevious}>

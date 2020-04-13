@@ -4,7 +4,6 @@ import TextField, { Input } from '@material/react-text-field';
 import mime from 'mime-types';
 import { remote } from 'electron';
 import fs from 'fs';
-import XlsxManager from '../utils/xlsxManager';
 import styles from './DropZone.scss';
 import ErrorMessage from './ErrorMessage';
 
@@ -15,10 +14,11 @@ type Props = {
   dataRowsFrom?: string | null,
   dataRowsTo?: string | null,
   title: string,
-  template?: string
+  template?: string,
+  sheet: any,
+  parseSheet: () => void
 };
 type State = {};
-
 const initialState = {
   file: null,
   dragging: false,
@@ -55,24 +55,17 @@ class DropZone extends Component<Props, State> {
   };
 
   validateMimeType = (filePath, data) => {
-    const { onChange } = this.props;
+    const { onChange, parseSheet } = this.props;
     const type = mime.lookup(filePath);
     if (permittedTypes.some(k => k === type)) {
       onChange(data);
       this.setState({ error: null });
-      this.parseSheet(data);
+      parseSheet(data);
     } else {
       this.setState({
         error: 'Invalid file format. Valid ones are csv and xls'
       });
     }
-  };
-
-  parseSheet = ({ file }) => {
-    const sheet = new XlsxManager(file.path);
-    this.setState({
-      maxRow: sheet.maxRow
-    });
   };
 
   handleChange = (field, e) => {
@@ -100,14 +93,15 @@ class DropZone extends Component<Props, State> {
   };
 
   render() {
-    const { dragging, maxRow, error } = this.state;
+    const { dragging, error } = this.state;
     const {
       file,
       headerRow,
       dataRowsFrom,
       dataRowsTo,
       title,
-      template
+      template,
+      sheet
     } = this.props;
     return (
       <>
@@ -171,7 +165,7 @@ class DropZone extends Component<Props, State> {
                     className={styles.input}
                     type="number"
                     min="0"
-                    max={maxRow}
+                    max={sheet.maxRow}
                     value={headerRow}
                     onChange={e => this.handleChange('headerRow', e)}
                   />
@@ -181,7 +175,7 @@ class DropZone extends Component<Props, State> {
                     type="number"
                     className={styles.input}
                     min={parseInt(headerRow, 10) || 0 + 1}
-                    max={maxRow}
+                    max={sheet.maxRow}
                     value={dataRowsFrom}
                     onChange={e => this.handleChange('dataRowsFrom', e)}
                   />
@@ -191,7 +185,7 @@ class DropZone extends Component<Props, State> {
                     type="number"
                     className={styles.input}
                     min={parseInt(dataRowsFrom, 10) || 0 + 1}
-                    max={maxRow}
+                    max={sheet.maxRow}
                     value={dataRowsTo}
                     onChange={e => this.handleChange('dataRowsTo', e)}
                   />

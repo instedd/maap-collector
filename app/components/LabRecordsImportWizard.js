@@ -9,6 +9,7 @@ import type { ContextRouter } from 'react-router';
 import DropZone from './DropZone';
 import ReviewStep from './ReviewStep';
 import type { Dispatch, State as ReduxState } from '../reducers/types';
+import XlsxManager from '../utils/xlsxManager';
 import ProtectedHealthInformationStep from './ProtectedHealthInformationStep';
 import WizardHeader from './WizardHeader';
 import {
@@ -25,29 +26,34 @@ type Props = {
 
 type State = {
   currentStep: number,
-  loading: boolean
+  loading: boolean,
+  file: any
 };
 
 const STEPS = [
-  ({ dispatch, labRecordImport }) => (
+  ({ dispatch, labRecordImport, sheet, parseSheet }) => (
     <DropZone
       {...labRecordImport}
+      parseSheet={parseSheet}
+      sheet={sheet}
       title="UPLOAD A FILE WITH ALL THE NEW ENTRIES"
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  ({ dispatch, labRecordImport }: Props) => (
+  ({ dispatch, labRecordImport, sheet }: Props) => (
     <ProtectedHealthInformationStep
       importData={labRecordImport}
+      sheet={sheet}
       withPatientOrLabRecord={false}
       onChange={state => dispatch(setImportData(state))}
     />
   ),
-  ({ dispatch, labRecordImport }: Props) => (
+  ({ dispatch, labRecordImport, sheet }: Props) => (
     <ReviewStep
       title="Complete patient ID for record linking"
       subtitle="You could skip this and complete patient ID later from lab records"
       importData={labRecordImport}
+      sheet={sheet}
       onChange={state => dispatch(setImportData(state))}
     />
   )
@@ -58,7 +64,18 @@ const mapStateToProps = ({ labRecordImport }) => ({ labRecordImport });
 class LabRecordsImportWizard extends Component<Props, State> {
   props: Props;
 
-  state: State = { currentStep: 0, loading: false };
+  state: State = {
+    currentStep: 0,
+    loading: false,
+    file: null
+  };
+
+  parseSheet = ({ file }) => {
+    const sheet = new XlsxManager(file.path);
+    this.setState({
+      file: sheet
+    });
+  };
 
   handleNext = () => {
     const { dispatch, history } = this.props;
@@ -96,7 +113,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
 
   render() {
     const { labRecordImport } = this.props;
-    const { currentStep, loading } = this.state;
+    const { currentStep, loading, file } = this.state;
     const headerRow = parseInt(labRecordImport.headerRow, 10);
     const dataRowsTo = parseInt(labRecordImport.dataRowsTo, 10);
     const dataRowsFrom = parseInt(labRecordImport.dataRowsFrom, 10);
@@ -108,8 +125,11 @@ class LabRecordsImportWizard extends Component<Props, State> {
           steps={['File upload', 'PHI', 'Patient ID']}
         />
         <div className={style.wizardBody}>
-          {/* $FlowFixMe */}
-          <CurrentStepComponent {...this.props} />
+          <CurrentStepComponent
+            {...this.props}
+            parseSheet={this.parseSheet}
+            sheet={file}
+          />
         </div>
         <div className={style.wizardFooter}>
           <Button onClick={this.handlePrevious}>
