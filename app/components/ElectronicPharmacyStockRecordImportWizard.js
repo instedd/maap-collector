@@ -38,9 +38,17 @@ type State = {
 };
 
 const STEPS = [
-  ({ dispatch, electronicPharmacyStockRecordImport, sheet, parseSheet }) => (
+  ({
+    dispatch,
+    electronicPharmacyStockRecordImport,
+    sheet,
+    parseSheet
+  }: Props) => (
     <DropZone
-      {...electronicPharmacyStockRecordImport}
+      file={electronicPharmacyStockRecordImport.file}
+      headerRow={electronicPharmacyStockRecordImport.headerRow}
+      dataRowsFrom={electronicPharmacyStockRecordImport.dataRowsFrom}
+      dataRowsTo={electronicPharmacyStockRecordImport.dataRowsTo}
       title="Upload a file with Pharmacy Stock Records"
       template={`${templatePath}/electronicPharmacyRecordsTemplate.csv`}
       onChange={state => dispatch(setImportData(state))}
@@ -50,7 +58,13 @@ const STEPS = [
   ),
   ({ dispatch, electronicPharmacyStockRecordImport, sheet }: Props) => (
     <ProtectedHealthInformationStep
-      importData={electronicPharmacyStockRecordImport}
+      importData={{
+        date: electronicPharmacyStockRecordImport.date,
+        phi: electronicPharmacyStockRecordImport.phi,
+        patientOrLabRecordId:
+          electronicPharmacyStockRecordImport.patientOrLabRecordId,
+        columns: electronicPharmacyStockRecordImport.columns
+      }}
       withPatientOrLabRecordId={false}
       onChange={state => dispatch(setImportData(state))}
       sheet={sheet}

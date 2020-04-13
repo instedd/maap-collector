@@ -31,9 +31,12 @@ type State = {
 };
 
 const STEPS = [
-  ({ dispatch, labRecordImport, sheet, parseSheet }) => (
+  ({ dispatch, labRecordImport, sheet, parseSheet }: Props) => (
     <DropZone
-      {...labRecordImport}
+      file={labRecordImport.file}
+      headerRow={labRecordImport.headerRow}
+      dataRowsFrom={labRecordImport.dataRowsFrom}
+      dataRowsTo={labRecordImport.dataRowsTo}
       parseSheet={parseSheet}
       sheet={sheet}
       title="UPLOAD A FILE WITH ALL THE NEW ENTRIES"
@@ -42,7 +45,12 @@ const STEPS = [
   ),
   ({ dispatch, labRecordImport, sheet }: Props) => (
     <ProtectedHealthInformationStep
-      importData={labRecordImport}
+      importData={{
+        date: labRecordImport.date,
+        phi: labRecordImport.phi,
+        patientOrLabRecordId: labRecordImport.patientOrLabRecordId,
+        columns: labRecordImport.columns
+      }}
       sheet={sheet}
       withPatientOrLabRecord={false}
       onChange={state => dispatch(setImportData(state))}
