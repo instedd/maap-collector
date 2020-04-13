@@ -1,3 +1,19 @@
 .centered {
   text-align: center;
 }
+
+.input {
+  background-color: whitesmoke;
+  padding: 6px 16px;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  border-radius: 4px 4px 0 0;
+  outline: 0;
+  line-height: 1.75rem;
+  font-size: 0.875rem;
+  font-family: var(--ws-regular);
+
+  &:focus {
+    border-bottom-color: var(--orange);
+  }
+}
