@@ -12,16 +12,14 @@ const FETCH_LAB_RECORDS_FAILED = 'FETCH_LAB_RECORDS_FAILED';
 const FETCHED_LAB_RECORD = 'FETCHED_LAB_RECORD';
 const FETCHING_LAB_RECORD = 'FETCHING_LAB_RECORD';
 
-const uploadMapper = async (attr, record) =>
-  snakeCaseKeys({
-    ...attr,
+const uploadMapper = async (attr, record) => {
+  const { rows, ...withoutRows } = attr;
+  return snakeCaseKeys({
+    ...withoutRows,
     date: Object.values(attr.date),
-    siteId: await record.getRemoteSiteId(),
-    lab_records_attributes: attr.rows.map((row, index) => ({
-      content: [...row],
-      row: index
-    }))
+    siteId: await record.getRemoteSiteId()
   });
+};
 
 export const syncLabRecords = () => async dispatch =>
   dispatch(uploadNewLabRecords()).then(() =>
@@ -41,7 +39,18 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
     const body = new FormData();
     const contents = fs.readFileSync(labRecord.filePath);
     const blob = new Blob([contents]);
-    const mapper = await uploadMapper(labRecord.dataValues, labRecord);
+    const labRecordValues = labRecord.dataValues;
+    const mapper = await uploadMapper(labRecordValues, labRecord);
+    const labRecordAttributes = labRecordValues.rows.map((row, index) => ({
+      content: [...row],
+      row: index
+    }));
+    const labRecordAttributesFile = JSONFile(
+      labRecordAttributes,
+      'lab_records_attributes.json'
+    );
+    const rowsFile = JSONFile(labRecordValues.rows, 'rows.json');
+
     // eslint-disable-next-line
     Object.keys(mapper).forEach(key => {
       if (isObject(mapper[key])) {
@@ -51,6 +60,8 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
       }
     });
     body.append('sheet_file', blob);
+    body.append('lab_records_attributes_file', labRecordAttributesFile);
+    body.append('rows_file', rowsFile);
     fetchAuthenticated('/api/v1/lab_record_imports', user.auth, {
       method: 'POST',
       body,
@@ -111,6 +122,13 @@ export const fetchLabRecord = labRecordId => async (dispatch, getState) => {
   dispatch({ type: FETCHED_LAB_RECORD, labRecord });
 
   return labRecord;
+};
+
+export const JSONFile = (content, filenme) => {
+  const blob = new Blob([JSON.stringify(content)], {
+    type: 'application/json'
+  });
+  return new File([blob], filenme);
 };
 
 export {
