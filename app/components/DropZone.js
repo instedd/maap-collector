@@ -153,7 +153,7 @@ class DropZone extends Component<Props, State> {
                 entries
               </p>
               {dataRowsTo &&
-                (dataRowsTo <= dataRowsFrom || dataRowsTo <= headerRow) && (
+                (dataRowsTo < dataRowsFrom || dataRowsTo < headerRow) && (
                   <ErrorMessage>
                     Last row cannot be lower or equal than the first row or the
                     header
