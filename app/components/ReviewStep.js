@@ -1,11 +1,23 @@
-import React, { Component } from 'react';
-import { at, values } from 'lodash';
+import React, { Component, Fragment } from 'react';
+import { values } from 'lodash';
+import { connect } from 'react-redux';
+import qs from 'qs';
+
+import XlsxManager from '../utils/xlsxManager';
 
 import style from './ReviewStep.scss';
+import Table from './Table';
 
-type ComponentProps = {};
+type ComponentProps = {
+  router: any
+};
 
 type Props = ComponentProps;
+
+const mapStateToProps = state => {
+  const { router } = state;
+  return { router };
+};
 
 class ReviewStep extends Component<Props> {
   indexMatchesIdColumn = (index, columnName) => {
@@ -58,19 +70,16 @@ class ReviewStep extends Component<Props> {
   };
 
   componentDidMount() {
+    const { importData, onChange, withPatientOrLabRecordId } = this.props;
     const {
-      importData,
-      onChange,
-      withPatientOrLabRecordId,
-      sheet
-    } = this.props;
-    const {
+      file,
       dataRowsFrom,
       dataRowsTo,
       patientOrLabRecordId,
       phi,
       date
     } = importData;
+    const sheet = new XlsxManager(file.path);
     const headerRow = sheet.row(importData.headerRow - 1);
     let rows = sheet.rows(dataRowsFrom - 1, dataRowsTo);
     const columnsToKeep = headerRow.reduce((acc, current, index) => {
@@ -105,61 +114,60 @@ class ReviewStep extends Component<Props> {
       importData,
       withPatientOrLabRecordId,
       title,
-      subtitle
+      subtitle,
+      router
     } = this.props;
     const { columns, rows, patientOrLabRecordId, columnsToKeep } = importData;
 
     if (!patientOrLabRecordId || !columnsToKeep) {
       return <></>;
     }
+    const pageSize = 20;
+    const totalPages = Math.floor(rows.length / pageSize);
+    const currentPage =
+      parseInt(qs.parse(router.location.search.slice(1)).page, 10) || 1;
+    const prevPage = currentPage > 1 ? currentPage - 1 : null;
+    const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+    const offset = (currentPage - 1) * pageSize;
 
     return (
-      <div>
+      <Fragment>
         {/* TODO Remove this text for pharmacy */}
         <h2>{title}</h2>
         <h4>{subtitle}</h4>
-        <table>
-          <thead>
-            <tr>
-              {columns.map((column, index) => (
-                <th
-                  className={style.centered}
-                  key={`column-patient-id-${index}`}
-                >
-                  {this.columnName(column, index)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, rowIndex) => (
-              <tr key={`row-${rowIndex}`}>
-                {at(row, columnsToKeep).map((cell, index) => (
-                  // eslint-disable-next-line
-                  <td className={style.centered} key={`td-${index}`}>
-                    {withPatientOrLabRecordId &&
-                    this.indexMatchesIdColumn(index, 'patientId') ? (
-                      <input
-                        className={style.input}
-                        type="text"
-                        value={cell.w}
-                        onChange={this.handleRowChange(
-                          rowIndex,
-                          columnsToKeep[index]
-                        )}
-                      />
-                    ) : (
-                      cell.w
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+        <div className={style.table}>
+          <Table
+            entityName="records to import"
+            columns={columns.map(this.columnName)}
+            pagination
+            offset={offset}
+            limit={pageSize}
+            prevPage={prevPage}
+            nextPage={nextPage}
+            totalCount={rows.length}
+            items={rows.slice(offset, offset + pageSize)}
+            fields={columnsToKeep.map(
+              (column, fieldIndex) => (row, rowIndex) => {
+                const cell = row[column];
+                return withPatientOrLabRecordId &&
+                  this.indexMatchesIdColumn(fieldIndex, 'patientId') ? (
+                  <input
+                    className={style.input}
+                    type="text"
+                    value={row.w}
+                    onChange={this.handleRowChange(rowIndex, column)}
+                  />
+                ) : (
+                  cell.w
+                );
+              }
+            )}
+          />
+        </div>
+      </Fragment>
     );
   }
 }
 
-export default ReviewStep;
+export default connect(mapStateToProps)(ReviewStep);
