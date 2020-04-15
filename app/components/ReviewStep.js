@@ -3,8 +3,6 @@ import { values } from 'lodash';
 import { connect } from 'react-redux';
 import qs from 'qs';
 
-import XlsxManager from '../utils/xlsxManager';
-
 import style from './ReviewStep.scss';
 import Table from './Table';
 
@@ -70,16 +68,19 @@ class ReviewStep extends Component<Props> {
   };
 
   componentDidMount() {
-    const { importData, onChange, withPatientOrLabRecordId } = this.props;
     const {
-      file,
+      importData,
+      onChange,
+      withPatientOrLabRecordId,
+      sheet
+    } = this.props;
+    const {
       dataRowsFrom,
       dataRowsTo,
       patientOrLabRecordId,
       phi,
       date
     } = importData;
-    const sheet = new XlsxManager(file.path);
     const headerRow = sheet.row(importData.headerRow - 1);
     let rows = sheet.rows(dataRowsFrom - 1, dataRowsTo);
     const columnsToKeep = headerRow.reduce((acc, current, index) => {
