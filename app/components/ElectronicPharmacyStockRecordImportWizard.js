@@ -185,7 +185,7 @@ class ElectronicPharmacyStockRecordImportWizard extends Component<
                   dataRowsFrom
                 ) ||
                   headerRow < 0 ||
-                  dataRowsFrom < headerRow ||
+                  dataRowsFrom <= headerRow ||
                   dataRowsTo < dataRowsFrom))
             }
           >

@@ -161,7 +161,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
                   dataRowsFrom
                 ) ||
                   headerRow < 0 ||
-                  dataRowsFrom < headerRow ||
+                  dataRowsFrom <= headerRow ||
                   dataRowsTo < dataRowsFrom))
             }
           >
