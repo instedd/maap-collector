@@ -14,9 +14,9 @@ const initialState = {
   dataRowsTo: '',
   columns: [],
   rows: [],
-  patientOrLabRecordId: {},
-  phi: {},
-  date: {}
+  patientOrLabRecordId: [],
+  phi: [],
+  date: []
 };
 
 export default function counter(state = initialState, action: Action) {

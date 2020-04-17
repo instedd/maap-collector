@@ -18,8 +18,8 @@ import ElectronicPharmacyStockRecordImport from './containers/ElectronicPharmacy
 import ElectronicPharmacyStockRecordDetail from './containers/ElectronicPharmacyStockRecordDetail';
 
 const mapStateToProps = state => {
-  const { user } = state;
-  return { user };
+  const { user, site } = state;
+  return { user, site };
 };
 
 const NonPrivateRoute = connect(mapStateToProps)(
@@ -35,18 +35,22 @@ const NonPrivateRoute = connect(mapStateToProps)(
 );
 
 const PrivateRoute = connect(mapStateToProps)(
-  ({ component: Component, path, user }) => (
+  ({ component: Component, path, user, enabled = true }) => (
     <Route
       exact
       path={path}
       render={props =>
-        user.auth ? <Component {...props} /> : <Redirect to={routes.SIGN_IN} />
+        user.auth && enabled ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={routes.SIGN_IN} />
+        )
       }
     />
   )
 );
 
-const Router = () => (
+const Router = ({ site }: { site: * }) => (
   <App>
     <Switch>
       <NonPrivateRoute exact path={routes.SIGN_IN} component={Login} />
@@ -61,18 +65,26 @@ const Router = () => (
         path="/antibiotics/:id"
         component={AntibioticsDetail}
       />
-      <PrivateRoute exact path="/patients" component={PatientsIndex} />
       <PrivateRoute
+        enabled={site && site.hasHospital}
+        exact
+        path="/patients"
+        component={PatientsIndex}
+      />
+      <PrivateRoute
+        enabled={site && site.hasHospital}
         exact
         path="/patients/:id/entries"
         component={PatientEntriesIndex}
       />
       <PrivateRoute
+        enabled={site && site.hasHospital}
         exact
         path="/patients/:id/entries/:patientEntryId/edit"
         component={PatientEntriesEdit}
       />
       <PrivateRoute
+        enabled={site && site.hasHospital}
         exact
         path="/patients/:id/entries/new"
         component={PatientEntriesNew}

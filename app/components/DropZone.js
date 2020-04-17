@@ -232,7 +232,8 @@ DropZone.defaultProps = {
   headerRow: '',
   dataRowsFrom: '',
   dataRowsTo: '',
-  template: ''
+  template: '',
+  rows: []
 };
 
 export default DropZone;

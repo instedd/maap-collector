@@ -4,9 +4,9 @@ import MaterialIcon from '@material/react-material-icon';
 import TextField, { Input } from '@material/react-text-field';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { values, isFunction } from 'lodash';
 import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
+import { values, isFunction } from 'lodash';
 import { fetchLabRecord } from '../actions/labRecords';
 import { setPhiData } from '../actions/labRecordImport';
 import { updateLabRecord } from '../actions/labRecord';
@@ -29,8 +29,8 @@ type State = {
 };
 
 const mapStateToProps = state => {
-  const { dispatch, labRecordImport, labRecords } = state;
-  return { dispatch, labRecordImport, labRecords };
+  const { dispatch, labRecordImport, labRecords, site } = state;
+  return { dispatch, labRecordImport, labRecords, site };
 };
 
 class LabRecordsDetailList extends Component<Props, State> {
@@ -86,7 +86,13 @@ class LabRecordsDetailList extends Component<Props, State> {
   }
 
   render() {
-    const { labRecordImport, dispatch, labRecordId, labRecords } = this.props;
+    const {
+      labRecordImport,
+      dispatch,
+      labRecordId,
+      labRecords,
+      site
+    } = this.props;
     const { labRecord } = labRecords;
     const { patientOrLabRecordId, phi, date } = {
       ...{ ...labRecord }.dataValues
@@ -118,10 +124,14 @@ class LabRecordsDetailList extends Component<Props, State> {
               return flatRow;
             })
             .filter(row => {
-              const patientIdColumn = patientOrLabRecordId.indexOf('patientId');
-              const labRecordIdColumn = patientOrLabRecordId.indexOf(
-                'labRecordId'
-              );
+              const patientIdColumn = (
+                (patientOrLabRecordId.length && patientOrLabRecordId) ||
+                []
+              ).indexOf('patientId');
+              const labRecordIdColumn = (
+                (patientOrLabRecordId.length && patientOrLabRecordId) ||
+                []
+              ).indexOf('labRecordId');
               return (
                 !searchText ||
                 row[patientIdColumn].includes(searchText) ||
@@ -135,13 +145,14 @@ class LabRecordsDetailList extends Component<Props, State> {
           fields={columnTypes
             .map((e, i) => {
               if (e === null) return false;
-              if (patientOrLabRecordId[i] === 'patientId')
+              if (patientOrLabRecordId[i] === 'patientId') {
+                if (site.hasHospital) return i;
                 return item =>
                   this.patientField(
                     `${item[item.length - 1]}-${i}-patientIdField`,
                     item
                   );
-
+              }
               if (patientOrLabRecordId[i] === 'labRecordId')
                 return item => <strong>{item[i]}</strong>;
               return i;
