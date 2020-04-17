@@ -155,8 +155,7 @@ class DropZone extends Component<Props, State> {
               {dataRowsTo &&
                 (dataRowsTo < dataRowsFrom || dataRowsTo < headerRow) && (
                   <ErrorMessage>
-                    Last row cannot be lower or equal than the first row or the
-                    header
+                    Last row cannot be lower than the first row or the header
                   </ErrorMessage>
                 )}
               <div className={styles.fileLimits}>
