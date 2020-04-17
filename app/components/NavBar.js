@@ -13,6 +13,7 @@ import MaterialIcon from '@material/react-material-icon';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { ContextRouter } from 'react-router';
+
 import { State } from '../reducers/types';
 import { userLoggedOut } from '../actions/user';
 import Logo from '../assets/logo.svg';
@@ -33,16 +34,11 @@ const mapStateToProps = ({ site, user }: State) => ({
   user
 });
 
-const tabs = [
+const initialTabs = [
   {
     name: 'Lab records',
     icon: <MaterialIcon icon="local_pharmacy" />,
     path: routes.HOME
-  },
-  {
-    name: 'Patient records',
-    icon: <MaterialIcon icon="assignment_ind" />,
-    path: '/patients/'
   },
   {
     name: 'Pharmacy stats',
@@ -55,10 +51,13 @@ const tabs = [
     path: '/electronic_pharmacy_stock_records'
   }
 ];
+
 class NavBar extends Component<Props, State> {
   props: Props;
 
   state: State = { userDropwdownOpen: false };
+
+  tabs = [...initialTabs];
 
   handleSignOut = e => {
     const { dispatch } = this.props;
@@ -76,6 +75,19 @@ class NavBar extends Component<Props, State> {
   render() {
     const { userDropwdownOpen } = this.state;
     const { history, user, site } = this.props;
+    if (site && site.hasHospital && this.tabs.length === initialTabs.length)
+      this.tabs.splice(1, 0, {
+        name: 'Patient records',
+        icon: <MaterialIcon icon="assignment_ind" />,
+        path: '/patients/'
+      });
+    else if (
+      site &&
+      !site.hasHospital &&
+      this.tabs.length !== initialTabs.length
+    )
+      this.tabs = [...initialTabs];
+
     return (
       <div>
         <TopAppBar className={styles.navBar}>
@@ -128,7 +140,7 @@ class NavBar extends Component<Props, State> {
           {site && (
             <TopAppBarRow>
               <TabBar activeIndex={null} className={styles.navBarTabs}>
-                {tabs.map(tab => (
+                {this.tabs.map(tab => (
                   <Tab
                     key={tab.name}
                     active={history.location.pathname === tab.path}
