@@ -3,6 +3,7 @@ import snakeCaseKeys from 'snakecase-keys';
 import { isObject } from 'lodash';
 import { fetchAuthenticated } from '../utils/fetch';
 import { fetchEntity, fetchEntitySingular } from './fetch';
+import { JSONFile } from './labRecords';
 import db from '../db';
 
 const FETCH_ELECTRONIC_PHARMACY_STOCK_RECORDS =
@@ -14,12 +15,14 @@ const FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORDS =
 const FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORD =
   'FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORD';
 
-const uploadMapper = async (attr, record) =>
-  snakeCaseKeys({
-    ...attr,
+const uploadMapper = async (attr, record) => {
+  const { rows, ...withoutRows } = attr;
+  return snakeCaseKeys({
+    ...withoutRows,
     date: Object.values(attr.date),
     siteId: await record.getRemoteSiteId()
   });
+};
 
 export const fetchElectronicPharmacyStockRecords = fetchEntity(
   'ElectronicPharmacyStockRecord'
@@ -50,10 +53,13 @@ export const uploadNewElectronicPharmacyStockRecords = () => async (
     const body = new FormData();
     const contents = fs.readFileSync(electronicPharmacyStockRecord.filePath);
     const blob = new Blob([contents]);
+    const electronicPharmacyValues = electronicPharmacyStockRecord.dataValues;
     const mapper = await uploadMapper(
-      electronicPharmacyStockRecord.dataValues,
+      electronicPharmacyValues,
       electronicPharmacyStockRecord
     );
+    const rowsFile = JSONFile(electronicPharmacyValues.rows, 'rows.json');
+
     // eslint-disable-next-line
     Object.keys(mapper).forEach(key => {
       if (isObject(mapper[key])) {
@@ -63,6 +69,7 @@ export const uploadNewElectronicPharmacyStockRecords = () => async (
       }
     });
     body.append('sheet_file', blob);
+    body.append('rows_file', rowsFile);
     fetchAuthenticated('/api/v1/electronic_pharmacy_stock_records', user.auth, {
       method: 'POST',
       body,
