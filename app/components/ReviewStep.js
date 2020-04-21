@@ -156,7 +156,7 @@ class ReviewStep extends Component<Props> {
                   <input
                     className={style.input}
                     type="text"
-                    value={row.w}
+                    value={cell.w}
                     onChange={this.handleRowChange(rowIndex, column)}
                   />
                 ) : (
