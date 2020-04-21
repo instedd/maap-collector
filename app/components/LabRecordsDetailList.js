@@ -146,7 +146,7 @@ class LabRecordsDetailList extends Component<Props, State> {
             .map((e, i) => {
               if (e === null) return false;
               if (patientOrLabRecordId[i] === 'patientId') {
-                if (site.hasHospital) return i;
+                if (!site.hasHospital) return i;
                 return item =>
                   this.patientField(
                     `${item[item.length - 1]}-${i}-patientIdField`,
