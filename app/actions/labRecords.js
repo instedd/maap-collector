@@ -95,12 +95,15 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
   });
 
   collectionToUpdate.forEach(async labRecord => {
+    const body = new FormData();
+    body.append('rows_file', JSONFile(labRecord.rows, 'rows.json'));
     fetchAuthenticated(
       `/api/v1/lab_record_imports/${labRecord.remoteId}`,
       user.auth,
       {
         method: 'PUT',
-        body: { rows: labRecord.rows }
+        body,
+        contentType: null
       }
     )
       .then(() => {
