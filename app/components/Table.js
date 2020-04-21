@@ -154,17 +154,23 @@ class Table extends Component<Props, State> {
             {items.map((item, index) => (
               <tr
                 className={rowClassName(item)}
-                key={`item-${item.id || index}`}
+                key={`item-${('id' in item && item.id) || index}`}
                 onClick={() => onClick(item)}
               >
                 {fields.map(
                   (field, fieldIndex) =>
                     isFunction(field) ? (
-                      <td key={`item-${item.id || index}-${fieldIndex}`}>
+                      <td
+                        key={`item-${('id' in item && item.id) ||
+                          index}-${fieldIndex}`}
+                      >
                         {field(item, index)}
                       </td>
                     ) : (
-                      <td key={`item-${item.id || index}-${field}`}>
+                      <td
+                        key={`item-${('id' in item && item.id) ||
+                          index}-${field}`}
+                      >
                         {parseField(item[field])}
                       </td>
                     )
