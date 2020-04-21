@@ -102,6 +102,7 @@ class LabRecordsImportWizard extends Component<Props, State> {
         ({ dispatch, labRecordImport, sheet }: Props) => (
           <ProtectedHealthInformationStep
             importData={{
+              headerRow: labRecordImport.headerRow,
               date: labRecordImport.date,
               phi: labRecordImport.phi,
               patientOrLabRecordId: labRecordImport.patientOrLabRecordId,

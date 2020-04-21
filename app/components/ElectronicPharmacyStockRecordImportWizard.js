@@ -59,6 +59,7 @@ const STEPS = [
   ({ dispatch, electronicPharmacyStockRecordImport, sheet }: Props) => (
     <ProtectedHealthInformationStep
       importData={{
+        headerRow: electronicPharmacyStockRecordImport.headerRow,
         date: electronicPharmacyStockRecordImport.date,
         phi: electronicPharmacyStockRecordImport.phi,
         patientOrLabRecordId:
