@@ -3,7 +3,7 @@ import snakeCaseKeys from 'snakecase-keys';
 import { isObject } from 'lodash';
 import { fetchAuthenticated } from '../utils/fetch';
 import { fetchEntity, fetchEntitySingular } from './fetch';
-import { JSONFile } from './labRecords';
+import createJSONFile from '../utils/attachments';
 import db from '../db';
 
 const FETCH_ELECTRONIC_PHARMACY_STOCK_RECORDS =
@@ -58,7 +58,7 @@ export const uploadNewElectronicPharmacyStockRecords = () => async (
       electronicPharmacyValues,
       electronicPharmacyStockRecord
     );
-    const rowsFile = JSONFile(electronicPharmacyValues.rows, 'rows.json');
+    const rowsFile = createJSONFile(electronicPharmacyValues.rows, 'rows.json');
 
     // eslint-disable-next-line
     Object.keys(mapper).forEach(key => {

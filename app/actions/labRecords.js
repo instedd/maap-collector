@@ -4,6 +4,7 @@ import { isObject } from 'lodash';
 import db from '../db';
 
 import { fetchAuthenticated } from '../utils/fetch';
+import createJSONFile from '../utils/attachments';
 import { fetchEntity } from './fetch';
 
 const FETCH_LAB_RECORDS = 'FETCH_LAB_RECORDS';
@@ -45,11 +46,11 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
       content: [...row],
       row: index
     }));
-    const labRecordAttributesFile = JSONFile(
+    const labRecordAttributesFile = createJSONFile(
       labRecordAttributes,
       'lab_records_attributes.json'
     );
-    const rowsFile = JSONFile(labRecordValues.rows, 'rows.json');
+    const rowsFile = createJSONFile(labRecordValues.rows, 'rows.json');
 
     // eslint-disable-next-line
     Object.keys(mapper).forEach(key => {
@@ -96,7 +97,7 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
 
   collectionToUpdate.forEach(async labRecord => {
     const body = new FormData();
-    body.append('rows_file', JSONFile(labRecord.rows, 'rows.json'));
+    body.append('rows_file', createJSONFile(labRecord.rows, 'rows.json'));
     fetchAuthenticated(
       `/api/v1/lab_record_imports/${labRecord.remoteId}`,
       user.auth,
@@ -125,13 +126,6 @@ export const fetchLabRecord = labRecordId => async (dispatch, getState) => {
   dispatch({ type: FETCHED_LAB_RECORD, labRecord });
 
   return labRecord;
-};
-
-export const JSONFile = (content, filenme) => {
-  const blob = new Blob([JSON.stringify(content)], {
-    type: 'application/json'
-  });
-  return new File([blob], filenme);
 };
 
 export {
