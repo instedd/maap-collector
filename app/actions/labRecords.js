@@ -4,6 +4,7 @@ import { isObject } from 'lodash';
 import db from '../db';
 
 import { fetchAuthenticated } from '../utils/fetch';
+import createJSONFile from '../utils/attachments';
 import { fetchEntity } from './fetch';
 
 const FETCH_LAB_RECORDS = 'FETCH_LAB_RECORDS';
@@ -12,16 +13,14 @@ const FETCH_LAB_RECORDS_FAILED = 'FETCH_LAB_RECORDS_FAILED';
 const FETCHED_LAB_RECORD = 'FETCHED_LAB_RECORD';
 const FETCHING_LAB_RECORD = 'FETCHING_LAB_RECORD';
 
-const uploadMapper = async (attr, record) =>
-  snakeCaseKeys({
-    ...attr,
+const uploadMapper = async (attr, record) => {
+  const { rows, ...withoutRows } = attr;
+  return snakeCaseKeys({
+    ...withoutRows,
     date: Object.values(attr.date),
-    siteId: await record.getRemoteSiteId(),
-    lab_records_attributes: attr.rows.map((row, index) => ({
-      content: [...row],
-      row: index
-    }))
+    siteId: await record.getRemoteSiteId()
   });
+};
 
 export const syncLabRecords = () => async dispatch =>
   dispatch(uploadNewLabRecords()).then(() =>
@@ -41,7 +40,18 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
     const body = new FormData();
     const contents = fs.readFileSync(labRecord.filePath);
     const blob = new Blob([contents]);
-    const mapper = await uploadMapper(labRecord.dataValues, labRecord);
+    const labRecordValues = labRecord.dataValues;
+    const mapper = await uploadMapper(labRecordValues, labRecord);
+    const labRecordAttributes = labRecordValues.rows.map((row, index) => ({
+      content: [...row],
+      row: index
+    }));
+    const labRecordAttributesFile = createJSONFile(
+      labRecordAttributes,
+      'lab_records_attributes.json'
+    );
+    const rowsFile = createJSONFile(labRecordValues.rows, 'rows.json');
+
     // eslint-disable-next-line
     Object.keys(mapper).forEach(key => {
       if (isObject(mapper[key])) {
@@ -51,6 +61,8 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
       }
     });
     body.append('sheet_file', blob);
+    body.append('lab_records_attributes_file', labRecordAttributesFile);
+    body.append('rows_file', rowsFile);
     fetchAuthenticated('/api/v1/lab_record_imports', user.auth, {
       method: 'POST',
       body,
@@ -84,12 +96,15 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
   });
 
   collectionToUpdate.forEach(async labRecord => {
+    const body = new FormData();
+    body.append('rows_file', createJSONFile(labRecord.rows, 'rows.json'));
     fetchAuthenticated(
       `/api/v1/lab_record_imports/${labRecord.remoteId}`,
       user.auth,
       {
         method: 'PUT',
-        body: { rows: labRecord.rows }
+        body,
+        contentType: null
       }
     )
       .then(() => {
