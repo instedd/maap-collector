@@ -1,12 +1,12 @@
 // @flow
 
 import MaterialIcon from '@material/react-material-icon';
-import TextField, { Input } from '@material/react-text-field';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import type { ContextRouter } from 'react-router';
 import { Link, withRouter } from 'react-router-dom';
 import { values, isFunction } from 'lodash';
+import qs from 'qs';
 import { fetchLabRecord } from '../actions/labRecords';
 import { setPhiData } from '../actions/labRecordImport';
 import { updateLabRecord } from '../actions/labRecord';
@@ -29,8 +29,8 @@ type State = {
 };
 
 const mapStateToProps = state => {
-  const { dispatch, labRecordImport, labRecords, site } = state;
-  return { dispatch, labRecordImport, labRecords, site };
+  const { dispatch, labRecordImport, labRecords, site, router } = state;
+  return { dispatch, labRecordImport, labRecords, site, router };
 };
 
 class LabRecordsDetailList extends Component<Props, State> {
@@ -49,26 +49,24 @@ class LabRecordsDetailList extends Component<Props, State> {
     );
 
     return (
-      <TextField key={key}>
-        <Input
-          type="text"
-          value={row[patientIdIndex]}
-          className={style.emphasis}
-          onChange={e => {
-            const newRows = [...labRecord.rows];
-            newRows[row[row.length - 1]][patientIdIndex] = {
-              w: e.target.value
-            };
-            return dispatch(updateLabRecord({ rows: newRows })).then(() =>
-              dispatch(
-                setPhiData({
-                  rows: newRows
-                })
-              )
-            );
-          }}
-        />
-      </TextField>
+      <input
+        type="text"
+        value={row[patientIdIndex]}
+        className={style.emphasis}
+        onChange={e => {
+          const newRows = [...labRecord.rows];
+          newRows[row[row.length - 1]][patientIdIndex] = {
+            w: e.target.value
+          };
+          return dispatch(updateLabRecord({ rows: newRows })).then(() =>
+            dispatch(
+              setPhiData({
+                rows: newRows
+              })
+            )
+          );
+        }}
+      />
     );
   };
 
@@ -86,21 +84,24 @@ class LabRecordsDetailList extends Component<Props, State> {
   }
 
   render() {
-    const {
-      labRecordImport,
-      dispatch,
-      labRecordId,
-      labRecords,
-      site
-    } = this.props;
+    const { labRecordImport, labRecords, router, site } = this.props;
     const { labRecord } = labRecords;
     const { patientOrLabRecordId, phi, date } = {
       ...{ ...labRecord }.dataValues
     };
     const { searchText } = this.state;
+
     if (!labRecords.labRecord) {
       return <></>;
     }
+
+    const pageSize = 20;
+    const totalPages = Math.floor(labRecordImport.rows.length / pageSize);
+    const currentPage =
+      parseInt(qs.parse(router.location.search.slice(1)).page, 10) || 1;
+    const prevPage = currentPage > 1 ? currentPage - 1 : null;
+    const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+    const offset = (currentPage - 1) * pageSize;
 
     // This gets all the columns indexes that are patientOrLabRecordId, phi, or date
     const columnTypes = [patientOrLabRecordId, phi, date]
@@ -117,7 +118,14 @@ class LabRecordsDetailList extends Component<Props, State> {
               {labRecord && labRecord.fileName}
             </>
           }
+          pagination
+          offset={offset}
+          limit={pageSize}
+          prevPage={prevPage}
+          nextPage={nextPage}
+          totalCount={labRecordImport.rows.length}
           items={labRecordImport.rows
+            .slice(offset, offset + pageSize)
             .map((row, index) => {
               const flatRow = row.map(({ w }) => w);
               flatRow.push(index);
@@ -139,8 +147,6 @@ class LabRecordsDetailList extends Component<Props, State> {
                   row[labRecordIdColumn].includes(searchText))
               );
             })}
-          totalCount={labRecordImport.totalCount}
-          onReload={() => dispatch(fetchLabRecord({ labRecordId }))}
           columns={labRecordImport.columns.map(({ w }) => w)}
           fields={columnTypes
             .map((e, i) => {

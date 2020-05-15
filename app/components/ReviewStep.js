@@ -25,30 +25,14 @@ class ReviewStep extends Component<Props> {
   };
 
   columnName = (column, index) => {
-    if (!column.v) {
-      return `Column ${column.c}`;
-    }
-    if (column.v === 'Manual Patient Id') {
-      return column.v;
-    }
-    if (this.indexMatchesIdColumn(index, 'patientId')) {
-      return (
-        <>
-          {column.v}
-          <br />
-          (Patient ID)
-        </>
-      );
-    }
-    if (this.indexMatchesIdColumn(index, 'labRecordId')) {
-      return (
-        <>
-          {column.v}
-          <br />
-          (Lab Record ID)
-        </>
-      );
-    }
+    if (!column.v) return `Column ${column.c}`;
+
+    if (column.v === 'Manual Patient Id') return column.v;
+
+    if (this.indexMatchesIdColumn(index, 'patientId')) return 'Patient ID';
+
+    if (this.indexMatchesIdColumn(index, 'labRecordId')) return 'Lab ID';
+
     return `${column.c} - ${column.v}`;
   };
 
