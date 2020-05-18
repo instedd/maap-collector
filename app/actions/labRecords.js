@@ -42,15 +42,11 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
     const blob = new Blob([contents]);
     const labRecordValues = labRecord.dataValues;
     const mapper = await uploadMapper(labRecordValues, labRecord);
-    const labRecordAttributes = labRecordValues.rows.map((row, index) => ({
+    const rows = labRecordValues.rows.map((row, index) => ({
       content: [...row],
       row: index
     }));
-    const labRecordAttributesFile = createJSONFile(
-      labRecordAttributes,
-      'lab_records_attributes.json'
-    );
-    const rowsFile = createJSONFile(labRecordValues.rows, 'rows.json');
+    const rowsFile = createJSONFile(rows, 'rows.json');
 
     // eslint-disable-next-line
     Object.keys(mapper).forEach(key => {
@@ -61,7 +57,6 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
       }
     });
     body.append('sheet_file', blob);
-    body.append('lab_records_attributes_file', labRecordAttributesFile);
     body.append('rows_file', rowsFile);
     fetchAuthenticated('/api/v1/lab_record_imports', user.auth, {
       method: 'POST',
