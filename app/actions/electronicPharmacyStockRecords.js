@@ -14,6 +14,8 @@ const FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORDS =
   'FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORDS';
 const FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORD =
   'FETCHED_ELECTRONIC_PHARMACY_STOCK_RECORD';
+const UPLOAD_ELECTRONIC_PHARMACY_STOCK_RECORDS =
+  'UPLOAD_ELECTRONIC_PHARMACY_STOCK_RECORDS';
 
 const uploadMapper = async (attr, record) => {
   const { rows, ...withoutRows } = attr;
@@ -31,8 +33,10 @@ export const fetchElectronicPharmacyStockRecord = fetchEntitySingular(
   'ElectronicPharmacyStockRecord'
 );
 
-export const syncElectronicPharmacyStockRecords = () => async dispatch =>
-  dispatch(uploadNewElectronicPharmacyStockRecords());
+export const syncElectronicPharmacyStockRecords = () => async dispatch => {
+  dispatch({ type: UPLOAD_ELECTRONIC_PHARMACY_STOCK_RECORDS });
+  return dispatch(uploadNewElectronicPharmacyStockRecords());
+};
 
 export const uploadNewElectronicPharmacyStockRecords = () => async (
   dispatch,
@@ -49,55 +53,63 @@ export const uploadNewElectronicPharmacyStockRecords = () => async (
   });
   if (collectionToCreate.length === 0) return;
 
-  collectionToCreate.forEach(async electronicPharmacyStockRecord => {
-    const body = new FormData();
-    const contents = fs.readFileSync(electronicPharmacyStockRecord.filePath);
-    const blob = new Blob([contents]);
-    const electronicPharmacyValues = electronicPharmacyStockRecord.dataValues;
-    const mapper = await uploadMapper(
-      electronicPharmacyValues,
-      electronicPharmacyStockRecord
-    );
-    const rowsFile = createJSONFile(electronicPharmacyValues.rows, 'rows.json');
+  return Promise.all(
+    collectionToCreate.map(async electronicPharmacyStockRecord => {
+      const body = new FormData();
+      const contents = fs.readFileSync(electronicPharmacyStockRecord.filePath);
+      const blob = new Blob([contents]);
+      const electronicPharmacyValues = electronicPharmacyStockRecord.dataValues;
+      const mapper = await uploadMapper(
+        electronicPharmacyValues,
+        electronicPharmacyStockRecord
+      );
+      const rowsFile = createJSONFile(
+        electronicPharmacyValues.rows,
+        'rows.json'
+      );
 
-    // eslint-disable-next-line
-    Object.keys(mapper).forEach(key => {
-      if (isObject(mapper[key])) {
-        body.append(key, JSON.stringify(mapper[key]));
-      } else {
-        body.append(key, mapper[key]);
-      }
-    });
-    body.append('sheet_file', blob);
-    body.append('rows_file', rowsFile);
-    fetchAuthenticated('/api/v1/electronic_pharmacy_stock_records', user.auth, {
-      method: 'POST',
-      body,
-      contentType: null
-    })
-      .then(res =>
-        electronicPharmacyStockRecord.update({
-          remoteId: res.id,
-          lastSyncAt: new Date()
-        })
+      // eslint-disable-next-line
+      Object.keys(mapper).forEach(key => {
+        if (isObject(mapper[key])) {
+          body.append(key, JSON.stringify(mapper[key]));
+        } else {
+          body.append(key, mapper[key]);
+        }
+      });
+      body.append('sheet_file', blob);
+      body.append('rows_file', rowsFile);
+      return fetchAuthenticated(
+        '/api/v1/electronic_pharmacy_stock_records',
+        user.auth,
+        {
+          method: 'POST',
+          body,
+          contentType: null
+        }
       )
-      .then(() => {
-        fs.unlink(
-          electronicPharmacyStockRecord.filePath,
-          e =>
-            e
-              ? console.log(e)
-              : console.log(
-                  `${
-                    electronicPharmacyStockRecord.filePath
-                  } file deleted successfully`
-                )
-        );
-        return Promise.resolve();
-      })
-      .catch(e => console.log(e));
-  });
-  return Promise.resolve();
+        .then(res =>
+          electronicPharmacyStockRecord.update({
+            remoteId: res.id,
+            lastSyncAt: new Date()
+          })
+        )
+        .then(() => {
+          fs.unlink(
+            electronicPharmacyStockRecord.filePath,
+            e =>
+              e
+                ? console.log(e)
+                : console.log(
+                    `${
+                      electronicPharmacyStockRecord.filePath
+                    } file deleted successfully`
+                  )
+          );
+          return Promise.resolve();
+        })
+        .catch(e => console.log(e));
+    })
+  );
 };
 
 export {
