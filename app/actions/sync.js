@@ -5,8 +5,6 @@ import db from '../db';
 import { fetchPaginated, fetchAuthenticated } from '../utils/fetch';
 
 import { syncSites } from './sites';
-import { syncSpecimenSources } from './specimenSources';
-import { syncCultureTypes } from './cultureTypes';
 import { syncAntibioticConsumptionStats } from './antibioticConsumptionStats';
 import { syncAntibiotics } from './antibiotics';
 import { syncLabRecords } from './labRecords';
@@ -23,14 +21,6 @@ const SYNC_FINISH = 'SYNC_FINISH';
 
 // TODO: We should honor this order, currently the async process randomizes everything
 export const entities = [
-  {
-    name: 'SpecimenSource',
-    syncAction: syncSpecimenSources
-  },
-  {
-    name: 'CultureType',
-    syncAction: syncCultureTypes
-  },
   {
     name: 'ClinicalService',
     syncAction: syncEntities('ClinicalService')
@@ -226,27 +216,28 @@ export const remoteUpload = (
 
   if (collectionToCreate.length === 0) return;
 
-  collectionToCreate.forEach(async currentEntity => {
-    const mapped = await Promise.resolve(mapper(currentEntity));
-    fetchAuthenticated(url, user.auth, {
-      method: 'POST',
-      body: snakeCaseKeys({ [entityName]: mapped })
-    })
-      .then(async res => {
-        const existingEntity = await entity.findOne({
-          where: { remoteId: res.id },
-          order: [['id', 'asc']]
-        });
-        if (existingEntity && existingEntity.id !== currentEntity.id)
-          existingEntity.destroy();
-        return currentEntity.update({
-          remoteId: res.id,
-          lastSyncAt: new Date()
-        });
+  return Promise.all(
+    collectionToCreate.map(async currentEntity => {
+      const mapped = await Promise.resolve(mapper(currentEntity));
+      return fetchAuthenticated(url, user.auth, {
+        method: 'POST',
+        body: snakeCaseKeys({ [entityName]: mapped })
       })
-      .catch(e => console.log(e));
-  });
-  return Promise.resolve();
+        .then(async res => {
+          const existingEntity = await entity.findOne({
+            where: { remoteId: res.id },
+            order: [['id', 'asc']]
+          });
+          if (existingEntity && existingEntity.id !== currentEntity.id)
+            existingEntity.destroy();
+          return currentEntity.update({
+            remoteId: res.id,
+            lastSyncAt: new Date()
+          });
+        })
+        .catch(e => console.log(e));
+    })
+  );
 };
 
 export const remoteUploadUpdate = (
@@ -265,33 +256,34 @@ export const remoteUploadUpdate = (
   const collectionToUpdate = await entity.findAll({
     where: sequelize.literal(query)
   });
-  collectionToUpdate.forEach(async currentEntity => {
-    const mapped = await Promise.resolve(mapper(currentEntity));
-    fetchAuthenticated(url(currentEntity.remoteId), user.auth, {
-      method: 'PUT',
-      body: snakeCaseKeys({ [entityName]: mapped })
-    })
-      .then(item =>
-        entity.update(
-          {
-            lastSyncAt: moment(item.updated_at)
-              .local()
-              .toDate(),
-            updatedAt: moment(item.updated_at)
-              .local()
-              .toDate()
-          },
-          {
-            where: {
-              id: currentEntity.id
+  return Promise.all(
+    collectionToUpdate.map(async currentEntity => {
+      const mapped = await Promise.resolve(mapper(currentEntity));
+      return fetchAuthenticated(url(currentEntity.remoteId), user.auth, {
+        method: 'PUT',
+        body: snakeCaseKeys({ [entityName]: mapped })
+      })
+        .then(item =>
+          entity.update(
+            {
+              lastSyncAt: moment(item.updated_at)
+                .local()
+                .toDate(),
+              updatedAt: moment(item.updated_at)
+                .local()
+                .toDate()
             },
-            silent: true
-          }
+            {
+              where: {
+                id: currentEntity.id
+              },
+              silent: true
+            }
+          )
         )
-      )
-      .catch(e => console.log(e));
-  });
-  return Promise.resolve();
+        .catch(e => console.log(e));
+    })
+  );
 };
 
 export { SYNC_START, SYNC_STOP, SYNC_FINISH };

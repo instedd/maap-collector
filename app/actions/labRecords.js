@@ -9,6 +9,7 @@ import { fetchEntity } from './fetch';
 
 const FETCH_LAB_RECORDS = 'FETCH_LAB_RECORDS';
 const FETCHED_LAB_RECORDS = 'FETCHED_LAB_RECORDS';
+const UPLOAD_LAB_RECORDS = 'UPLOAD_LAB_RECORDS';
 const FETCH_LAB_RECORDS_FAILED = 'FETCH_LAB_RECORDS_FAILED';
 const FETCHED_LAB_RECORD = 'FETCHED_LAB_RECORD';
 const FETCHING_LAB_RECORD = 'FETCHING_LAB_RECORD';
@@ -22,10 +23,12 @@ const uploadMapper = async (attr, record) => {
   });
 };
 
-export const syncLabRecords = () => async dispatch =>
-  dispatch(uploadNewLabRecords()).then(() =>
+export const syncLabRecords = () => async dispatch => {
+  dispatch({ type: UPLOAD_LAB_RECORDS });
+  return dispatch(uploadNewLabRecords()).then(() =>
     dispatch(uploadUpdatedLabRecords())
   );
+};
 
 export const uploadNewLabRecords = () => async (dispatch, getState) => {
   const { user } = getState();
@@ -36,49 +39,50 @@ export const uploadNewLabRecords = () => async (dispatch, getState) => {
   });
   if (collectionToCreate.length === 0) return;
 
-  collectionToCreate.forEach(async labRecord => {
-    const body = new FormData();
-    const contents = fs.readFileSync(labRecord.filePath);
-    const blob = new Blob([contents]);
-    const labRecordValues = labRecord.dataValues;
-    const mapper = await uploadMapper(labRecordValues, labRecord);
-    const rows = labRecordValues.rows.map((row, index) => ({
-      content: [...row],
-      row: index
-    }));
-    const rowsFile = createJSONFile(rows, 'rows.json');
+  return Promise.all(
+    collectionToCreate.map(async labRecord => {
+      const body = new FormData();
+      const contents = fs.readFileSync(labRecord.filePath);
+      const blob = new Blob([contents]);
+      const labRecordValues = labRecord.dataValues;
+      const mapper = await uploadMapper(labRecordValues, labRecord);
+      const rows = labRecordValues.rows.map((row, index) => ({
+        content: [...row],
+        row: index
+      }));
+      const rowsFile = createJSONFile(rows, 'rows.json');
 
-    // eslint-disable-next-line
-    Object.keys(mapper).forEach(key => {
-      if (isObject(mapper[key])) {
-        body.append(key, JSON.stringify(mapper[key]));
-      } else {
-        body.append(key, mapper[key]);
-      }
-    });
-    body.append('sheet_file', blob);
-    body.append('rows_file', rowsFile);
-    fetchAuthenticated('/api/v1/lab_record_imports', user.auth, {
-      method: 'POST',
-      body,
-      contentType: null
-    })
-      .then(res =>
-        labRecord.update({ remoteId: res.id, lastSyncAt: new Date() })
-      )
-      .then(() => {
-        fs.unlink(
-          labRecord.filePath,
-          e =>
-            e
-              ? console.log(e)
-              : console.log(`${labRecord.filePath} file deleted successfully`)
-        );
-        return Promise.resolve();
+      // eslint-disable-next-line
+      Object.keys(mapper).map(key => {
+        if (isObject(mapper[key])) {
+          body.append(key, JSON.stringify(mapper[key]));
+        } else {
+          body.append(key, mapper[key]);
+        }
+      });
+      body.append('sheet_file', blob);
+      body.append('rows_file', rowsFile);
+      return fetchAuthenticated('/api/v1/lab_record_imports', user.auth, {
+        method: 'POST',
+        body,
+        contentType: null
       })
-      .catch(e => console.log(e));
-  });
-  return Promise.resolve();
+        .then(res =>
+          labRecord.update({ remoteId: res.id, lastSyncAt: new Date() })
+        )
+        .then(() => {
+          fs.unlink(
+            labRecord.filePath,
+            e =>
+              e
+                ? console.log(e)
+                : console.log(`${labRecord.filePath} file deleted successfully`)
+          );
+          return Promise.resolve();
+        })
+        .catch(e => console.log(e));
+    })
+  );
 };
 
 export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
@@ -90,25 +94,26 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
     )
   });
 
-  collectionToUpdate.forEach(async labRecord => {
-    const body = new FormData();
-    body.append('rows_file', createJSONFile(labRecord.rows, 'rows.json'));
-    fetchAuthenticated(
-      `/api/v1/lab_record_imports/${labRecord.remoteId}`,
-      user.auth,
-      {
-        method: 'PUT',
-        body,
-        contentType: null
-      }
-    )
-      .then(() => {
-        const updatedAt = new Date();
-        return labRecord.update({ lastSyncAt: updatedAt, updatedAt });
-      })
-      .catch(e => console.log(e));
-  });
-  return Promise.resolve();
+  return Promise.all(
+    collectionToUpdate.map(async labRecord => {
+      const body = new FormData();
+      body.append('rows_file', createJSONFile(labRecord.rows, 'rows.json'));
+      return fetchAuthenticated(
+        `/api/v1/lab_record_imports/${labRecord.remoteId}`,
+        user.auth,
+        {
+          method: 'PUT',
+          body,
+          contentType: null
+        }
+      )
+        .then(() => {
+          const updatedAt = new Date();
+          return labRecord.update({ lastSyncAt: updatedAt, updatedAt });
+        })
+        .catch(e => console.log(e));
+    })
+  );
 };
 
 export const fetchLabRecords = fetchEntity('LabRecord');
