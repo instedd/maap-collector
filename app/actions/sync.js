@@ -102,7 +102,9 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
   const initializedDb = await db.initializeForUser(user);
   const entity = initializedDb[entityName];
   const oldestEntity = await entity.findOne({
-    where: initializedDb.sequelize.literal("lastSyncAt IS NOT 'Invalid date'"),
+    where: initializedDb.sequelize.literal(
+      "lastSyncAt IS NOT 'Invalid date' AND lastSyncAt is NOT NULL"
+    ),
     order: [['lastSyncAt', 'ASC']]
   });
   const newestRemoteIdEntity = await entity.findOne({
