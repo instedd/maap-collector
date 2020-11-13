@@ -3,12 +3,13 @@ import { constantCase } from 'change-case';
 import pluralize from 'pluralize';
 import db from '../db';
 
-const fetchEntity = (entityName, actions) => (
+const fetchEntity = (entityName, actions) => ({
   where = {},
+  attributes = { exclude: [] },
   order = [['id', 'desc']],
   startInLastPage = false,
   perPage = 20
-) => async (dispatch, getState) => {
+}) => async (dispatch, getState) => {
   const pluralizedEntityName = constantCase(pluralize(entityName));
 
   const actualActions = actions || {
@@ -30,7 +31,7 @@ const fetchEntity = (entityName, actions) => (
   const nextPage = currentPage < totalPages ? currentPage + 1 : null;
   const offset = (currentPage - 1) * perPage;
   entity
-    .findAll({ where, offset, limit: perPage, order })
+    .findAll({ attributes, where, offset, limit: perPage, order })
     .then(items =>
       dispatch({
         type: actualActions.fetchSucceededAction,

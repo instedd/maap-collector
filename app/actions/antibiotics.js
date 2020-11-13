@@ -65,6 +65,6 @@ export const uploadAntibiotics = () => async (
 export const fetchAntibiotics = (
   where: {} = {},
   order: Array<Array<string>> = [['name', 'asc']]
-) => fetchEntity('Antibiotic')(where, order);
+) => fetchEntity('Antibiotic')({ where, order });
 
 export { FETCH_ANTIBIOTICS, FETCHED_ANTIBIOTICS, FETCH_ANTIBIOTICS_FAILED };

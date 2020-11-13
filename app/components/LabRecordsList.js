@@ -38,7 +38,12 @@ class LabRecordsList extends Component<Props, State> {
 
   componentDidMount() {
     const { dispatch, site } = this.props;
-    dispatch(fetchLabRecords({ siteId: site.id }));
+    dispatch(
+      fetchLabRecords({
+        where: { siteId: site.id },
+        attributes: ['id', 'fileName', 'createdAt']
+      })
+    );
   }
 
   render() {

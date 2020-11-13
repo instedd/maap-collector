@@ -38,7 +38,12 @@ class ElectronicPharmacyStockRecordslist extends Component<Props, State> {
 
   componentDidMount() {
     const { dispatch, site } = this.props;
-    dispatch(fetchElectronicPharmacyStockRecords({ siteId: site.id }));
+    dispatch(
+      fetchElectronicPharmacyStockRecords({
+        where: { siteId: site.id },
+        attributes: ['id', 'fileName', 'createdAt']
+      })
+    );
   }
 
   render() {
