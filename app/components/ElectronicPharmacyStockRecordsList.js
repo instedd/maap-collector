@@ -39,10 +39,11 @@ class ElectronicPharmacyStockRecordslist extends Component<Props, State> {
   componentDidMount() {
     const { dispatch, site } = this.props;
     dispatch(
-      fetchElectronicPharmacyStockRecords({
-        where: { siteId: site.id },
-        attributes: ['id', 'fileName', 'createdAt']
-      })
+      fetchElectronicPharmacyStockRecords({ siteId: site.id }, [
+        'id',
+        'fileName',
+        'createdAt'
+      ])
     );
   }
 
@@ -65,7 +66,13 @@ class ElectronicPharmacyStockRecordslist extends Component<Props, State> {
           prevPage={electronicPharmacyStockRecords.prevPage}
           nextPage={electronicPharmacyStockRecords.nextPage}
           onReload={() =>
-            dispatch(fetchElectronicPharmacyStockRecords({ siteId: site.id }))
+            dispatch(
+              fetchElectronicPharmacyStockRecords({ siteId: site.id }, [
+                'id',
+                'fileName',
+                'createdAt'
+              ])
+            )
           }
           onClick={({ id }) =>
             history.push(`/electronic_pharmacy_stock_records/${id}`)

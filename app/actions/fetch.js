@@ -17,14 +17,6 @@ const fetchEntity = (entityName, actions) => ({
     fetchSucceededAction: `FETCHED_${pluralizedEntityName}`,
     fetchFailedAction: `FETCH_${pluralizedEntityName}_FAILED`
   };
-  if (entityName === 'Site') {
-    console.log('- - - FETCHING SITES - - - ');
-    console.log(where);
-    console.log(attributes);
-    console.log(order);
-    console.log(startInLastPage);
-    console.log(perPage);
-  }
 
   dispatch({ type: actualActions.fetchAction, where });
 

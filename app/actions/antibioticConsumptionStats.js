@@ -93,15 +93,15 @@ export const fetchAntibioticConsumptionStatsList = (
     fetchAction: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST,
     fetchSucceededAction: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST_SUCCEEDED,
     fetchFailedAction: FETCH_ANTIBIOTIC_CONSUMPTION_STATS_LIST_FAILED
-  })(
-    {
+  })({
+    where: {
       ...where,
       [Sequelize.Op.or]: [{ deletedAt: null }, { deletedAt: 'Invalid date' }]
     },
     order,
     startInLastPage,
     perPage
-  );
+  });
 
 export const addCreatedAntibioticConsumptionStat = createdACS => dispatch =>
   dispatch({

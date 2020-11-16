@@ -20,7 +20,7 @@ class RowForm extends Component<Props> {
         {children.map((child, index) => (
           <td
             key={`row-form-${index}`}
-            colspan={index === children.length - 1 ? 2 : 1}
+            colSpan={index === children.length - 1 ? 2 : 1}
             onKeyPress={this.handleKeyPress}
           >
             {cloneElement(child, {})}
