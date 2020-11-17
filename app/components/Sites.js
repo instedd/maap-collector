@@ -117,7 +117,7 @@ class Sites extends Component<Props, State> {
             'Last activity'
           ]}
           fields={[
-            'id',
+            'remoteId',
             'name',
             'address',
             'ownership',
