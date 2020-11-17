@@ -38,7 +38,9 @@ class LabRecordsList extends Component<Props, State> {
 
   componentDidMount() {
     const { dispatch, site } = this.props;
-    dispatch(fetchLabRecords({ siteId: site.id }));
+    dispatch(
+      fetchLabRecords({ siteId: site.id }, ['id', 'fileName', 'createdAt'])
+    );
   }
 
   render() {
@@ -54,7 +56,15 @@ class LabRecordsList extends Component<Props, State> {
           limit={labRecords.limit}
           prevPage={labRecords.prevPage}
           nextPage={labRecords.nextPage}
-          onReload={() => dispatch(fetchLabRecords({ siteId: site.id }))}
+          onReload={() =>
+            dispatch(
+              fetchLabRecords({ siteId: site.id }, [
+                'id',
+                'fileName',
+                'createdAt'
+              ])
+            )
+          }
           onClick={({ id }) => history.push(`/lab_records/${id}`)}
           columns={['File', 'Created at']}
           fields={['fileName', 'createdAt']}

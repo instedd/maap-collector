@@ -24,7 +24,7 @@ const mapper = attrs =>
 const uploadMapper = async attrs =>
   snakeCaseKeys({ ...attrs.dataValues, siteId: await attrs.getRemoteSiteId() });
 
-export const fetchPatients = fetchEntity('Patient');
+export const fetchPatients = where => fetchEntity('Patient')({ where });
 export const syncPatients = () => async (dispatch, getState) => {
   const { user, site } = getState();
   dispatch({ type: SYNC_PATIENTS });

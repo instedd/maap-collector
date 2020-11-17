@@ -26,6 +26,6 @@ export const syncSites = () => async (dispatch, getState) => {
   );
 };
 
-export const fetchSites = fetchEntity('Site');
+export const fetchSites = where => fetchEntity('Site')({ where });
 
 export { FETCH_SITES, FETCHED_SITES, FETCH_SITES_FAILED };

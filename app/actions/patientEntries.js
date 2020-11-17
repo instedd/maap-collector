@@ -39,7 +39,8 @@ const uploadMapper = async attrs => {
   });
 };
 
-export const fetchPatientEntries = fetchEntity('PatientEntry');
+export const fetchPatientEntries = where =>
+  fetchEntity('PatientEntry')({ where });
 export const syncPatientEntries = () => async (dispatch, getState) => {
   const { user } = getState();
   dispatch({ type: SYNC_PATIENT_ENTRIES });

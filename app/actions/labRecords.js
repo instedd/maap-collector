@@ -116,7 +116,9 @@ export const uploadUpdatedLabRecords = () => async (dispatch, getState) => {
   );
 };
 
-export const fetchLabRecords = fetchEntity('LabRecord');
+export const fetchLabRecords = (where, attributes) =>
+  fetchEntity('LabRecord')({ where, attributes });
+
 export const fetchLabRecord = labRecordId => async (dispatch, getState) => {
   dispatch({ type: FETCHING_LAB_RECORD });
   const { user } = getState();

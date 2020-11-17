@@ -81,7 +81,10 @@ export const syncStart = () => async (dispatch, getState) => {
           Promise.resolve()
         )
         .then(() => dispatch({ type: SYNC_FINISH }))
-        .catch(() => dispatch({ type: SYNC_FINISH })),
+        .catch(err => {
+          console.error(err);
+          return dispatch({ type: SYNC_FINISH });
+        }),
     300
   );
 };

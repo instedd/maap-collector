@@ -26,9 +26,8 @@ const uploadMapper = async (attr, record) => {
   });
 };
 
-export const fetchElectronicPharmacyStockRecords = fetchEntity(
-  'ElectronicPharmacyStockRecord'
-);
+export const fetchElectronicPharmacyStockRecords = (where, attributes) =>
+  fetchEntity('ElectronicPharmacyStockRecord')({ where, attributes });
 export const fetchElectronicPharmacyStockRecord = fetchEntitySingular(
   'ElectronicPharmacyStockRecord'
 );

@@ -40,7 +40,7 @@ export const createPatientEntry = attributes => async (dispatch, getState) => {
   const record = await PatientEntry.create(attributes);
 
   dispatch({ type: SAVED_PATIENT_ENTRY, record });
-  return dispatch(fetchPatientEntries());
+  return dispatch(fetchPatientEntries({ patientId: attributes.patientId }));
 };
 
 export {
