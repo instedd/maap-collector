@@ -104,18 +104,18 @@ export const auth = () => async (dispatch, getState) => {
 export const remoteSync = (url, user, entityName, mapper) => async () => {
   const initializedDb = await db.initializeForUser(user);
   const entity = initializedDb[entityName];
-  const oldestEntity = await entity.findOne({
+  const newestEntity = await entity.findOne({
     where: initializedDb.sequelize.literal(
       "lastSyncAt IS NOT 'Invalid date' AND lastSyncAt is NOT NULL"
     ),
-    order: [['lastSyncAt', 'ASC']]
+    order: [['lastSyncAt', 'DESC']]
   });
   const newestRemoteIdEntity = await entity.findOne({
     order: [['remoteId', 'DESC']]
   });
-  const oldestDate =
-    oldestEntity && oldestEntity.lastSyncAt
-      ? moment(oldestEntity.lastSyncAt).toISOString()
+  const newestDate =
+    newestEntity && newestEntity.lastSyncAt
+      ? moment(newestEntity.lastSyncAt).toISOString()
       : null;
   const newestRemoteId = newestRemoteIdEntity
     ? newestRemoteIdEntity.remoteId
@@ -125,7 +125,7 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
     user.auth,
     {
       qs: {
-        updated_at_gth: oldestDate,
+        updated_at_gth: newestDate,
         id_gth: newestRemoteId
       }
     },
@@ -180,26 +180,7 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
         )
         .catch(e => console.log(e));
     }
-  ).then(({ greather_updated_at: greatherUpdatedAt }) => {
-    if (!greatherUpdatedAt) return;
-    entity.update(
-      {
-        lastSyncAt: moment(greatherUpdatedAt)
-          .local()
-          .toDate(),
-        updatedAt: moment(greatherUpdatedAt)
-          .local()
-          .toDate()
-      },
-      {
-        where: initializedDb.sequelize.literal(
-          "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) <= strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)"
-        ),
-        silent: true
-      }
-    );
-    return Promise.resolve();
-  });
+  );
 };
 
 export const remoteUpload = (
