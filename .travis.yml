@@ -200,7 +200,7 @@ script:
 
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then node release.js; fi
-  - if [[ "$TRAVIS_BRANCH" == "release-improvement" ]]; then node release.js; fi
+  - if [[ "$TRAVIS_BRANCH" == "sync-chunks-improvement" ]]; then node release.js; fi
 
 notifications:
   email: false
