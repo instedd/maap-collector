@@ -113,7 +113,7 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
   const newestRemoteIdEntity = await entity.findOne({
     order: [['remoteId', 'DESC']]
   });
-  const newestDate =
+  const newestLastSyncAt =
     newestEntity && newestEntity.lastSyncAt
       ? moment(newestEntity.lastSyncAt).toISOString()
       : null;
@@ -125,7 +125,7 @@ export const remoteSync = (url, user, entityName, mapper) => async () => {
     user.auth,
     {
       qs: {
-        updated_at_gth: newestDate,
+        updated_at_gth: newestLastSyncAt,
         id_gth: newestRemoteId
       }
     },
@@ -193,6 +193,19 @@ export const remoteUpload = (
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
+
+  const newestEntity = await entity.findOne({
+    where: initializedDb.sequelize.literal(
+      "lastSyncAt IS NOT 'Invalid date' AND lastSyncAt is NOT NULL"
+    ),
+    order: [['lastSyncAt', 'DESC']]
+  });
+
+  const newestLastSyncAt =
+    newestEntity && newestEntity.lastSyncAt
+      ? moment(newestEntity.lastSyncAt).toISOString()
+      : null;
+
   const query = withSoftDelete
     ? "(deletedAt is NULL OR deletedAt IS 'Invalid date') AND (remoteId is NULL OR remoteId = '')"
     : "remoteId is NULL OR remoteId = ''";
@@ -216,9 +229,12 @@ export const remoteUpload = (
           });
           if (existingEntity && existingEntity.id !== currentEntity.id)
             existingEntity.destroy();
+          // TODO: `updatedAt` is not being updated for some reason
+          // thus triggering an extra innocuous `update`
           return currentEntity.update({
             remoteId: res.id,
-            lastSyncAt: new Date()
+            lastSyncAt: newestLastSyncAt || new Date(),
+            updatedAt: newestLastSyncAt || new Date()
           });
         })
         .catch(e => console.log(e));
@@ -236,6 +252,18 @@ export const remoteUploadUpdate = (
   const initializedDb = await db.initializeForUser(user);
   const { sequelize } = initializedDb;
   const entity = initializedDb[entityName];
+  const newestEntity = await entity.findOne({
+    where: initializedDb.sequelize.literal(
+      "lastSyncAt IS NOT 'Invalid date' AND lastSyncAt is NOT NULL"
+    ),
+    order: [['lastSyncAt', 'DESC']]
+  });
+
+  const newestLastSyncAt =
+    newestEntity && newestEntity.lastSyncAt
+      ? moment(newestEntity.lastSyncAt).toISOString()
+      : null;
+
   const query = withSoftDelete
     ? "(deletedAt is NULL OR deletedAt IS 'Invalid date') AND (remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt))"
     : "remoteId is NOT NULL AND strftime('%Y-%m-%d %H:%M:%S', updatedAt) > strftime('%Y-%m-%d %H:%M:%S', lastSyncAt)";
@@ -252,12 +280,16 @@ export const remoteUploadUpdate = (
         .then(item =>
           entity.update(
             {
-              lastSyncAt: moment(item.updated_at)
-                .local()
-                .toDate(),
-              updatedAt: moment(item.updated_at)
-                .local()
-                .toDate()
+              lastSyncAt:
+                newestLastSyncAt ||
+                moment(item.updated_at)
+                  .local()
+                  .toDate(),
+              updatedAt:
+                newestLastSyncAt ||
+                moment(item.updated_at)
+                  .local()
+                  .toDate()
             },
             {
               where: {
