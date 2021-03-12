@@ -230,7 +230,7 @@ export const remoteUpload = (
           if (existingEntity && existingEntity.id !== currentEntity.id)
             existingEntity.destroy();
           // TODO: `updatedAt` is not being updated for some reason
-          // thus triggering an extra innocuous `update`
+          // thus triggering an extra innocuous `update`.
           return currentEntity.update({
             remoteId: res.id,
             lastSyncAt: newestLastSyncAt || new Date(),
