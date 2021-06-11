@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  - push
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install dependencies
+        run: yarn install --ignore-engines  --network-timeout 1000000
+      - name: Post-install
+        run: yarn postinstall
+      - name: Lint
+        run: yarn lint
+      - name: Flow
+        run: yarn flow
+      - name: Build End-to-End Tests
+        run: yarn build-e2e
+      - name: Run End-to-End Tests
+        run: yarn test-e2e
+  build-windows:
+    runs-on: windows-2019
+    needs: build-and-test
+    steps:
+      - name: Install dependencies
+        run: yarn install --ignore-engines  --network-timeout 1000000
+      - name: Post-install
+        run: yarn postinstall
+      - name: Build
+        run: yarn build
+  build-macos:
+    runs-on: macos-10.15
+    needs: build-and-test
+    steps:
+      - name: Install dependencies
+        run: yarn install --ignore-engines  --network-timeout 1000000
+      - name: Post-install
+        run: yarn postinstall
+      - name: Build
+        run: yarn build
