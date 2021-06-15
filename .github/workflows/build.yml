@@ -81,3 +81,4 @@ jobs:
         run: node release.js
         env:
           INSTANCE: ${{ matrix.instance }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
