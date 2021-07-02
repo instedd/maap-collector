@@ -20,20 +20,20 @@ octokit.repos
     repo: 'maap-collector'
   })
   .then(async data => {
-    const { data: releases } = data;
+    // const { data: releases } = data;
     const environment = environments.find(k => k.name === process.env.INSTANCE);
     if (!process.env.INSTANCE)
       return console.log('INSTANCE env var is missing');
     const versionName = versionNameTag(version, environment.name);
-    if (!releases.map(({ name }) => name).includes(versionName)) {
-      octokit.repos.createRelease({
-        owner: 'instedd',
-        repo: 'maap-collector',
-        tag_name: `V${versionName}`,
-        draft: true,
-        name: versionName
-      });
-    }
+    // if (!releases.map(({ name }) => name).includes(versionName)) {
+    //   octokit.repos.createRelease({
+    //     owner: 'instedd',
+    //     repo: 'maap-collector',
+    //     tag_name: `V${versionName}`,
+    //     draft: true,
+    //     name: versionName
+    //   });
+    // }
     console.log(`Releasing ${versionName} with config:`);
     console.log(environment.config);
 
