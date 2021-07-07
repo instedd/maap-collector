@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: ['Build']
+    types:
+      - completed
+    branches:
+      - main
+      - feature/github-actions # temporal
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    strategy:
+      matrix:
+        os:
+          - windows-2019
+          - macos-10.15
+        instance:
+          - demo
+          - staging
+          - bf
+          - cm
+          - ga
+          - gh
+          - ke
+          - mw
+          - ng
+          - sl
+          - sn
+          - sz
+          - tz
+          - ug
+          - zm
+          - zw
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha}}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10.15.3'
+      - name: Install dependencies
+        run: yarn install --ignore-engines  --network-timeout 1000000
+      - name: Post-install
+        run: yarn postinstall
+      - name: Release
+        run: node release.js
+        env:
+          INSTANCE: ${{ matrix.instance }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
