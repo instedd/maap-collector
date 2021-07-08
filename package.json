@@ -96,6 +96,9 @@
         }
       ]
     },
+    "mac": {
+      "target": "pkg"
+    },
     "win": {
       "target": [
         "msi"
