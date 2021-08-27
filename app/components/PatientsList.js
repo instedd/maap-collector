@@ -47,7 +47,7 @@ class PatientList extends Component<Props, State> {
           nextPage={patients.nextPage}
           onReload={() => dispatch(fetchPatients({ siteId: site.id }))}
           columns={[
-            'Patient id',
+            'Patient ID',
             'Gender',
             'Year of birth',
             'Level of education',
